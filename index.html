@@ -260,14 +260,20 @@ a{text-decoration:none;color:inherit}
 .cf-btn.on{background:var(--bx);border-color:var(--bx);color:var(--white)}
 
 /* progress view */
-.ptb{background:var(--white);border-radius:var(--rl);padding:1.45rem;box-shadow:0 1px 6px rgba(97,43,74,.07);margin-bottom:1.25rem}
-.ptb-lbl{font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);margin-bottom:.75rem}
-.ptb-track{position:relative;height:7px;background:var(--cream-dk);border-radius:99px;margin-bottom:.6rem}
-.ptb-fill{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,var(--bx),var(--gold));border-radius:99px}
-.ptb-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:var(--bx);border:2px solid var(--white);box-shadow:0 0 0 3px rgba(97,43,74,.2);z-index:2}
-.ptb-dates{display:flex;justify-content:space-between;font-size:.68rem;color:var(--tl)}
-.ptb-dates strong{color:var(--tm)}
-.ptb-st{display:inline-flex;align-items:center;gap:.35rem;margin-top:.75rem;padding:.3rem .75rem;border-radius:99px;font-size:.74rem;font-weight:700}
+.ptb{background:var(--white);border-radius:var(--rl);padding:1.45rem 1.5rem;box-shadow:0 1px 6px rgba(97,43,74,.07);margin-bottom:1.25rem}
+.ptb-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.7rem}
+.ptb-lbl{font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tl)}
+.ptb-today-row{position:relative;height:20px;margin:0 6px}
+.ptb-today-lbl{position:absolute;bottom:0;transform:translateX(-50%);white-space:nowrap;font-family:Georgia,serif;font-weight:700;font-size:.78rem;color:var(--bx)}
+.ptb-axis{position:relative;height:2px;background:var(--cream-dk);border-radius:2px;margin:0 6px}
+.ptb-axis-fill{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,var(--bx),var(--gold));border-radius:2px}
+.ptb-tick{position:absolute;top:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--cream-dk);border:2px solid var(--white)}
+.ptb-today-dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;border-radius:50%;background:var(--bx);border:2px solid var(--white);box-shadow:0 0 0 3px rgba(97,43,74,.18);z-index:2}
+.ptb-end-row{display:flex;justify-content:space-between;margin-top:.7rem}
+.ptb-end{font-size:.66rem;color:var(--tl)}
+.ptb-end-date{display:block;font-family:Georgia,serif;font-weight:700;color:var(--tm);font-size:.78rem;margin-bottom:.1rem}
+.ptb-end.fim{text-align:right}
+.ptb-st{display:inline-flex;align-items:center;gap:.35rem;padding:.28rem .7rem;border-radius:99px;font-size:.7rem;font-weight:700}
 .phase-list{display:flex;flex-direction:column;gap:.75rem}
 .phase-card{background:var(--white);border-radius:var(--rl);box-shadow:0 1px 6px rgba(97,43,74,.07);border-left:4px solid var(--cream-dk);overflow:hidden}
 .phase-card.pc-done{border-left-color:var(--gold)}
@@ -488,6 +494,22 @@ a{text-decoration:none;color:inherit}
 .eq-av img{width:100%;height:100%;object-fit:cover}
 .eq-nome{font-family:Georgia,serif;font-size:1rem;font-weight:bold;color:var(--bx)}
 .eq-papel{font-size:.7rem;color:var(--tl)}
+
+/* dados da empresa: cadastro em blocos, estilo ficha de CRM */
+.df-card{background:var(--white);border-radius:var(--rl);box-shadow:0 1px 6px rgba(97,43,74,.07);overflow:hidden;margin-bottom:1.25rem}
+.df-head{display:flex;align-items:center;gap:.9rem;padding:1.3rem 1.4rem 1.1rem}
+.df-avatar{width:48px;height:48px;border-radius:50%;background:var(--bx);color:var(--gold-lt);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:bold;font-size:1.15rem;flex-shrink:0}
+.df-head-name{font-family:Georgia,serif;font-weight:bold;font-size:1.08rem;color:var(--bx)}
+.df-head-sub{font-size:.76rem;color:var(--tl);margin-top:.15rem}
+.df-tabs{display:flex;gap:.4rem;padding:0 1.4rem 1.1rem;border-bottom:1px solid var(--cream-dk);flex-wrap:wrap}
+.df-body{padding:1.2rem 1.4rem 1.4rem}
+.df-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.df-field{background:var(--cream);border:1px solid var(--cream-dk);border-radius:var(--r);padding:.55rem .75rem;min-width:0}
+.df-field-lbl{font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--tl);margin-bottom:.3rem}
+.df-field-val{font-size:.85rem;color:var(--td);font-weight:600;overflow-wrap:break-word}
+@media(max-width:640px){
+  .df-grid{grid-template-columns:1fr}
+}
 .eq-xbody{max-height:0;overflow:hidden;transition:max-height .3s}
 .eq-card.open .eq-xbody{max-height:280px}
 .eq-card.open .xchev{transform:rotate(180deg)}
@@ -695,43 +717,43 @@ a{text-decoration:none;color:inherit}
   .valor-grid{grid-template-columns:repeat(2,1fr)}
 }
 /* cronograma visual: gantt + calendário */
-.cron-gantt-title{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tl);margin-bottom:.6rem}
+.cron-gantt-title{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tl);margin-bottom:1.6rem}
 .cron-gantt-wrap{background:var(--white);border-radius:var(--rl);padding:1.1rem 1.2rem;box-shadow:0 1px 6px rgba(97,43,74,.07)}
 .cron-gantt{position:relative;height:46px;background:var(--cream);border-radius:8px;overflow:visible;margin-bottom:.7rem}
 .cron-gantt-seg{position:absolute;top:0;bottom:0;border-radius:6px;display:flex;align-items:center;overflow:hidden;transition:filter .15s}
 .cron-gantt-seg:hover{filter:brightness(1.08)}
-.cron-gantt-seg-lbl{font-size:.66rem;font-weight:700;color:var(--white);padding:0 .5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cron-gantt-seg-lbl{font-size:.66rem;font-weight:700;padding:0 .5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cron-gantt-hoje{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--danger);z-index:2}
-.cron-gantt-hoje::after{content:'Hoje';position:absolute;top:-1.1rem;left:50%;transform:translateX(-50%);font-size:.6rem;font-weight:700;color:var(--danger);white-space:nowrap}
+.cron-gantt-hoje::after{content:'Hoje';position:absolute;top:-1.15rem;left:50%;transform:translateX(-50%);font-size:.6rem;font-weight:700;color:var(--danger);white-space:nowrap}
 .cron-gantt-legend{display:flex;flex-wrap:wrap;gap:.5rem 1rem}
 .cgl-item{font-size:.74rem;color:var(--tm);display:flex;align-items:center;gap:.32rem}
 .cgl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .cgl-date{color:var(--tl);font-size:.68rem}
-.cron-cal-wrap{background:var(--white);border-radius:var(--rl);padding:1.1rem 1.2rem;box-shadow:0 1px 6px rgba(97,43,74,.07);margin-top:.85rem}
-.cron-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
-.cron-cal-month-lbl{font-size:.92rem;font-weight:700;color:var(--td);text-transform:capitalize;font-family:Georgia,serif}
-.cron-cal-nav{display:flex;align-items:center;gap:.35rem}
-.cron-cal-nav-btn{width:26px;height:26px;border-radius:50%;border:1px solid var(--cream-dk);background:var(--white);color:var(--tm);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;transition:background .15s}
+.cron-cal-wrap{background:var(--white);border-radius:var(--rl);padding:1rem 1.1rem;box-shadow:0 1px 6px rgba(97,43,74,.07);margin-top:.85rem}
+.cron-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem}
+.cron-cal-month-lbl{font-size:.9rem;font-weight:700;color:var(--td);text-transform:capitalize;font-family:Georgia,serif}
+.cron-cal-nav{display:flex;align-items:center;gap:.3rem}
+.cron-cal-nav-btn{width:24px;height:24px;border-radius:50%;border:1px solid var(--cream-dk);background:var(--white);color:var(--tm);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;transition:background .15s;padding:0}
 .cron-cal-nav-btn:hover{background:var(--cream)}
-.cron-cal-today-btn{font-size:.68rem;font-weight:700;color:var(--bx);background:var(--cream);border:none;border-radius:99px;padding:.3rem .65rem;cursor:pointer;margin-left:.3rem}
+.cron-cal-today-btn{font-size:.64rem;font-weight:700;color:var(--bx);background:var(--cream);border:none;border-radius:99px;padding:.26rem .6rem;cursor:pointer;margin-left:.3rem}
 .cron-cal-today-btn:hover{background:var(--cream-dk)}
-.cron-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cron-cal-dow{font-size:.62rem;font-weight:700;color:var(--tl);text-align:center;padding:.25rem 0;text-transform:uppercase}
-.cron-cal-cell{position:relative;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;font-size:.76rem;color:var(--tm)}
+.cron-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cron-cal-dow{font-size:.6rem;font-weight:700;color:var(--tl);text-align:center;padding:.2rem 0;text-transform:uppercase}
+.cron-cal-cell{position:relative;height:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:6px;font-size:.74rem;color:var(--tm)}
 .cron-cal-cell.empty{visibility:hidden}
 .cron-cal-cell.has-act{cursor:pointer;background:var(--cream);font-weight:700;color:var(--td)}
 .cron-cal-cell.has-act:hover{background:var(--cream-dk)}
 .cron-cal-cell.selected{background:var(--bx);color:var(--white)}
-.cron-cal-cell.is-today{box-shadow:inset 0 0 0 1.5px var(--danger)}
+.cron-cal-cell.is-today{box-shadow:inset 0 0 0 1.5px var(--gold)}
 .ccd-num{line-height:1}
-.ccd-dots{display:flex;gap:2px;margin-top:2px}
-.ccd-dot{width:5px;height:5px;border-radius:50%;background:var(--bx)}
+.ccd-dots{display:flex;gap:2px;margin-top:3px}
+.ccd-dot{width:4.5px;height:4.5px;border-radius:50%;background:var(--bx)}
 .ccd-dot.ccd-online{background:var(--blue)}
 .ccd-dot.ccd-presencial{background:var(--bx)}
 .ccd-dot.ccd-realizado{background:var(--ok)}
 .ccd-dot.ccd-entrega{border-radius:1px;background:var(--gold)}
 .cron-cal-cell.selected .ccd-dot{background:var(--white)}
-.cron-cal-legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.72rem;color:var(--tm);padding-top:.6rem;margin-top:.5rem;border-top:1px solid var(--cream-dk)}
+.cron-cal-legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.68rem;color:var(--tm);padding-top:.6rem;margin-top:.55rem;border-top:1px solid var(--cream-dk)}
 .cron-cal-legend span{display:flex;align-items:center;gap:.3rem}
 .cron-dia-detail-box{margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--cream-dk)}
 .cron-dia-detail-head{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:700;color:var(--td);margin-bottom:.6rem}
@@ -750,7 +772,7 @@ a{text-decoration:none;color:inherit}
 .cron-act-item.open .xchev{transform:rotate(180deg)}
 .cron-dia-enc-resumo{font-size:.79rem;color:var(--tm);line-height:1.55;margin-bottom:.5rem}
 @media(max-width:768px){
-  .cron-cal-cell{font-size:.7rem}
+  .cron-cal-cell{font-size:.7rem;height:34px}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -1003,12 +1025,14 @@ function sbCarregarProjeto(email) {
         // Fases precisam vir em ordem cronológica de início (não na ordem de criação do registro).
         // O sort definitivo ainda acontece no front via ordenarFases(), esta é só uma camada extra.
         if (tabela === 'fases') return sb.from(tabela).select('*').eq('projeto_id', pid).order('data_inicio', { ascending: true, nullsFirst: false });
+        if (tabela === 'entregas') return sb.from(tabela).select('*').eq('projeto_id', pid).order('data_prevista', { ascending: true, nullsFirst: false });
         return sb.from(tabela).select('*').eq('projeto_id', pid).order('id', { ascending: true });
       });
 
       return Promise.all(promessas).then(function(resultados) {
         var dados = {
           _projetoId: pid,
+          _loginEmail: email,
           nome: proj.nome_cliente, empresa: proj.empresa, cargo: proj.cargo,
           projeto: proj.nome_projeto, consultor: proj.consultor, consultorWa: proj.consultor_whatsapp,
           consultorEmail: proj.consultor_email, consultorTelefone: proj.consultor_telefone, consultorCargo: proj.consultor_cargo,
@@ -1054,6 +1078,13 @@ function sbExcluirItem(campoFront, itemId) {
 // consultor. Recebe um objeto em snake_case (colunas da tabela "projetos").
 function sbAtualizarProjetoCampos(projetoId, colunas) {
   return sb.from('projetos').update(colunas).eq('id', projetoId).select().single()
+    .then(function(res){ if (res.error) throw res.error; return res.data; });
+}
+
+// Atualiza e-mail e/ou senha de login do cliente na tabela "usuarios", localizando
+// a linha pelo e-mail atual (antes da troca).
+function sbAtualizarUsuario(emailAtual, colunas) {
+  return sb.from('usuarios').update(colunas).eq('email', emailAtual).select().single()
     .then(function(res){ if (res.error) throw res.error; return res.data; });
 }
 
@@ -1217,6 +1248,21 @@ function ordenarFases(fases) {
     return 0;
   });
   return fases;
+}
+// Mesma lógica para as entregas: ordena por prazo (dataISO), não pela ordem de cadastro.
+// Isso também corrige o cálculo de "próxima entrega" do Dashboard, que depende da ordem
+// do array para achar a primeira entrega não concluída.
+function ordenarEntregas(entregas) {
+  if (!entregas || !entregas.length) return entregas;
+  entregas.sort(function(a, b) {
+    var da = a.dataISO ? new Date(a.dataISO).getTime() : null;
+    var db = b.dataISO ? new Date(b.dataISO).getTime() : null;
+    if (da !== null && db !== null) return da - db;
+    if (da !== null) return -1;
+    if (db !== null) return 1;
+    return 0;
+  });
+  return entregas;
 }
 function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 function ini2(nome) {
@@ -1420,6 +1466,7 @@ function doLoginLocal(email, senha) {
   _isMaster = false;
   salvarSessao(email, 'cliente', 'local');
   ge('login-screen').style.display = 'none';
+  reg.dados._loginEmail = email;
   openClient(reg.dados);
 }
 
@@ -1457,6 +1504,7 @@ function tentarRestaurarSessao() {
   if (reg) {
     _isMaster = false;
     ge('login-screen').style.display = 'none';
+    reg.dados._loginEmail = sess.email;
     openClient(reg.dados);
   } else {
     limparSessao();
@@ -1609,7 +1657,8 @@ var CE_CATEGORIAS = [
       { k:'consultorEmail', label:'E-mail do consultor responsável', tipo:'text', col:'consultor_email' },
       { k:'consultorTelefone', label:'Telefone do consultor responsável', tipo:'text', col:'consultor_telefone' }
     ]
-  }
+  },
+  { id:'acessoCliente', label:'Acesso do Cliente (login)', tipo:'acesso' }
 ];
 
 function badgeStLabel(s) {
@@ -1641,6 +1690,8 @@ function ceRenderCategorias() {
     h += '<div class="ce-cat-name">' + esc(c.label) + '</div>';
     if (c.tipo === 'single') {
       h += '<div class="ce-cat-count">Editar ficha</div>';
+    } else if (c.tipo === 'acesso') {
+      h += '<div class="ce-cat-count">' + esc(_c._loginEmail || 'Editar acesso') + '</div>';
     } else {
       var arr = _c[c.campo] || [];
       h += '<div class="ce-cat-count">' + arr.length + ' ' + (arr.length===1?'item':'itens') + '</div>';
@@ -1660,6 +1711,7 @@ function ceOpenCategoria(id) {
   _ceCat = ceFindCat(id);
   _ceEditIdx = null;
   if (_ceCat.tipo === 'single') { ceRenderFormSingle(); return; }
+  if (_ceCat.tipo === 'acesso') { ceRenderFormAcesso(); return; }
   ceRenderLista();
 }
 
@@ -1699,6 +1751,70 @@ function ceSaveSingle() {
   }).catch(function(e) {
     console.error('Erro ao salvar dados cadastrais:', e);
     alert('Os dados foram atualizados na tela, mas não foi possível salvar no banco. Verifique sua conexão e tente novamente.');
+  });
+}
+
+// Formulário de acesso do cliente: troca de e-mail de login e/ou redefinição de senha.
+// Mexe na tabela "usuarios" (login) e, se o e-mail mudar, também em projetos.cliente_email
+// (são as duas colunas que precisam ficar iguais para o login continuar funcionando).
+function ceRenderFormAcesso() {
+  ge('ce-title').textContent = 'Acesso do Cliente';
+  var h = '<button class="ce-back" onclick="ceRenderCategorias()">&#8592; Todas as categorias</button>';
+  h += '<div style="font-size:.79rem;color:var(--tm);line-height:1.6;margin-bottom:1.1rem;padding:.85rem 1rem;background:var(--cream);border-radius:var(--r);border-left:3px solid var(--gold)">Trocar o e-mail aqui desloga o cliente em qualquer sessão já aberta com o e-mail antigo. Ele vai precisar entrar de novo com o e-mail novo. Deixe a senha em branco se não quiser alterá-la.</div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">E-mail de login</label>';
+  h += '<input class="ce-form-input" type="text" id="ce-acesso-email" value="' + esc(_c._loginEmail || '') + '"></div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Nova senha</label>';
+  h += '<input class="ce-form-input" type="text" id="ce-acesso-senha1" placeholder="Deixe em branco para não alterar"></div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Confirmar nova senha</label>';
+  h += '<input class="ce-form-input" type="text" id="ce-acesso-senha2" placeholder="Repita a nova senha"></div>';
+  h += '<div class="ce-form-actions">';
+  h += '<button class="ce-btn-save" id="ce-btn-save" onclick="ceSaveAcesso()">Salvar</button>';
+  h += '<button class="ce-btn-cancel" onclick="ceRenderCategorias()">Cancelar</button>';
+  h += '</div>';
+  ge('ce-body').innerHTML = h;
+}
+
+function ceSaveAcesso() {
+  if (!sb || !_c._projetoId || !_c._loginEmail) {
+    alert('Esse cliente ainda não tem login real conectado ao banco de dados, então não é possível alterar acesso por aqui.');
+    return;
+  }
+  var emailAntigo = _c._loginEmail;
+  var emailNovo = (ge('ce-acesso-email').value || '').trim().toLowerCase();
+  var senha1 = ge('ce-acesso-senha1').value || '';
+  var senha2 = ge('ce-acesso-senha2').value || '';
+
+  if (!emailNovo || emailNovo.indexOf('@') === -1 || emailNovo.indexOf('.') === -1) {
+    alert('Digite um e-mail válido.');
+    return;
+  }
+  if (senha1 || senha2) {
+    if (senha1 !== senha2) { alert('As duas senhas digitadas não são iguais.'); return; }
+    if (senha1.length < 4) { alert('Use uma senha com pelo menos 4 caracteres.'); return; }
+  }
+
+  var colunasUsuario = {};
+  var emailMudou = emailNovo !== emailAntigo;
+  if (emailMudou) colunasUsuario.email = emailNovo;
+  if (senha1) colunasUsuario.senha = senha1;
+
+  if (!emailMudou && !senha1) { ceRenderCategorias(); ceToast(); return; }
+
+  var btnSave = ge('ce-btn-save');
+  if (btnSave) { btnSave.disabled = true; btnSave.textContent = 'Salvando...'; }
+
+  sbAtualizarUsuario(emailAntigo, colunasUsuario).then(function() {
+    if (!emailMudou) return null;
+    return sbAtualizarProjetoCampos(_c._projetoId, { cliente_email: emailNovo });
+  }).then(function() {
+    if (emailMudou) _c._loginEmail = emailNovo;
+    ceRenderCategorias();
+    ceToast();
+  }).catch(function(e) {
+    console.error('Erro ao atualizar acesso do cliente:', e);
+    if (btnSave) { btnSave.disabled = false; btnSave.textContent = 'Salvar'; }
+    var motivo = (e && e.message) ? e.message : 'motivo não identificado';
+    alert('Não foi possível atualizar o acesso.\n\nMotivo retornado: ' + motivo);
   });
 }
 
@@ -1834,6 +1950,7 @@ function ceFinalizarSalvamento(cat, item) {
   if (isNovo) _c[cat.campo].push(item);
   else _c[cat.campo][_ceEditIdx] = item;
   if (cat.campo === 'fases') ordenarFases(_c.fases);
+  if (cat.campo === 'entregas') ordenarEntregas(_c.entregas);
   ceRenderLista();
   if (_currentView === cat.id || (cat.id === 'proximosPassos' && _currentView === 'proximos')) setView(_currentView);
 
@@ -1878,6 +1995,7 @@ function ceDeleteItem(i) {
 function openClient(dados) {
   _c = dados;
   if (_c.fases) ordenarFases(_c.fases);
+  if (_c.entregas) ordenarEntregas(_c.entregas);
   ge('master-screen').style.display = 'none';
   var app = ge('app');
   app.className = 'on';
@@ -2011,7 +2129,7 @@ function masterOpenClient(email) {
   if (_msProjetosCache[email]) { openClient(_msProjetosCache[email]); return; }
   // Senão, tenta achar localmente (fallback)
   var reg = CLIENTES[email];
-  if (reg) { openClient(reg.dados); return; }
+  if (reg) { reg.dados._loginEmail = email; openClient(reg.dados); return; }
   // Por fim, busca no banco
   if (sb) {
     sbCarregarProjeto(email).then(function(dados) {
@@ -2028,6 +2146,7 @@ var NAV_SECTIONS = [
     { id:'dashboard', label:'Visão Geral' },
     { id:'progresso', label:'Progresso' },
     { id:'cronograma', label:'Cronograma' },
+    { id:'agenda', label:'Agenda' },
     { id:'documentos', label:'Documentos' },
     { id:'proximos', label:'Próximos Passos' }
   ]},
@@ -2432,15 +2551,23 @@ function renderProgresso() {
   var totDias = Math.max(1, Math.floor((fim - ini) / 86400000));
   var passDias = Math.floor((hoje - ini) / 86400000);
   var pctT = Math.min(100, Math.max(0, Math.round(passDias / totDias * 100)));
+  var diaAtual = Math.min(totDias, Math.max(0, passDias));
   var diasFim = Math.ceil((fim - hoje) / 86400000);
   var stCls = diasFim < 0 ? 'background:var(--danger-bg);color:var(--danger)' : diasFim <= 14 ? 'background:var(--warn-bg);color:var(--warn)' : 'background:var(--ok-bg);color:var(--ok)';
   var stTxt = diasFim < 0 ? '&#9888; ' + Math.abs(diasFim) + ' dias de atraso' : diasFim <= 14 ? '&#8987; ' + diasFim + ' dias até a conclusão' : '&#10003; No prazo · ' + diasFim + ' dias restantes';
 
   var h = '<div class="ptb sec">';
-  h += '<div class="ptb-lbl">Linha do tempo do projeto</div>';
-  h += '<div class="ptb-track"><div class="ptb-fill" style="width:' + pctT + '%"></div><div class="ptb-marker" style="left:' + pctT + '%"></div></div>';
-  h += '<div class="ptb-dates"><div><strong>' + fd(c.dataInicio) + '</strong><br>Início</div><div style="text-align:center"><strong>Hoje · ' + fdhoje() + '</strong></div><div style="text-align:right"><strong>' + fd(c.dataPrevisao) + '</strong><br>Previsão</div></div>';
-  h += '<span class="ptb-st" style="' + stCls + '">' + stTxt + '</span></div>';
+  h += '<div class="ptb-top"><div class="ptb-lbl">Linha do tempo do projeto</div><span class="ptb-st" style="' + stCls + '">' + stTxt + '</span></div>';
+  h += '<div class="ptb-today-row"><div class="ptb-today-lbl" style="left:clamp(34px, ' + pctT + '%, calc(100% - 34px))">Dia ' + diaAtual + ' de ' + totDias + '</div></div>';
+  h += '<div class="ptb-axis">';
+  h += '<div class="ptb-axis-fill" style="width:' + pctT + '%"></div>';
+  h += '<div class="ptb-tick" style="left:0"></div>';
+  h += '<div class="ptb-tick" style="left:100%"></div>';
+  h += '<div class="ptb-today-dot" style="left:' + pctT + '%"></div>';
+  h += '</div>';
+  h += '<div class="ptb-end-row"><div class="ptb-end"><span class="ptb-end-date">' + fd(c.dataInicio) + '</span>Início</div>';
+  h += '<div class="ptb-end fim"><span class="ptb-end-date">' + fd(c.dataPrevisao) + '</span>Previsão</div></div>';
+  h += '</div>';
   h += '<div class="sec-lbl">Fases do projeto</div>';
   h += '<div class="phase-list">';
 
@@ -2519,12 +2646,17 @@ function renderProgresso() {
 // ═══════════════════════════════════════════
 function fdTS(ts) { var d = new Date(ts); return pad(d.getDate()) + '/' + pad(d.getMonth() + 1); }
 
+function cronFaseCor(status) {
+  if (status === 'concluida') return { bg: 'var(--bx)', txt: 'var(--white)' };
+  if (status === 'ativa') return { bg: 'var(--gold)', txt: 'var(--bx)' };
+  return { bg: 'var(--cream-dk)', txt: 'var(--tm)' };
+}
+
 function cronGanttHTML(c) {
   var fases = c.fases || [];
   if (!fases.length || !c.dataInicio || !c.dataPrevisao) return '';
   var t0 = new Date(c.dataInicio).getTime(), t1 = new Date(c.dataPrevisao).getTime();
   var total = Math.max(1, t1 - t0);
-  var COLORS = ['#612B4A', '#8A4068', '#C9A96E', '#B07D2A', '#6B4F5A', '#9C5A78'];
   var cumMs = 0;
   var ranges = [];
   for (var i = 0; i < fases.length; i++) {
@@ -2544,14 +2676,14 @@ function cronGanttHTML(c) {
     var r = ranges[j];
     var leftPct = Math.max(0, (r.start - t0) / total * 100);
     var widthPct = Math.max(2, (r.end - r.start) / total * 100);
-    var color = r.fase.status === 'concluida' ? 'var(--ok)' : COLORS[j % COLORS.length];
-    h += '<div class="cron-gantt-seg" style="left:' + leftPct + '%;width:' + widthPct + '%;background:' + color + '" title="' + esc(r.fase.nome) + ' · ' + r.fase.peso + '%">';
-    h += '<span class="cron-gantt-seg-lbl">' + esc(r.fase.nome) + '</span></div>';
+    var cor = cronFaseCor(r.fase.status);
+    h += '<div class="cron-gantt-seg" style="left:' + leftPct + '%;width:' + widthPct + '%;background:' + cor.bg + '" title="' + esc(r.fase.nome) + ' · ' + r.fase.peso + '%">';
+    h += '<span class="cron-gantt-seg-lbl" style="color:' + cor.txt + '">' + esc(r.fase.nome) + '</span></div>';
   }
   h += '<div class="cron-gantt-hoje" style="left:' + hojePct + '%" title="Hoje"></div>';
   h += '</div><div class="cron-gantt-legend">';
   for (var k = 0; k < ranges.length; k++) {
-    var lc = ranges[k].fase.status === 'concluida' ? 'var(--ok)' : COLORS[k % COLORS.length];
+    var lc = cronFaseCor(ranges[k].fase.status).bg;
     h += '<div class="cgl-item"><span class="cgl-dot" style="background:' + lc + '"></span>' + esc(ranges[k].fase.nome);
     h += ' <span class="cgl-date">' + fdTS(ranges[k].start) + '–' + fdTS(ranges[k].end) + '</span></div>';
   }
@@ -2559,13 +2691,25 @@ function cronGanttHTML(c) {
   return h;
 }
 
-// Lista unificada de atividades com data: encontros (reuniões) + entregas (prazos de entregáveis)
+// Lista unificada de atividades com data: encontros (reuniões com ata completa) +
+// agenda (reuniões/eventos agendados de forma mais simples, mesmo conceito de compromisso)
+// + entregas (prazos de entregáveis). Itens da Agenda que já existem em Encontros
+// (mesma data + mesmo título) não entram duplicados.
 function cronTodasAtividades(c) {
   var lista = [];
   var encs = c.encontros || [];
+  var chavesEnc = {};
   for (var i = 0; i < encs.length; i++) {
     if (!encs[i].data) continue;
     lista.push({ id: 'enc-' + i, iso: encs[i].data, tipo: 'encontro', raw: encs[i] });
+    chavesEnc[encs[i].data + '|' + (encs[i].titulo || '').toLowerCase().trim()] = true;
+  }
+  var ag = c.agenda || [];
+  for (var k = 0; k < ag.length; k++) {
+    if (!ag[k].data) continue;
+    var chave = ag[k].data + '|' + (ag[k].titulo || '').toLowerCase().trim();
+    if (chavesEnc[chave]) continue;
+    lista.push({ id: 'ag-' + k, iso: ag[k].data, tipo: 'encontro', raw: ag[k] });
   }
   var ents = c.entregas || [];
   for (var j = 0; j < ents.length; j++) {
@@ -3133,49 +3277,69 @@ function submitNPS() {
 // ═══════════════════════════════════════════
 // VIEW: DADOS DA EMPRESA
 // ═══════════════════════════════════════════
-function renderDadosEmpresa() {
+var _dfTab = 'empresa';
+
+function dfFieldHTML(label, valor) {
+  return '<div class="df-field"><div class="df-field-lbl">' + esc(label) + '</div><div class="df-field-val">' + esc(valor || '—') + '</div></div>';
+}
+
+function renderDadosEmpresa(tab) {
+  _dfTab = tab || _dfTab || 'empresa';
   var c = _c;
-  var h = '';
+  var h = '<div class="df-card">';
 
-  h += '<div class="hero"><div class="sec-lbl" style="margin-bottom:.9rem">Dados da empresa</div><div class="hero-meta">';
-  h += '<div class="hm-item"><div class="hm-key">Empresa</div><div class="hm-val">' + esc(c.empresa || '—') + '</div></div>';
-  h += '<div class="hm-item"><div class="hm-key">CNPJ</div><div class="hm-val">' + esc(c.cnpj || '—') + '</div></div>';
-  h += '<div class="hm-item"><div class="hm-key">Setor / atividade</div><div class="hm-val">' + esc(c.setor || '—') + '</div></div>';
-  h += '<div class="hm-item"><div class="hm-key">Endereço</div><div class="hm-val">' + esc(c.endereco || '—') + '</div></div>';
-  h += '<div class="hm-item"><div class="hm-key">Telefone</div><div class="hm-val">' + esc(c.telefoneEmpresa || '—') + '</div></div>';
-  h += '<div class="hm-item"><div class="hm-key">E-mail</div><div class="hm-val">' + esc(c.emailEmpresa || '—') + '</div></div>';
-  h += '</div></div>';
+  h += '<div class="df-head"><div class="df-avatar">' + ini2(c.empresa || 'EX') + '</div>';
+  h += '<div><div class="df-head-name">' + esc(c.empresa || '—') + '</div>';
+  h += '<div class="df-head-sub">' + esc(c.setor || 'Setor não informado') + (c.cnpj ? ' · ' + esc(c.cnpj) : '') + '</div></div></div>';
 
-  h += '<div class="hero"><div class="sec-lbl" style="margin-bottom:.9rem">Consultor responsável</div><div class="hero-meta">';
-  h += '<div class="hm-item"><div class="hm-key">Nome</div><div class="hm-val">' + esc(c.consultor || '—') + '</div></div>';
-  h += '<div class="hm-item"><div class="hm-key">Cargo</div><div class="hm-val">' + esc(c.consultorCargo || '—') + '</div></div>';
-  h += '<div class="hm-item"><div class="hm-key">E-mail</div><div class="hm-val">' + esc(c.consultorEmail || '—') + '</div></div>';
-  h += '<div class="hm-item"><div class="hm-key">Telefone</div><div class="hm-val">' + esc(c.consultorTelefone || '—') + '</div></div>';
-  h += '</div></div>';
-
-  var colabs = c.colaboradores || [];
-  h += '<div class="sec-lbl">Colaboradores</div>';
-  if (!colabs.length) {
-    h += '<p style="padding:.5rem 0 1rem;color:var(--tl);font-size:.85rem">Nenhum colaborador cadastrado ainda.</p>';
-  } else {
-    h += '<div class="equipe-grid">';
-    for (var i = 0; i < colabs.length; i++) {
-      var p = colabs[i];
-      var cid = 'colab-' + i;
-      var av = ini2(p.nome);
-      var isResp = p.responsavel === true || p.responsavel === 'sim';
-      h += '<div class="eq-card" id="' + cid + '">';
-      h += '<button class="eq-toggle" onclick="toggleX(\'' + cid + '\',\'colab\')">';
-      h += '<div style="display:flex;align-items:center;gap:.75rem"><div class="eq-av"><span>' + av + '</span></div>';
-      h += '<div><div class="eq-nome serif">' + esc(p.nome) + '</div><div class="eq-papel">' + esc(p.cargo || '') + (isResp ? ' · Responsável pelo projeto' : '') + '</div></div></div>';
-      h += chevSVG() + '</button>';
-      h += '<div class="eq-xbody"><div class="eq-xinner"><div style="height:1px;background:var(--cream-dk);margin:.4rem 0 .65rem"></div>';
-      h += p.email ? '<div style="font-size:.81rem;color:var(--tm);margin-bottom:.3rem">E-mail: ' + esc(p.email) + '</div>' : '';
-      h += p.telefone ? '<div style="font-size:.81rem;color:var(--tm)">Telefone: ' + esc(p.telefone) + '</div>' : '';
-      h += '</div></div></div>';
-    }
-    h += '</div>';
+  h += '<div class="df-tabs">';
+  var tabs = [{v:'empresa',l:'Empresa'},{v:'consultor',l:'Consultor'},{v:'colaboradores',l:'Colaboradores'}];
+  for (var ti = 0; ti < tabs.length; ti++) {
+    h += '<button class="cf-btn' + (_dfTab === tabs[ti].v ? ' on' : '') + '" onclick="renderDadosEmpresa(\'' + tabs[ti].v + '\')">' + tabs[ti].l + '</button>';
   }
+  h += '</div>';
+
+  h += '<div class="df-body">';
+  if (_dfTab === 'empresa') {
+    h += '<div class="df-grid">';
+    h += dfFieldHTML('CNPJ', c.cnpj);
+    h += dfFieldHTML('Setor / atividade', c.setor);
+    h += dfFieldHTML('Endereço', c.endereco);
+    h += dfFieldHTML('Telefone', c.telefoneEmpresa);
+    h += dfFieldHTML('E-mail', c.emailEmpresa);
+    h += '</div>';
+  } else if (_dfTab === 'consultor') {
+    h += '<div class="df-grid">';
+    h += dfFieldHTML('Nome', c.consultor);
+    h += dfFieldHTML('Cargo', c.consultorCargo);
+    h += dfFieldHTML('E-mail', c.consultorEmail);
+    h += dfFieldHTML('Telefone', c.consultorTelefone);
+    h += '</div>';
+  } else {
+    var colabs = c.colaboradores || [];
+    if (!colabs.length) {
+      h += '<p style="color:var(--tl);font-size:.85rem">Nenhum colaborador cadastrado ainda.</p>';
+    } else {
+      h += '<div class="equipe-grid">';
+      for (var i = 0; i < colabs.length; i++) {
+        var p = colabs[i];
+        var cid = 'colab-' + i;
+        var av = ini2(p.nome);
+        var isResp = p.responsavel === true || p.responsavel === 'sim';
+        h += '<div class="eq-card" id="' + cid + '">';
+        h += '<button class="eq-toggle" onclick="toggleX(\'' + cid + '\',\'colab\')">';
+        h += '<div style="display:flex;align-items:center;gap:.75rem"><div class="eq-av"><span>' + av + '</span></div>';
+        h += '<div><div class="eq-nome serif">' + esc(p.nome) + '</div><div class="eq-papel">' + esc(p.cargo || '') + (isResp ? ' · Responsável pelo projeto' : '') + '</div></div></div>';
+        h += chevSVG() + '</button>';
+        h += '<div class="eq-xbody"><div class="eq-xinner"><div style="height:1px;background:var(--cream-dk);margin:.4rem 0 .65rem"></div>';
+        h += p.email ? '<div style="font-size:.81rem;color:var(--tm);margin-bottom:.3rem">E-mail: ' + esc(p.email) + '</div>' : '';
+        h += p.telefone ? '<div style="font-size:.81rem;color:var(--tm)">Telefone: ' + esc(p.telefone) + '</div>' : '';
+        h += '</div></div></div>';
+      }
+      h += '</div>';
+    }
+  }
+  h += '</div></div>';
 
   h += footer();
   sv(h);
@@ -3532,8 +3696,27 @@ function proximosEncontrosHTML() {
   return h;
 }
 
+// Junta Agenda + Encontros num formato único, igual ao que o calendário do Cronograma já faz.
+// Assim, um encontro cadastrado em "Encontros" aparece aqui também, sem duplicar.
+function agendaTodosItens(c) {
+  var lista = (c.agenda || []).slice();
+  var chaves = {};
+  for (var i = 0; i < lista.length; i++) {
+    chaves[lista[i].data + '|' + (lista[i].titulo || '').toLowerCase().trim()] = true;
+  }
+  var encs = c.encontros || [];
+  for (var j = 0; j < encs.length; j++) {
+    var e = encs[j];
+    if (!e.data) continue;
+    var chave = e.data + '|' + (e.titulo || '').toLowerCase().trim();
+    if (chaves[chave]) continue;
+    lista.push({ data: e.data, titulo: e.titulo, tipo: e.tipo, pauta: e.pauta || [], docs: e.docs || [] });
+  }
+  return lista;
+}
+
 function renderAgenda() {
-  var agenda = (_c.agenda || []).slice().sort(function(a,b){ return new Date(a.data)-new Date(b.data); });
+  var agenda = agendaTodosItens(_c).sort(function(a,b){ return new Date(a.data)-new Date(b.data); });
   var hoje = new Date(); hoje.setHours(0,0,0,0);
   var futuros = agenda.filter(function(a){ return new Date(a.data) >= hoje; });
   var passados = agenda.filter(function(a){ return new Date(a.data) < hoje; });
