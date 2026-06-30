@@ -116,6 +116,55 @@ a{text-decoration:none;color:inherit}
 .sb-back-btn{display:none;margin:.5rem 1.1rem .2rem;width:calc(100% - 2.2rem);padding:.45rem;border:1.5px solid var(--gold);border-radius:var(--r);background:transparent;color:var(--bx);font-size:.74rem;font-weight:700;cursor:pointer;text-align:left}
 .sb-back-btn:hover{background:var(--gold);color:var(--white)}
 .sb-back-btn.on{display:block}
+
+/* CENTRAL DE EDIÇÃO */
+.sb-edit-btn{display:none;margin:.4rem 1.1rem .2rem;width:calc(100% - 2.2rem);padding:.5rem;border:none;border-radius:var(--r);background:var(--bx);color:var(--white);font-size:.76rem;font-weight:700;cursor:pointer;text-align:center;letter-spacing:.03em}
+.sb-edit-btn.on{display:block}
+.sb-edit-btn:hover{background:var(--bx-dk)}
+
+.ce-overlay{display:none;position:fixed;inset:0;background:rgba(44,26,36,.55);z-index:500;align-items:flex-start;justify-content:center;padding:2.5rem 1rem;overflow-y:auto}
+.ce-overlay.on{display:flex}
+.ce-panel{background:var(--white);border-radius:var(--rl);max-width:760px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);margin-bottom:2.5rem}
+.ce-head{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;border-bottom:1.5px solid var(--cream-dk)}
+.ce-title{font-family:Georgia,serif;font-size:1.15rem;font-weight:bold;color:var(--bx)}
+.ce-close{background:none;border:none;font-size:1.3rem;color:var(--tl);cursor:pointer;line-height:1;padding:.2rem .4rem}
+.ce-close:hover{color:var(--td)}
+.ce-body{padding:1.5rem}
+
+.ce-cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem}
+.ce-cat-card{border:1.5px solid var(--cream-dk);border-radius:var(--r);padding:.9rem 1rem;cursor:pointer;transition:.15s}
+.ce-cat-card:hover{border-color:var(--bx);background:var(--cream)}
+.ce-cat-name{font-weight:700;font-size:.88rem;color:var(--td);margin-bottom:.15rem}
+.ce-cat-count{font-size:.74rem;color:var(--tl)}
+
+.ce-back{background:none;border:none;color:var(--bx);font-size:.8rem;font-weight:700;cursor:pointer;margin-bottom:.9rem;padding:.2rem 0}
+.ce-back:hover{text-decoration:underline}
+
+.ce-list-item{display:flex;align-items:center;justify-content:space-between;gap:.7rem;padding:.7rem .9rem;border:1.5px solid var(--cream-dk);border-radius:var(--r);margin-bottom:.5rem}
+.ce-item-main{flex:1;min-width:0}
+.ce-item-title{font-weight:700;font-size:.86rem;color:var(--td);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ce-item-sub{font-size:.74rem;color:var(--tl);margin-top:.1rem}
+.ce-item-actions{display:flex;gap:.35rem;flex-shrink:0}
+.ce-ic-btn{background:var(--cream);border:1.5px solid var(--cream-dk);border-radius:6px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem}
+.ce-ic-btn:hover{background:var(--bx);border-color:var(--bx);color:var(--white)}
+.ce-ic-btn.danger:hover{background:var(--danger);border-color:var(--danger)}
+
+.ce-add-btn{width:100%;padding:.65rem;border:1.5px dashed var(--bx);border-radius:var(--r);background:none;color:var(--bx);font-weight:700;font-size:.84rem;cursor:pointer;margin-top:.3rem}
+.ce-add-btn:hover{background:var(--cream)}
+
+.ce-form-row{margin-bottom:.85rem}
+.ce-form-label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--tm);margin-bottom:.3rem}
+.ce-form-input,.ce-form-select,.ce-form-textarea{width:100%;padding:.55rem .75rem;border:1.5px solid var(--cream-dk);border-radius:var(--r);font-size:.86rem;color:var(--td);outline:none;background:var(--white)}
+.ce-form-input:focus,.ce-form-select:focus,.ce-form-textarea:focus{border-color:var(--bx)}
+.ce-form-textarea{min-height:70px;resize:vertical}
+.ce-form-actions{display:flex;gap:.6rem;margin-top:1.2rem}
+.ce-btn-save{flex:1;padding:.7rem;background:var(--bx);color:var(--white);border:none;border-radius:var(--r);font-weight:700;font-size:.85rem;cursor:pointer}
+.ce-btn-save:hover{background:var(--bx-dk)}
+.ce-btn-cancel{padding:.7rem 1.2rem;background:var(--cream);color:var(--tm);border:none;border-radius:var(--r);font-weight:700;font-size:.85rem;cursor:pointer}
+.ce-btn-cancel:hover{background:var(--cream-dk)}
+.ce-empty{text-align:center;color:var(--tl);font-size:.84rem;padding:1.5rem 0}
+.ce-saved-toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--ok);color:var(--white);padding:.7rem 1.3rem;border-radius:var(--r);font-size:.84rem;font-weight:700;z-index:600;transition:.25s;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.ce-saved-toast.on{transform:translateX(-50%) translateY(0)}
 .sb-logout-btn{margin:.55rem 1.1rem 1.1rem;width:calc(100% - 2.2rem);padding:.45rem;border:1.5px solid var(--cream-dk);border-radius:var(--r);background:transparent;color:var(--tl);font-size:.74rem;cursor:pointer}
 .sb-logout-btn:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-bg)}
 .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:299}
@@ -659,6 +708,7 @@ a{text-decoration:none;color:inherit}
   .valor-grid{grid-template-columns:repeat(2,1fr)}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -736,10 +786,22 @@ a{text-decoration:none;color:inherit}
         </a>
       </div>
       <button class="sb-back-btn" id="sb-back-btn">&#8592; Todos os projetos</button>
+      <button class="sb-edit-btn" id="sb-edit-btn" onclick="ceOpen()">&#9998; Editar Projeto</button>
       <button class="sb-logout-btn" id="sb-logout-btn">Sair do portal</button>
     </aside>
     <div id="vc"></div>
   </div>
+
+  <div class="ce-overlay" id="ce-overlay">
+    <div class="ce-panel">
+      <div class="ce-head">
+        <div class="ce-title" id="ce-title">Central de Edi&#231;&#227;o</div>
+        <button class="ce-close" onclick="ceClose()">&#10005;</button>
+      </div>
+      <div class="ce-body" id="ce-body"></div>
+    </div>
+  </div>
+  <div class="ce-saved-toast" id="ce-toast">&#10003; Altera&#231;&#227;o salva</div>
 
   <button class="fb-fab" id="fb-fab">
     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -766,6 +828,177 @@ var MASTER = {
 };
 
 var CLIENTES = {};
+
+// ═══════════════════════════════════════════
+// SUPABASE — conexão com o banco real
+// ═══════════════════════════════════════════
+var SB_URL = 'https://rrwfntxriwowexmgdyui.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyd2ZudHhyaXdvd2V4bWdkeXVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3NzUwMjQsImV4cCI6MjA5ODM1MTAyNH0.fdhRidRhAeehtH4Hwk9uSd75Iy_qfjFQU9hOs6PdFIA';
+var sb = null;
+try {
+  if (window.supabase) sb = window.supabase.createClient(SB_URL, SB_KEY);
+} catch (e) { console.error('Falha ao iniciar Supabase:', e); }
+
+// Mapa: nome da tabela no banco -> nome do campo usado no objeto _c (front-end)
+var SB_TABELAS = {
+  fases: 'fases',
+  entregas: 'entregas',
+  documentos: 'documentos',
+  proximosPassos: 'proximos_passos',
+  riscos: 'riscos',
+  kpis: 'kpis',
+  decisoes: 'decisoes',
+  agenda: 'agenda',
+  encontros: 'encontros',
+  equipe: 'equipe'
+};
+
+// Converte uma linha do banco (snake_case) para o formato usado no front (camelCase)
+function sbRowToFront(tabela, row) {
+  if (tabela === 'fases') {
+    return { _id: row.id, nome: row.nome, peso: row.peso, status: row.status, dataInicio: row.data_inicio, dataConclusao: row.data_conclusao, descricao: row.descricao, entregaveis: row.entregaveis || [], docs: row.docs || [] };
+  }
+  if (tabela === 'entregas') {
+    return { _id: row.id, nome: row.nome, status: row.status, data: row.data_prevista ? fd(row.data_prevista) : '', dataISO: row.data_prevista, responsavel: row.responsavel, inicioISO: row.data_inicio, descricao: row.descricao, docs: row.docs || [] };
+  }
+  if (tabela === 'documentos') {
+    return { _id: row.id, nome: row.codigo, titulo: row.titulo, categoria: row.categoria, status: row.status, data: row.data ? fd(row.data) : '', tamanho: row.tamanho, url: row.url };
+  }
+  if (tabela === 'proximos_passos') {
+    return { _id: row.id, titulo: row.titulo, descricao: row.descricao, prioridade: row.prioridade, dataLimite: row.data_limite, responsavel: row.responsavel };
+  }
+  if (tabela === 'riscos') {
+    return { _id: row.id, titulo: row.titulo, probabilidade: row.probabilidade, impacto: row.impacto, mitigacao: row.mitigacao };
+  }
+  if (tabela === 'kpis') {
+    return { _id: row.id, nome: row.nome, meta: row.meta, atual: row.atual, unidade: row.unidade, tendencia: row.tendencia, descricao: row.descricao, historico: row.historico || [] };
+  }
+  if (tabela === 'decisoes') {
+    return { _id: row.id, data: row.data, titulo: row.titulo, contexto: row.contexto, responsavel: row.responsavel, docs: row.docs || [] };
+  }
+  if (tabela === 'agenda') {
+    return { _id: row.id, data: row.data, titulo: row.titulo, tipo: row.tipo, pauta: row.pauta || [], docs: row.docs || [] };
+  }
+  if (tabela === 'encontros') {
+    return { _id: row.id, data: row.data, titulo: row.titulo, tipo: row.tipo, fase: row.fase, participantes: row.participantes || [], pauta: row.pauta || [], resumo: row.resumo, destaques: row.destaques || [], proximosPassosReuniao: row.proximos_passos_reuniao || [], docs: row.docs || [] };
+  }
+  if (tabela === 'equipe') {
+    return { _id: row.id, nome: row.nome, papel: row.papel, especialidade: row.especialidade, bio: row.bio, foto: row.foto_url };
+  }
+  return row;
+}
+
+// Converte um item do front (camelCase) para o formato de colunas do banco (snake_case)
+function sbItemToRow(tabela, item, projetoId) {
+  if (tabela === 'fases') {
+    return { projeto_id: projetoId, nome: item.nome, peso: item.peso, status: item.status, data_inicio: item.dataInicio || null, data_conclusao: item.dataConclusao || null, descricao: item.descricao || null, entregaveis: item.entregaveis || [], docs: item.docs || [] };
+  }
+  if (tabela === 'entregas') {
+    return { projeto_id: projetoId, nome: item.nome, status: item.status, data_prevista: item.dataISO || null, responsavel: item.responsavel || null, data_inicio: item.inicioISO || null, descricao: item.descricao || null, docs: item.docs || [] };
+  }
+  if (tabela === 'documentos') {
+    return { projeto_id: projetoId, codigo: item.nome, titulo: item.titulo, categoria: item.categoria || null, status: item.status || null, data: item.data || null, tamanho: item.tamanho || null, url: item.url || null };
+  }
+  if (tabela === 'proximos_passos') {
+    return { projeto_id: projetoId, titulo: item.titulo, descricao: item.descricao || null, prioridade: item.prioridade || null, data_limite: item.dataLimite || null, responsavel: item.responsavel || null };
+  }
+  if (tabela === 'riscos') {
+    return { projeto_id: projetoId, titulo: item.titulo, probabilidade: item.probabilidade, impacto: item.impacto, mitigacao: item.mitigacao || null };
+  }
+  if (tabela === 'kpis') {
+    return { projeto_id: projetoId, nome: item.nome, meta: item.meta, atual: item.atual, unidade: item.unidade || null, tendencia: item.tendencia || null, descricao: item.descricao || null, historico: item.historico || [] };
+  }
+  if (tabela === 'decisoes') {
+    return { projeto_id: projetoId, data: item.data || null, titulo: item.titulo, contexto: item.contexto || null, responsavel: item.responsavel || null, docs: item.docs || [] };
+  }
+  if (tabela === 'agenda') {
+    return { projeto_id: projetoId, data: item.data || null, titulo: item.titulo, tipo: item.tipo || null, pauta: item.pauta || [], docs: item.docs || [] };
+  }
+  if (tabela === 'encontros') {
+    return { projeto_id: projetoId, data: item.data || null, titulo: item.titulo, tipo: item.tipo || null, fase: item.fase || null, participantes: item.participantes || [], pauta: item.pauta || [], resumo: item.resumo || null, destaques: item.destaques || [], proximos_passos_reuniao: item.proximosPassosReuniao || [], docs: item.docs || [] };
+  }
+  if (tabela === 'equipe') {
+    return { projeto_id: projetoId, nome: item.nome, papel: item.papel || null, especialidade: item.especialidade || null, bio: item.bio || null, foto_url: item.foto || null };
+  }
+  return item;
+}
+
+// Busca no banco o usuário pelo e-mail e confere a senha
+function sbLogin(email, senha) {
+  return sb.from('usuarios').select('*').eq('email', email).maybeSingle()
+    .then(function(res) {
+      if (res.error) throw res.error;
+      if (!res.data || res.data.senha !== senha) return null;
+      return res.data;
+    });
+}
+
+// Carrega o projeto completo de um cliente (todas as 10 categorias + dados gerais)
+function sbCarregarProjeto(email) {
+  return sb.from('projetos').select('*').eq('cliente_email', email).maybeSingle()
+    .then(function(res) {
+      if (res.error) throw res.error;
+      if (!res.data) return null;
+      var proj = res.data;
+      var pid = proj.id;
+
+      var nomesTabelas = Object.keys(SB_TABELAS).map(function(k){ return SB_TABELAS[k]; });
+      var promessas = nomesTabelas.map(function(tabela) {
+        return sb.from(tabela).select('*').eq('projeto_id', pid).order('id', { ascending: true });
+      });
+
+      return Promise.all(promessas).then(function(resultados) {
+        var dados = {
+          _projetoId: pid,
+          nome: proj.nome_cliente, empresa: proj.empresa, cargo: proj.cargo,
+          projeto: proj.nome_projeto, consultor: proj.consultor, consultorWa: proj.consultor_whatsapp,
+          dataInicio: proj.data_inicio, dataPrevisao: proj.data_previsao,
+          ultimaAtualizacao: proj.ultima_atualizacao, atualizadoPor: proj.atualizado_por,
+          horasProjeto: proj.horas_projeto, encerrado: proj.encerrado, dataEncerramento: proj.data_encerramento,
+          corAcento: proj.cor_acento, logoUrl: proj.logo_url, mensagemConsultor: proj.mensagem_consultor,
+          nps: [], glossario: [], aprendizados: [], proximaJornada: {}
+        };
+        Object.keys(SB_TABELAS).forEach(function(campoFront, i) {
+          var tabela = SB_TABELAS[campoFront];
+          var rows = resultados[i].data || [];
+          dados[campoFront] = rows.map(function(r){ return sbRowToFront(tabela, r); });
+        });
+        return dados;
+      });
+    });
+}
+
+// Salva (insere ou atualiza) um item de uma categoria no banco
+function sbSalvarItem(campoFront, item, projetoId) {
+  var tabela = SB_TABELAS[campoFront];
+  var row = sbItemToRow(tabela, item, projetoId);
+  if (item._id) {
+    return sb.from(tabela).update(row).eq('id', item._id).select().single()
+      .then(function(res){ if (res.error) throw res.error; return sbRowToFront(tabela, res.data); });
+  } else {
+    return sb.from(tabela).insert(row).select().single()
+      .then(function(res){ if (res.error) throw res.error; return sbRowToFront(tabela, res.data); });
+  }
+}
+
+// Exclui um item de uma categoria no banco
+function sbExcluirItem(campoFront, itemId) {
+  var tabela = SB_TABELAS[campoFront];
+  return sb.from(tabela).delete().eq('id', itemId)
+    .then(function(res){ if (res.error) throw res.error; return true; });
+}
+
+// Faz upload de um arquivo no Storage e devolve a URL pública
+function sbUploadArquivo(file, projetoId) {
+  var caminho = projetoId + '/' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+  return sb.storage.from('documentos').upload(caminho, file)
+    .then(function(res) {
+      if (res.error) throw res.error;
+      var pub = sb.storage.from('documentos').getPublicUrl(caminho);
+      return pub.data.publicUrl;
+    });
+}
+
 
 CLIENTES["contato@miniestoque.com.br"] = {
   senha: "MINI2026",
@@ -794,6 +1027,20 @@ CLIENTES["treinamento@equinix.com"] = {
     mensagemConsultor:"A coleta dos perfis DISC está quase completa. Em breve teremos uma visão clara das dinâmicas do seu time. Os primeiros dados já apontam padrões interessantes que vão guiar toda a trilha de treinamento."
   })
 };
+CLIENTES["leliene@odontologiaintegrativa.com.br"] = {
+  senha: "LELIENE2026",
+  dados: Object.assign({"fases": [{"nome": "Imersão e Diagnóstico", "peso": 20, "status": "ativa", "dataInicio": "2026-06-29", "dataConclusao": null, "docs": ["KCK2026.7", "CNTRPS2026.7"], "descricao": "Alinhamento de expectativas, aplicação dos Instrumentos HSP e entrevistas presenciais de mapeamento comportamental e organizacional com a Dra. Leliene e a equipe.", "entregaveis": ["Relatório de Diagnóstico Comportamental", "Mapa de Perfil Individual da Equipe"]}, {"nome": "Estrutura e Processos", "peso": 25, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Treinamentos de Cultura e Perfil, mapeamento dos processos críticos (recepção, agendamento, atendimento, pós-consulta), produção dos POPs por setor e implantação dos rituais de gestão.", "entregaveis": ["POP Recepção", "POP Agendamento", "POP Atendimento", "POP Pós-Consulta", "Manual de Rituais de Gestão"]}, {"nome": "Implementação e Ajuste", "peso": 25, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Monitoramento semanal da adesão da equipe aos processos implantados, ajustes finos e consolidação da versão definitiva de todos os documentos produzidos.", "entregaveis": ["Relatório de Adesão da Equipe", "Relatórios de Acompanhamento Semanal", "Versão Definitiva dos Manuais e POPs"]}, {"nome": "Entrega e Advisory", "peso": 30, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Fechamento formal dos 90 dias, entrega do Organograma e do Dossiê Organizacional Completo, planejamento dos próximos 90 dias e início do Advisory de 3 meses.", "entregaveis": ["Organograma Formalizado", "Dossiê Organizacional Completo", "Plano de Ação 90 dias"]}], "encontros": [{"data": "2026-06-29", "titulo": "Kickoff do Programa", "tipo": "presencial", "fase": "Imersão e Diagnóstico", "docs": ["KCK2026.7"], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": ["Apresentação do programa de 90 dias", "Alinhamento de expectativas", "Definição da agenda de trabalho", "Confirmação dos próximos passos"], "resumo": "Sessão de abertura do programa. Alinhamento de agenda, confirmação dos formatos online e presencial, e definição dos primeiros passos.", "destaques": ["Centralização da liderança confirmada como ponto central", "Equipe qualificada mas sem autonomia declarada", "Processos vivem na cabeça das pessoas, não documentados"], "proximosPassosReuniao": ["Confirmar datas e horários da agenda semanal", "Enviar Instrumentos HSP após confirmação da 1ª parcela"]}], "entregas": [{"nome": "Relatório de Diagnóstico Comportamental", "status": "em_andamento", "data": "20/07/2026", "dataISO": "2026-07-20", "responsavel": "Aexane Alves", "inicioISO": "2026-06-29", "docs": [], "descricao": "Relatório consolidado dos achados comportamentais e organizacionais da clínica, com base nos Instrumentos HSP e entrevistas."}, {"nome": "Mapa de Perfil Individual da Equipe", "status": "pendente", "data": "20/07/2026", "dataISO": "2026-07-20", "responsavel": "Aexane Alves", "inicioISO": "2026-07-06", "docs": [], "descricao": "Mapeamento individual de perfil comportamental de cada colaborador da clínica."}, {"nome": "POP Recepção", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-07-27", "docs": [], "descricao": "Procedimento Operacional Padrão do setor de recepção."}, {"nome": "POP Agendamento", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-07-27", "docs": [], "descricao": "Procedimento Operacional Padrão do setor de agendamento."}, {"nome": "POP Atendimento", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-07-27", "docs": [], "descricao": "Procedimento Operacional Padrão do atendimento ao paciente."}, {"nome": "POP Pós-Consulta", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-07-27", "docs": [], "descricao": "Procedimento Operacional Padrão do acompanhamento pós-consulta."}, {"nome": "Manual de Rituais de Gestão", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-08-03", "docs": [], "descricao": "Modelos de reunião de equipe, 1:1, feedback e rotinas de acompanhamento implantados na clínica."}, {"nome": "Versão Definitiva dos Manuais e POPs", "status": "pendente", "data": "07/09/2026", "dataISO": "2026-09-07", "responsavel": "Aexane Alves", "inicioISO": "2026-08-17", "docs": [], "descricao": "Consolidação e revisão final de todos os documentos operacionais produzidos no programa."}, {"nome": "Organograma Formalizado", "status": "pendente", "data": "21/09/2026", "dataISO": "2026-09-21", "responsavel": "Aexane Alves", "inicioISO": "2026-09-07", "docs": [], "descricao": "Estrutura de papéis, responsabilidades e autonomia por função, formalizada para a clínica."}, {"nome": "Dossiê Organizacional Completo", "status": "pendente", "data": "21/09/2026", "dataISO": "2026-09-21", "responsavel": "Aexane Alves", "inicioISO": "2026-09-07", "docs": [], "descricao": "Documento consolidado com organograma, mapa de setores, manuais, POPs e plano de ação. Marca o Encerramento do Programa."}, {"nome": "Plano de Ação 90 dias", "status": "pendente", "data": "21/09/2026", "dataISO": "2026-09-21", "responsavel": "Aexane Alves", "inicioISO": "2026-09-07", "docs": [], "descricao": "Próximos passos priorizados com responsáveis e prazos para os 90 dias seguintes ao Encerramento."}], "documentos": [{"nome": "CNTRPS2026.7", "titulo": "Contrato de Prestação de Serviços", "categoria": "material", "status": "final", "data": "29/06/2026", "tamanho": "1.4 MB", "url": "https://drive.google.com"}, {"nome": "KCK2026.7", "titulo": "Apresentação de Kickoff", "categoria": "material", "status": "final", "data": "29/06/2026", "tamanho": "3.1 MB", "url": "https://drive.google.com"}], "proximosPassos": [{"titulo": "Confirmar datas e horários da agenda", "descricao": "Segunda online e dia presencial. Definição conjunta na reunião de kickoff.", "prioridade": "alta", "dataLimite": "2026-06-29", "responsavel": "Leliene Rodrigues"}, {"titulo": "Avisar a equipe sobre o início do programa", "descricao": "Comunicado simples de que a EXPLORE começa a visitar a clínica esta semana.", "prioridade": "alta", "dataLimite": "2026-06-30", "responsavel": "Leliene Rodrigues"}, {"titulo": "Enviar os Instrumentos HSP", "descricao": "Envio após confirmação do pagamento da 1ª parcela, conforme Condições Precedentes do contrato.", "prioridade": "alta", "dataLimite": "2026-07-01", "responsavel": "Aexane Alves"}, {"titulo": "Primeiro encontro presencial na clínica", "descricao": "Início efetivo do diagnóstico com a equipe.", "prioridade": "alta", "dataLimite": "2026-07-06", "responsavel": "Aexane Alves"}], "kpis": [{"nome": "Tempo da Gestora em Operação", "meta": 20, "atual": 40, "unidade": "%", "tendencia": "stable", "descricao": "Percentual do tempo da Dra. Leliene dedicado a tarefas operacionais em vez de estratégicas", "historico": []}, {"nome": "Processos Documentados", "meta": 100, "atual": 0, "unidade": "%", "tendencia": "stable", "descricao": "Percentual dos processos críticos da clínica formalizados em POP", "historico": []}, {"nome": "Entregas no Prazo", "meta": 100, "atual": 100, "unidade": "%", "tendencia": "subindo", "descricao": "Percentual de entregas da consultoria realizadas no prazo", "historico": []}], "decisoes": [{"data": "2026-06-29", "titulo": "Diagnóstico confirma 3 riscos centrais", "docs": ["KCK2026.7"], "contexto": "Centralização na liderança, processos não documentados e equipe técnica sem senso de pertencimento confirmados como pontos de partida no kickoff.", "responsavel": "Leliene Rodrigues"}], "nps": [], "riscos": [{"titulo": "Centralização na liderança", "probabilidade": "alta", "impacto": "alto", "mitigacao": "Estruturação de organograma e matriz de autonomia por função na Fase 02."}, {"titulo": "Processos não documentados", "probabilidade": "alta", "impacto": "alto", "mitigacao": "Produção de POPs por setor mapeados diretamente na rotina observada da clínica."}, {"titulo": "Equipe técnica sem senso de pertencimento", "probabilidade": "media", "impacto": "alto", "mitigacao": "Implantação de rituais de gestão e reconhecimento na Fase 02 e acompanhamento na Fase 03."}], "agenda": [{"data": "2026-06-29", "titulo": "Kickoff do Programa", "tipo": "presencial", "docs": ["KCK2026.7"], "pauta": ["Alinhamento de expectativas", "Definição da agenda semanal", "Próximos passos"]}], "glossario": [{"termo": "HSP", "sigla": "Instrumentos de Avaliação Comportamental e de Saúde Organizacional", "definicao": "Ferramentas aplicadas pela EXPLORE para diagnóstico do perfil da equipe e da gestora, conforme definido no Contrato CNTRPS2026.7."}, {"termo": "POP", "sigla": "Procedimento Operacional Padrão", "definicao": "Documento que formaliza por escrito as rotinas, responsabilidades e fluxos de cada setor da clínica."}, {"termo": "Dossiê Organizacional", "sigla": "", "definicao": "Conjunto completo de documentos entregues no Encerramento do Programa: organograma, mapa de setores, manuais, POPs e plano dos próximos 90 dias."}, {"termo": "Advisory", "sigla": "", "definicao": "Fase subsequente ao Programa, com duração de 3 meses, composta por sessões de alinhamento periódico e apoio pontual a decisões relacionadas ao escopo já executado."}], "aprendizados": [], "proximaJornada": {"titulo": "Advisory — 3 meses de acompanhamento", "descricao": "Após o Encerramento do Programa, a EXPLORE segue com sessões periódicas de alinhamento, apoio a decisões de gestão e verificação do andamento dos processos e rituais implantados.", "itens": ["12 a 24 sessões de alinhamento ao longo de 3 meses", "Apoio pontual a decisões diretamente relacionadas ao escopo do Programa", "Verificação do andamento dos indicadores definidos no Dossiê"], "prazoSugerido": "Dezembro de 2026", "consultor": "Aexane Alves"}, "equipe": [{"nome": "Aexane Alves", "papel": "Sócia-Diretora", "especialidade": "Gestão de Pessoas e Cultura Organizacional", "bio": "Consultora especializada em diagnóstico comportamental, desenvolvimento de lideranças e transformação cultural. Responsável pela condução do Programa de Desenvolvimento Organizacional da Clínica Odontologia Integrativa.", "foto": null}]}, {
+    nome:"Leliene Rodrigues", empresa:"Clínica Odontologia Integrativa", cargo:"Sócia-Gestora",
+    projeto:"Programa de Desenvolvimento Organizacional",
+    consultor:"Aexane Alves", consultorWa:"5521987482710",
+    dataInicio:"2026-06-29", dataPrevisao:"2026-09-27",
+    ultimaAtualizacao:"2026-06-29", atualizadoPor:"Aexane Alves",
+    horasProjeto:0, encerrado:false, dataEncerramento:null,
+    corAcento:null, logoUrl:null,
+    mensagemConsultor:"Hoje demos início ao seu Programa de Desenvolvimento Organizacional. Nos próximos 90 dias vamos trabalhar lado a lado para estruturar a clínica, desenvolver a equipe e te preparar para liderar com menos dependência do dia a dia. Esse é o nosso compromisso com você."
+  })
+};
+
 // Para adicionar cliente: CLIENTES["email"] = { senha:"X", dados: Object.assign({fases:[],encontros:[],entregas:[],documentos:[],proximosPassos:[],kpis:[],decisoes:[],nps:[],riscos:[],agenda:[],glossario:[],aprendizados:[], proximaJornada:{}, equipe:[]}, { nome:"", empresa:"", ... }) }
 
 
@@ -978,7 +1225,55 @@ function doLogin() {
   var email = (ge('inp-email').value || '').trim().toLowerCase();
   var senha = ge('inp-senha').value || '';
   var err = ge('l-err');
+  var btn = ge('btn-login');
 
+  err.style.display = 'none';
+  if (btn) { btn.disabled = true; btn.textContent = 'Entrando...'; }
+
+  function restaurarBotao() {
+    if (btn) { btn.disabled = false; btn.textContent = 'Acessar portal'; }
+  }
+
+  if (!sb) {
+    restaurarBotao();
+    doLoginLocal(email, senha);
+    return;
+  }
+
+  sbLogin(email, senha).then(function(usuario) {
+    restaurarBotao();
+    if (!usuario) {
+      // fallback: tenta login local (dados embutidos no código), caso o e-mail
+      // ainda não exista no banco
+      doLoginLocal(email, senha);
+      return;
+    }
+    if (usuario.papel === 'consultor') {
+      _isMaster = true;
+      ge('login-screen').style.display = 'none';
+      renderMasterSupabase();
+      return;
+    }
+    // papel === 'cliente'
+    _isMaster = false;
+    sbCarregarProjeto(email).then(function(dados) {
+      if (!dados) { err.textContent = 'Projeto não encontrado para este e-mail.'; err.style.display = 'block'; return; }
+      openClient(dados);
+    }).catch(function(e) {
+      console.error(e);
+      err.textContent = 'Erro ao carregar o projeto. Tente novamente.';
+      err.style.display = 'block';
+    });
+  }).catch(function(e) {
+    console.error('Erro de conexão com o banco:', e);
+    restaurarBotao();
+    doLoginLocal(email, senha);
+  });
+}
+
+// Login usando os dados fixos no código (usado se o Supabase estiver fora do ar)
+function doLoginLocal(email, senha) {
+  var err = ge('l-err');
   if (MASTER[email] && MASTER[email].senha === senha) {
     err.style.display = 'none';
     _isMaster = true;
@@ -986,16 +1281,334 @@ function doLogin() {
     renderMaster();
     return;
   }
-
   var reg = CLIENTES[email];
   if (!reg || reg.senha !== senha) {
     err.style.display = 'block';
     return;
   }
-
   err.style.display = 'none';
   _isMaster = false;
   openClient(reg.dados);
+}
+
+// ═══════════════════════════════════════════
+// CENTRAL DE EDIÇÃO
+// ═══════════════════════════════════════════
+var _ceCat = null;     // categoria atualmente aberta (null = tela de categorias)
+var _ceEditIdx = null; // índice do item em edição (null = lista, -1 = novo item)
+
+var CE_CATEGORIAS = [
+  { id:'fases', label:'Fases do Programa', campo:'fases',
+    titulo: function(i){ return i.nome; },
+    sub: function(i){ return cap(i.status) + ' · peso ' + i.peso; },
+    campos: [
+      { k:'nome', label:'Nome da fase', tipo:'text', req:true },
+      { k:'peso', label:'Peso (%, soma das fases deve ser 100)', tipo:'number', req:true },
+      { k:'status', label:'Status', tipo:'select', opcoes:[['futura','Futura'],['ativa','Ativa'],['concluida','Concluída']], req:true },
+      { k:'dataInicio', label:'Data de início', tipo:'date' },
+      { k:'dataConclusao', label:'Data de conclusão', tipo:'date' },
+      { k:'descricao', label:'Descrição', tipo:'textarea' }
+    ]
+  },
+  { id:'entregas', label:'Entregas', campo:'entregas',
+    titulo: function(i){ return i.nome; },
+    sub: function(i){ return badgeStLabel(i.status) + ' · prazo ' + (i.data || '—'); },
+    campos: [
+      { k:'nome', label:'Nome da entrega', tipo:'text', req:true },
+      { k:'status', label:'Status', tipo:'select', opcoes:[['pendente','Pendente'],['em_andamento','Em andamento'],['concluido','Concluído']], req:true },
+      { k:'data', label:'Prazo (texto, ex: 20/07/2026)', tipo:'text' },
+      { k:'dataISO', label:'Prazo (data)', tipo:'date' },
+      { k:'responsavel', label:'Responsável', tipo:'text' },
+      { k:'descricao', label:'Descrição', tipo:'textarea' }
+    ]
+  },
+  { id:'documentos', label:'Documentos', campo:'documentos',
+    titulo: function(i){ return i.titulo; },
+    sub: function(i){ return (i.categoria||'') + ' · ' + (i.data||'') + (i.url ? ' · anexado' : ' · sem arquivo'); },
+    campos: [
+      { k:'nome', label:'Código (ex: CNTRPS2026.7)', tipo:'text', req:true },
+      { k:'titulo', label:'Título do documento', tipo:'text', req:true },
+      { k:'categoria', label:'Categoria', tipo:'text' },
+      { k:'status', label:'Status', tipo:'select', opcoes:[['rascunho','Rascunho'],['revisao','Em revisão'],['final','Final']] },
+      { k:'data', label:'Data do documento', tipo:'date' },
+      { k:'arquivo', label:'Arquivo (PDF, Word, etc.)', tipo:'file' }
+    ]
+  },
+  { id:'proximosPassos', label:'Próximos Passos', campo:'proximosPassos',
+    titulo: function(i){ return i.titulo; },
+    sub: function(i){ return cap(i.prioridade) + ' · ' + (i.responsavel||''); },
+    campos: [
+      { k:'titulo', label:'Título da ação', tipo:'text', req:true },
+      { k:'descricao', label:'Descrição', tipo:'textarea' },
+      { k:'prioridade', label:'Prioridade', tipo:'select', opcoes:[['baixa','Baixa'],['media','Média'],['alta','Alta']] },
+      { k:'dataLimite', label:'Data limite', tipo:'date' },
+      { k:'responsavel', label:'Responsável', tipo:'text' }
+    ]
+  },
+  { id:'riscos', label:'Riscos', campo:'riscos',
+    titulo: function(i){ return i.titulo; },
+    sub: function(i){ return 'Prob. ' + cap(i.probabilidade) + ' · Impacto ' + cap(i.impacto); },
+    campos: [
+      { k:'titulo', label:'Título do risco', tipo:'text', req:true },
+      { k:'probabilidade', label:'Probabilidade', tipo:'select', opcoes:[['baixa','Baixa'],['media','Média'],['alta','Alta']], req:true },
+      { k:'impacto', label:'Impacto', tipo:'select', opcoes:[['baixo','Baixo'],['medio','Médio'],['alto','Alto']], req:true },
+      { k:'mitigacao', label:'Mitigação', tipo:'textarea' }
+    ]
+  },
+  { id:'kpis', label:'KPIs do Projeto', campo:'kpis',
+    titulo: function(i){ return i.nome; },
+    sub: function(i){ return i.atual + (i.unidade||'') + ' de meta ' + i.meta + (i.unidade||''); },
+    campos: [
+      { k:'nome', label:'Nome do indicador', tipo:'text', req:true },
+      { k:'meta', label:'Meta', tipo:'number', req:true },
+      { k:'atual', label:'Valor atual', tipo:'number', req:true },
+      { k:'unidade', label:'Unidade (ex: %, h, dias)', tipo:'text' },
+      { k:'tendencia', label:'Tendência', tipo:'select', opcoes:[['subindo','Subindo'],['stable','Estável'],['descendo','Descendo']] },
+      { k:'descricao', label:'Descrição', tipo:'textarea' }
+    ]
+  },
+  { id:'decisoes', label:'Decisões', campo:'decisoes',
+    titulo: function(i){ return i.titulo; },
+    sub: function(i){ return (i.data||'') + ' · ' + (i.responsavel||''); },
+    campos: [
+      { k:'titulo', label:'Título da decisão', tipo:'text', req:true },
+      { k:'data', label:'Data', tipo:'date' },
+      { k:'contexto', label:'Contexto', tipo:'textarea' },
+      { k:'responsavel', label:'Responsável', tipo:'text' }
+    ]
+  },
+  { id:'agenda', label:'Agenda', campo:'agenda',
+    titulo: function(i){ return i.titulo; },
+    sub: function(i){ return (i.data||'') + ' · ' + cap(i.tipo||''); },
+    campos: [
+      { k:'titulo', label:'Título do encontro', tipo:'text', req:true },
+      { k:'data', label:'Data', tipo:'date', req:true },
+      { k:'tipo', label:'Tipo', tipo:'select', opcoes:[['presencial','Presencial'],['online','Online']] }
+    ]
+  },
+  { id:'encontros', label:'Encontros Realizados', campo:'encontros',
+    titulo: function(i){ return i.titulo; },
+    sub: function(i){ return (i.data||'') + ' · ' + cap(i.tipo||''); },
+    campos: [
+      { k:'titulo', label:'Título do encontro', tipo:'text', req:true },
+      { k:'data', label:'Data', tipo:'date', req:true },
+      { k:'tipo', label:'Tipo', tipo:'select', opcoes:[['presencial','Presencial'],['online','Online']] },
+      { k:'fase', label:'Fase relacionada', tipo:'text' },
+      { k:'resumo', label:'Resumo da sessão', tipo:'textarea' }
+    ]
+  },
+  { id:'equipe', label:'Equipe EXPLORE', campo:'equipe',
+    titulo: function(i){ return i.nome; },
+    sub: function(i){ return i.papel||''; },
+    campos: [
+      { k:'nome', label:'Nome', tipo:'text', req:true },
+      { k:'papel', label:'Papel', tipo:'text' },
+      { k:'especialidade', label:'Especialidade', tipo:'text' },
+      { k:'bio', label:'Bio', tipo:'textarea' }
+    ]
+  }
+];
+
+function badgeStLabel(s) {
+  var m = { concluido:'Concluído', em_andamento:'Em andamento', pendente:'Pendente', atrasado:'Atrasado' };
+  return m[s] || s;
+}
+
+function ceOpen() {
+  _ceCat = null; _ceEditIdx = null;
+  ge('ce-overlay').className = 'ce-overlay on';
+  ceRenderCategorias();
+}
+function ceClose() {
+  ge('ce-overlay').className = 'ce-overlay';
+}
+function ceToast() {
+  var t = ge('ce-toast');
+  t.className = 'ce-saved-toast on';
+  setTimeout(function(){ t.className = 'ce-saved-toast'; }, 1800);
+}
+
+function ceRenderCategorias() {
+  _ceCat = null;
+  ge('ce-title').textContent = 'Central de Edição — ' + (_c.empresa||'');
+  var h = '<div class="ce-cat-grid">';
+  for (var i = 0; i < CE_CATEGORIAS.length; i++) {
+    var c = CE_CATEGORIAS[i];
+    var arr = _c[c.campo] || [];
+    h += '<div class="ce-cat-card" onclick="ceOpenCategoria(\'' + c.id + '\')">';
+    h += '<div class="ce-cat-name">' + esc(c.label) + '</div>';
+    h += '<div class="ce-cat-count">' + arr.length + ' ' + (arr.length===1?'item':'itens') + '</div>';
+    h += '</div>';
+  }
+  h += '</div>';
+  ge('ce-body').innerHTML = h;
+}
+
+function ceFindCat(id) {
+  for (var i = 0; i < CE_CATEGORIAS.length; i++) if (CE_CATEGORIAS[i].id === id) return CE_CATEGORIAS[i];
+  return null;
+}
+
+function ceOpenCategoria(id) {
+  _ceCat = ceFindCat(id);
+  _ceEditIdx = null;
+  ceRenderLista();
+}
+
+function ceRenderLista() {
+  var cat = _ceCat;
+  ge('ce-title').textContent = cat.label;
+  var arr = _c[cat.campo] || [];
+  var h = '<button class="ce-back" onclick="ceRenderCategorias()">&#8592; Todas as categorias</button>';
+  if (!arr.length) {
+    h += '<div class="ce-empty">Nenhum item cadastrado ainda.</div>';
+  } else {
+    for (var i = 0; i < arr.length; i++) {
+      var it = arr[i];
+      h += '<div class="ce-list-item">';
+      h += '<div class="ce-item-main"><div class="ce-item-title">' + esc(cat.titulo(it)) + '</div>';
+      h += '<div class="ce-item-sub">' + esc(cat.sub(it)) + '</div></div>';
+      h += '<div class="ce-item-actions">';
+      h += '<button class="ce-ic-btn" title="Editar" onclick="ceEditItem(' + i + ')">&#9998;</button>';
+      h += '<button class="ce-ic-btn danger" title="Excluir" onclick="ceDeleteItem(' + i + ')">&#128465;</button>';
+      h += '</div></div>';
+    }
+  }
+  h += '<button class="ce-add-btn" onclick="ceNewItem()">+ Adicionar ' + esc(cat.label.replace(/s$/,'')) + '</button>';
+  ge('ce-body').innerHTML = h;
+}
+
+function ceNewItem() {
+  _ceEditIdx = -1;
+  ceRenderForm({});
+}
+function ceEditItem(i) {
+  _ceEditIdx = i;
+  ceRenderForm(_c[_ceCat.campo][i]);
+}
+
+function ceRenderForm(item) {
+  var cat = _ceCat;
+  ge('ce-title').textContent = (_ceEditIdx === -1 ? 'Adicionar' : 'Editar') + ' · ' + cat.label;
+  var h = '<button class="ce-back" onclick="ceRenderLista()">&#8592; Voltar para a lista</button>';
+  for (var i = 0; i < cat.campos.length; i++) {
+    var f = cat.campos[i];
+    var val = item[f.k] != null ? item[f.k] : '';
+    h += '<div class="ce-form-row"><label class="ce-form-label">' + esc(f.label) + (f.req ? ' *' : '') + '</label>';
+    if (f.tipo === 'select') {
+      h += '<select class="ce-form-select" id="ce-f-' + f.k + '">';
+      for (var j = 0; j < f.opcoes.length; j++) {
+        h += '<option value="' + f.opcoes[j][0] + '"' + (val === f.opcoes[j][0] ? ' selected' : '') + '>' + f.opcoes[j][1] + '</option>';
+      }
+      h += '</select>';
+    } else if (f.tipo === 'textarea') {
+      h += '<textarea class="ce-form-textarea" id="ce-f-' + f.k + '">' + esc(val) + '</textarea>';
+    } else if (f.tipo === 'file') {
+      if (item.url) {
+        h += '<div style="font-size:.8rem;color:var(--tm);margin-bottom:.4rem">Arquivo atual: <a href="' + esc(item.url) + '" target="_blank" style="color:var(--bx);font-weight:700">' + esc(item.tamanho||'ver arquivo') + '</a> &middot; selecione um novo arquivo abaixo para substituir</div>';
+      }
+      h += '<input class="ce-form-input" type="file" id="ce-f-' + f.k + '">';
+    } else {
+      h += '<input class="ce-form-input" type="' + f.tipo + '" id="ce-f-' + f.k + '" value="' + esc(val) + '">';
+    }
+    h += '</div>';
+  }
+  h += '<div class="ce-form-actions">';
+  h += '<button class="ce-btn-save" id="ce-btn-save" onclick="ceSaveItem()">Salvar</button>';
+  h += '<button class="ce-btn-cancel" onclick="ceRenderLista()">Cancelar</button>';
+  h += '</div>';
+  ge('ce-body').innerHTML = h;
+}
+
+function ceSaveItem() {
+  var cat = _ceCat;
+  var item = _ceEditIdx === -1 ? {} : Object.assign({}, _c[cat.campo][_ceEditIdx]);
+
+  // Validação e coleta dos campos comuns (tudo exceto o campo de arquivo, tratado à parte)
+  for (var i = 0; i < cat.campos.length; i++) {
+    var f = cat.campos[i];
+    if (f.tipo === 'file') continue;
+    var el = ge('ce-f-' + f.k);
+    var val = el.value;
+    if (f.req && !val) { alert('Preencha o campo "' + f.label + '"'); return; }
+    item[f.k] = f.tipo === 'number' ? Number(val) : val;
+  }
+
+  // Se esta categoria tem campo de arquivo e um arquivo novo foi escolhido, faz upload primeiro
+  var campoArquivo = null;
+  for (var i2 = 0; i2 < cat.campos.length; i2++) { if (cat.campos[i2].tipo === 'file') { campoArquivo = cat.campos[i2]; break; } }
+
+  if (campoArquivo) {
+    var fileEl = ge('ce-f-' + campoArquivo.k);
+    var file = fileEl.files && fileEl.files[0];
+    if (file) {
+      if (!sb || !_c._projetoId) { alert('Não é possível anexar arquivos sem conexão com o banco de dados.'); return; }
+      var btnSave = ge('ce-btn-save');
+      if (btnSave) { btnSave.disabled = true; btnSave.textContent = 'Enviando arquivo...'; }
+      sbUploadArquivo(file, _c._projetoId).then(function(url) {
+        item.url = url;
+        item.tamanho = (file.size / 1024 / 1024).toFixed(1) + ' MB';
+        ceFinalizarSalvamento(cat, item);
+      }).catch(function(e) {
+        console.error('Erro no upload:', e);
+        if (btnSave) { btnSave.disabled = false; btnSave.textContent = 'Salvar'; }
+        alert('Não foi possível enviar o arquivo. Verifique o tamanho (máx. 50 MB) e tente novamente.');
+      });
+      return; // espera o upload terminar antes de continuar
+    }
+  }
+
+  ceFinalizarSalvamento(cat, item);
+}
+
+function ceFinalizarSalvamento(cat, item) {
+  if (!_c[cat.campo]) _c[cat.campo] = [];
+
+  // Atualização otimista: mostra a mudança na tela imediatamente
+  var isNovo = (_ceEditIdx === -1);
+  if (isNovo) _c[cat.campo].push(item);
+  else _c[cat.campo][_ceEditIdx] = item;
+  ceRenderLista();
+  if (_currentView === cat.id || (cat.id === 'proximosPassos' && _currentView === 'proximos')) setView(_currentView);
+  renderStatusBar();
+
+  // Se não há conexão com o banco ou não sabemos o id do projeto, paramos aqui
+  // (a mudança fica só na memória desta sessão, igual ao comportamento anterior)
+  if (!sb || !_c._projetoId) { ceToast(); return; }
+
+  sbSalvarItem(cat.campo, item, _c._projetoId).then(function(salvo) {
+    // Atualiza o item local com o _id retornado pelo banco (necessário para futuras edições)
+    if (isNovo) _c[cat.campo][_c[cat.campo].length - 1] = salvo;
+    else {
+      var idx = _c[cat.campo].indexOf(item);
+      if (idx !== -1) _c[cat.campo][idx] = salvo;
+    }
+    ceToast();
+  }).catch(function(e) {
+    console.error('Erro ao salvar no banco:', e);
+    alert('A alteração apareceu na tela, mas não foi possível salvar no banco de dados. Verifique sua conexão e tente novamente.');
+  });
+}
+
+function ceDeleteItem(i) {
+  if (!confirm('Tem certeza que deseja excluir este item?')) return;
+  var item = _c[_ceCat.campo][i];
+  var cat = _ceCat;
+
+  // Remoção otimista
+  _c[cat.campo].splice(i, 1);
+  ceRenderLista();
+  if (_currentView === cat.id) setView(_currentView);
+  renderStatusBar();
+
+  if (!sb || !item._id) { ceToast(); return; }
+
+  sbExcluirItem(cat.campo, item._id).then(function() {
+    ceToast();
+  }).catch(function(e) {
+    console.error('Erro ao excluir no banco:', e);
+    alert('O item sumiu da tela, mas não foi possível excluir no banco de dados. Recarregue a página para conferir.');
+  });
 }
 
 function openClient(dados) {
@@ -1018,6 +1631,10 @@ function openClient(dados) {
   var backBtn = ge('sb-back-btn');
   if (_isMaster) backBtn.className = 'sb-back-btn on';
   else backBtn.className = 'sb-back-btn';
+
+  var editBtn = ge('sb-edit-btn');
+  if (_isMaster) editBtn.className = 'sb-edit-btn on';
+  else editBtn.className = 'sb-edit-btn';
 
   buildNav();
   setView('dashboard');
@@ -1049,6 +1666,40 @@ function doLogout() {
 // ═══════════════════════════════════════════
 // MASTER
 // ═══════════════════════════════════════════
+function msCardHTML(email, d) {
+  var pct = cprog(d.fases);
+  var faseAtiva = null;
+  for (var j = 0; j < d.fases.length; j++) {
+    if (d.fases[j].status === 'ativa') { faseAtiva = d.fases[j]; break; }
+  }
+  var todasConcl = true;
+  for (var k = 0; k < d.fases.length; k++) {
+    if (d.fases[k].status !== 'concluida') { todasConcl = false; break; }
+  }
+  var faseLabel = faseAtiva ? faseAtiva.nome : (todasConcl ? 'Concluído' : '—');
+  var concl = 0;
+  for (var m = 0; m < d.entregas.length; m++) { if (d.entregas[m].status === 'concluido') concl++; }
+  var hoje = new Date(); hoje.setHours(0,0,0,0);
+  var diasAtt = d.ultimaAtualizacao ? Math.floor((hoje - new Date(d.ultimaAtualizacao)) / 86400000) : 999;
+  var dotColor = diasAtt <= 3 ? '#3B7A57' : diasAtt <= 7 ? '#C9A96E' : '#9B2335';
+  var attTxt = d.ultimaAtualizacao ? fd(d.ultimaAtualizacao) + (d.atualizadoPor ? ' · ' + d.atualizadoPor : '') : '—';
+
+  var html = '<div class="ms-card" onclick="masterOpenClient(\'' + email + '\')">';
+  html += '<div class="ms-card-top">';
+  html += '<div><div class="ms-emp">' + esc(d.empresa) + '</div>';
+  html += '<div class="ms-cli">' + esc(d.nome) + ' · ' + esc(d.cargo) + '</div></div>';
+  html += '<span class="ms-fase-badge' + (todasConcl ? ' done' : '') + '">' + esc(faseLabel) + '</span></div>';
+  html += '<div class="ms-proj">' + esc(d.projeto) + '</div>';
+  html += '<div class="ms-row">';
+  html += '<div class="ms-metric"><div class="ms-mval">' + pct + '%</div><div class="ms-mlbl">Progresso</div></div>';
+  html += '<div class="ms-metric"><div class="ms-mval">' + concl + '/' + d.entregas.length + '</div><div class="ms-mlbl">Entregas</div></div>';
+  html += '</div>';
+  html += '<div class="ms-bar-bg"><div class="ms-bar-fill" style="width:' + pct + '%"></div></div>';
+  html += '<div class="ms-att"><div class="ms-att-dot" style="background:' + dotColor + '"></div>' + esc(attTxt) + '</div>';
+  html += '</div>';
+  return html;
+}
+
 function renderMaster() {
   ge('login-screen').style.display = 'none';
   ge('master-screen').style.display = 'block';
@@ -1056,46 +1707,52 @@ function renderMaster() {
   var html = '';
   var emails = Object.keys(CLIENTES);
   for (var i = 0; i < emails.length; i++) {
-    var email = emails[i];
-    var d = CLIENTES[email].dados;
-    var pct = cprog(d.fases);
-    var faseAtiva = null;
-    for (var j = 0; j < d.fases.length; j++) {
-      if (d.fases[j].status === 'ativa') { faseAtiva = d.fases[j]; break; }
-    }
-    var todasConcl = true;
-    for (var k = 0; k < d.fases.length; k++) {
-      if (d.fases[k].status !== 'concluida') { todasConcl = false; break; }
-    }
-    var faseLabel = faseAtiva ? faseAtiva.nome : (todasConcl ? 'Concluído' : '—');
-    var concl = 0;
-    for (var m = 0; m < d.entregas.length; m++) { if (d.entregas[m].status === 'concluido') concl++; }
-    var hoje = new Date(); hoje.setHours(0,0,0,0);
-    var diasAtt = d.ultimaAtualizacao ? Math.floor((hoje - new Date(d.ultimaAtualizacao)) / 86400000) : 999;
-    var dotColor = diasAtt <= 3 ? '#3B7A57' : diasAtt <= 7 ? '#C9A96E' : '#9B2335';
-    var attTxt = d.ultimaAtualizacao ? fd(d.ultimaAtualizacao) + (d.atualizadoPor ? ' · ' + d.atualizadoPor : '') : '—';
-
-    html += '<div class="ms-card" onclick="masterOpenClient(\'' + email + '\')">';
-    html += '<div class="ms-card-top">';
-    html += '<div><div class="ms-emp">' + esc(d.empresa) + '</div>';
-    html += '<div class="ms-cli">' + esc(d.nome) + ' · ' + esc(d.cargo) + '</div></div>';
-    html += '<span class="ms-fase-badge' + (todasConcl ? ' done' : '') + '">' + esc(faseLabel) + '</span></div>';
-    html += '<div class="ms-proj">' + esc(d.projeto) + '</div>';
-    html += '<div class="ms-row">';
-    html += '<div class="ms-metric"><div class="ms-mval">' + pct + '%</div><div class="ms-mlbl">Progresso</div></div>';
-    html += '<div class="ms-metric"><div class="ms-mval">' + concl + '/' + d.entregas.length + '</div><div class="ms-mlbl">Entregas</div></div>';
-    html += '</div>';
-    html += '<div class="ms-bar-bg"><div class="ms-bar-fill" style="width:' + pct + '%"></div></div>';
-    html += '<div class="ms-att"><div class="ms-att-dot" style="background:' + dotColor + '"></div>' + esc(attTxt) + '</div>';
-    html += '</div>';
+    html += msCardHTML(emails[i], CLIENTES[emails[i]].dados);
   }
   grid.innerHTML = html;
 }
 
+// Versão que busca os projetos reais do banco de dados (Supabase)
+var _msProjetosCache = {}; // email -> dados completos já carregados, evita recarregar ao reabrir
+
+function renderMasterSupabase() {
+  ge('login-screen').style.display = 'none';
+  ge('master-screen').style.display = 'block';
+  var grid = ge('ms-grid');
+  grid.innerHTML = '<p style="color:rgba(255,255,255,.6);padding:1rem">Carregando projetos...</p>';
+
+  sb.from('projetos').select('cliente_email').then(function(res) {
+    if (res.error) { grid.innerHTML = '<p style="color:#f88;padding:1rem">Erro ao carregar projetos.</p>'; console.error(res.error); return; }
+    var emails = (res.data || []).map(function(p){ return p.cliente_email; });
+    if (!emails.length) { grid.innerHTML = '<p style="color:rgba(255,255,255,.6);padding:1rem">Nenhum projeto cadastrado ainda.</p>'; return; }
+
+    Promise.all(emails.map(function(email){ return sbCarregarProjeto(email); })).then(function(todos) {
+      var html = '';
+      for (var i = 0; i < todos.length; i++) {
+        if (!todos[i]) continue;
+        _msProjetosCache[emails[i]] = todos[i];
+        html += msCardHTML(emails[i], todos[i]);
+      }
+      grid.innerHTML = html || '<p style="color:rgba(255,255,255,.6);padding:1rem">Nenhum projeto encontrado.</p>';
+    }).catch(function(e) {
+      console.error(e);
+      grid.innerHTML = '<p style="color:#f88;padding:1rem">Erro ao carregar os projetos.</p>';
+    });
+  });
+}
+
 function masterOpenClient(email) {
+  // Se já carregamos esse projeto do Supabase nesta sessão, usa o cache (mais rápido)
+  if (_msProjetosCache[email]) { openClient(_msProjetosCache[email]); return; }
+  // Senão, tenta achar localmente (fallback)
   var reg = CLIENTES[email];
-  if (!reg) return;
-  openClient(reg.dados);
+  if (reg) { openClient(reg.dados); return; }
+  // Por fim, busca no banco
+  if (sb) {
+    sbCarregarProjeto(email).then(function(dados) {
+      if (dados) openClient(dados);
+    });
+  }
 }
 
 // ═══════════════════════════════════════════
