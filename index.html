@@ -707,6 +707,50 @@ a{text-decoration:none;color:inherit}
   .prc-grid{grid-template-columns:1fr}
   .valor-grid{grid-template-columns:repeat(2,1fr)}
 }
+/* cronograma visual: gantt + calendário */
+.cron-gantt-title{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tl);margin-bottom:.6rem}
+.cron-gantt-wrap{background:var(--white);border-radius:var(--rl);padding:1.1rem 1.2rem;box-shadow:0 1px 6px rgba(97,43,74,.07)}
+.cron-gantt{position:relative;height:46px;background:var(--cream);border-radius:8px;overflow:visible;margin-bottom:.7rem}
+.cron-gantt-seg{position:absolute;top:0;bottom:0;border-radius:6px;display:flex;align-items:center;overflow:hidden;transition:filter .15s}
+.cron-gantt-seg:hover{filter:brightness(1.08)}
+.cron-gantt-seg-lbl{font-size:.66rem;font-weight:700;color:var(--white);padding:0 .5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cron-gantt-hoje{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--danger);z-index:2}
+.cron-gantt-hoje::after{content:'Hoje';position:absolute;top:-1.1rem;left:50%;transform:translateX(-50%);font-size:.6rem;font-weight:700;color:var(--danger);white-space:nowrap}
+.cron-gantt-legend{display:flex;flex-wrap:wrap;gap:.5rem 1rem}
+.cgl-item{font-size:.74rem;color:var(--tm);display:flex;align-items:center;gap:.32rem}
+.cgl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cgl-date{color:var(--tl);font-size:.68rem}
+.cron-cal-wrap{background:var(--white);border-radius:var(--rl);padding:1.1rem 1.2rem;box-shadow:0 1px 6px rgba(97,43,74,.07);margin-top:.85rem}
+.cron-cal-months{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin-bottom:.7rem}
+.cron-cal-month-lbl{font-size:.78rem;font-weight:700;color:var(--td);margin-bottom:.45rem;text-transform:capitalize}
+.cron-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cron-cal-dow{font-size:.6rem;font-weight:700;color:var(--tl);text-align:center;padding:.2rem 0}
+.cron-cal-cell{position:relative;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:6px;font-size:.7rem;color:var(--tm)}
+.cron-cal-cell.empty{visibility:hidden}
+.cron-cal-cell.has-enc{cursor:pointer;background:var(--cream);font-weight:700;color:var(--td)}
+.cron-cal-cell.has-enc:hover{background:var(--cream-dk)}
+.cron-cal-cell.selected{background:var(--bx);color:var(--white)}
+.cron-cal-cell.is-today{box-shadow:inset 0 0 0 1.5px var(--danger)}
+.ccd-num{line-height:1}
+.ccd-dots{display:flex;gap:1.5px;margin-top:1px}
+.ccd-dot{width:5px;height:5px;border-radius:50%;background:var(--bx)}
+.ccd-dot.ccd-online{background:var(--blue)}
+.ccd-dot.ccd-presencial{background:var(--bx)}
+.ccd-dot.ccd-realizado{background:var(--ok)}
+.cron-cal-cell.selected .ccd-dot{background:var(--white)}
+.cron-cal-legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.72rem;color:var(--tm);padding-top:.5rem;border-top:1px solid var(--cream-dk)}
+.cron-cal-legend span{display:flex;align-items:center;gap:.3rem}
+.cron-dia-detail-box{margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--cream-dk)}
+.cron-dia-detail-head{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:700;color:var(--td);margin-bottom:.6rem}
+.cron-dia-close{background:none;border:none;font-size:1.2rem;color:var(--tl);cursor:pointer;line-height:1;padding:0 .2rem}
+.cron-dia-enc{background:var(--cream);border-radius:var(--r);padding:.75rem .85rem;margin-bottom:.55rem}
+.cron-dia-enc-top{display:flex;gap:.4rem;margin-bottom:.4rem}
+.cron-dia-enc-titulo{font-size:.84rem;font-weight:700;color:var(--td);margin-bottom:.15rem}
+.cron-dia-enc-fase{font-size:.68rem;color:var(--tl);margin-bottom:.4rem}
+.cron-dia-enc-resumo{font-size:.79rem;color:var(--tm);line-height:1.55;margin-bottom:.5rem}
+@media(max-width:768px){
+  .cron-cal-months{grid-template-columns:1fr}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
@@ -1053,6 +1097,7 @@ var _sbOpen = false;
 var _fE = 'todos';
 var _fD = 'todos';
 var _fTL = 'todos';
+var _cronDia = null; // dia selecionado no calendário do Cronograma (YYYY-MM-DD)
 var _npsVal = 0;
 var _fbSel = '';
 var _tourStep = 0;
@@ -1386,15 +1431,21 @@ var CE_CATEGORIAS = [
       { k:'tipo', label:'Tipo', tipo:'select', opcoes:[['presencial','Presencial'],['online','Online']] }
     ]
   },
-  { id:'encontros', label:'Encontros Realizados', campo:'encontros',
+  { id:'encontros', label:'Encontros', campo:'encontros',
     titulo: function(i){ return i.titulo; },
-    sub: function(i){ return (i.data||'') + ' · ' + cap(i.tipo||''); },
+    sub: function(i){ return fd(i.data) + ' · ' + cap(i.tipo||'') + ' · ' + (i.status==='realizado' ? 'Realizado' : 'Agendado'); },
     campos: [
       { k:'titulo', label:'Título do encontro', tipo:'text', req:true },
       { k:'data', label:'Data', tipo:'date', req:true },
-      { k:'tipo', label:'Tipo', tipo:'select', opcoes:[['presencial','Presencial'],['online','Online']] },
+      { k:'tipo', label:'Tipo', tipo:'select', opcoes:[['presencial','Presencial'],['online','Online']], req:true },
+      { k:'status', label:'Status', tipo:'select', opcoes:[['agendado','Agendado'],['realizado','Realizado']], req:true },
       { k:'fase', label:'Fase relacionada', tipo:'text' },
-      { k:'resumo', label:'Resumo da sessão', tipo:'textarea' }
+      { k:'participantes', label:'Participantes (separe por vírgula)', tipo:'taglist' },
+      { k:'pauta', label:'Pauta (um item por linha)', tipo:'list' },
+      { k:'resumo', label:'Resumo da sessão', tipo:'textarea' },
+      { k:'destaques', label:'Destaques (um item por linha)', tipo:'list' },
+      { k:'proximosPassosReuniao', label:'Próximos passos da reunião (um item por linha)', tipo:'list' },
+      { k:'docs', label:'Documentos vinculados (códigos, separe por vírgula, ex: CNTRPS2026.7)', tipo:'taglist' }
     ]
   },
   { id:'equipe', label:'Equipe EXPLORE', campo:'equipe',
@@ -1503,6 +1554,12 @@ function ceRenderForm(item) {
       h += '</select>';
     } else if (f.tipo === 'textarea') {
       h += '<textarea class="ce-form-textarea" id="ce-f-' + f.k + '">' + esc(val) + '</textarea>';
+    } else if (f.tipo === 'list') {
+      var listVal = Array.isArray(item[f.k]) ? item[f.k].join('\n') : (item[f.k] || '');
+      h += '<textarea class="ce-form-textarea" id="ce-f-' + f.k + '" placeholder="Um item por linha">' + esc(listVal) + '</textarea>';
+    } else if (f.tipo === 'taglist') {
+      var tagVal = Array.isArray(item[f.k]) ? item[f.k].join(', ') : (item[f.k] || '');
+      h += '<input class="ce-form-input" type="text" id="ce-f-' + f.k + '" placeholder="Separe por vírgula" value="' + esc(tagVal) + '">';
     } else if (f.tipo === 'file') {
       if (item.url) {
         h += '<div style="font-size:.8rem;color:var(--tm);margin-bottom:.4rem">Arquivo atual: <a href="' + esc(item.url) + '" target="_blank" style="color:var(--bx);font-weight:700">' + esc(item.tamanho||'ver arquivo') + '</a> &middot; selecione um novo arquivo abaixo para substituir</div>';
@@ -1531,7 +1588,13 @@ function ceSaveItem() {
     var el = ge('ce-f-' + f.k);
     var val = el.value;
     if (f.req && !val) { alert('Preencha o campo "' + f.label + '"'); return; }
-    item[f.k] = f.tipo === 'number' ? Number(val) : val;
+    if (f.tipo === 'list') {
+      item[f.k] = val.split('\n').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+    } else if (f.tipo === 'taglist') {
+      item[f.k] = val.split(',').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+    } else {
+      item[f.k] = f.tipo === 'number' ? Number(val) : val;
+    }
   }
 
   // Se esta categoria tem campo de arquivo e um arquivo novo foi escolhido, faz upload primeiro
@@ -1768,24 +1831,17 @@ var NAV_SECTIONS = [
   ]},
   { lbl: 'Acompanhamento', items: [
     { id:'kpis', label:'KPIs do Projeto' },
-    { id:'timeline', label:'Timeline' },
-    { id:'decisoes', label:'Decisões' },
-    { id:'nps', label:'Pulso do Projeto' },
-    { id:'equipe', label:'Equipe EXPLORE' }
-  ]},
-  { lbl: 'Dashboards', items: [
+    { id:'timeline', label:'Atividades do Projeto' },
     { id:'radar', label:'Radar de Saúde' },
-    { id:'heatmap', label:'Heatmap de Atividade' },
-    { id:'burndown', label:'Burndown' },
-    { id:'riscos', label:'Riscos' },
-    { id:'agenda', label:'Agenda' },
-    { id:'glossario', label:'Glossário' }
+    { id:'riscos', label:'Riscos' }
   ]},
   { lbl: 'Projeto', items: [
+    { id:'equipe', label:'Equipe EXPLORE' },
     { id:'valor', label:'Valor Entregue' },
     { id:'aprendizados', label:'Aprendizados' },
     { id:'proxima', label:'Próxima Jornada' },
-    { id:'sobre', label:'Sobre a EXPLORE' }
+    { id:'sobre', label:'Sobre a EXPLORE' },
+    { id:'glossario', label:'Glossário' }
   ]}
 ];
 
@@ -2200,9 +2256,12 @@ function renderDashboard() {
     h += '<div class="nav-card-title serif">' + nc.title + '</div>';
     h += '<div class="nav-card-kpi">' + nc.kpi + '</div></div>';
   }
-  h += '</div>' + footer();
+  h += '</div>';
+  h += npsCardHTML();
+  h += footer();
   sv(h);
   setTimeout(function() { var el = ge('mini-bar'); if (el) el.style.width = pct + '%'; }, 80);
+  _npsVal = 0;
 }
 
 function getMomento(c) {
@@ -2311,9 +2370,152 @@ function renderProgresso() {
 // ═══════════════════════════════════════════
 // VIEW: CRONOGRAMA
 // ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
+// CRONOGRAMA VISUAL: GANTT DE FASES + CALENDÁRIO DE ENCONTROS
+// ═══════════════════════════════════════════
+function fdTS(ts) { var d = new Date(ts); return pad(d.getDate()) + '/' + pad(d.getMonth() + 1); }
+
+function cronGanttHTML(c) {
+  var fases = c.fases || [];
+  if (!fases.length || !c.dataInicio || !c.dataPrevisao) return '';
+  var t0 = new Date(c.dataInicio).getTime(), t1 = new Date(c.dataPrevisao).getTime();
+  var total = Math.max(1, t1 - t0);
+  var COLORS = ['#612B4A', '#8A4068', '#C9A96E', '#B07D2A', '#6B4F5A', '#9C5A78'];
+  var cumMs = 0;
+  var ranges = [];
+  for (var i = 0; i < fases.length; i++) {
+    var f = fases[i];
+    var span = total * (f.peso / 100);
+    var fStart = f.dataInicio ? new Date(f.dataInicio).getTime() : t0 + cumMs;
+    var fEnd = f.dataConclusao ? new Date(f.dataConclusao).getTime() : fStart + span;
+    ranges.push({ fase: f, start: fStart, end: fEnd });
+    cumMs = (fEnd - t0);
+  }
+  var hoje = Date.now();
+  var hojePct = Math.min(100, Math.max(0, (hoje - t0) / total * 100));
+  var h = '<div class="cron-gantt-wrap sec">';
+  h += '<div class="cron-gantt-title">Linha do tempo das fases</div>';
+  h += '<div class="cron-gantt">';
+  for (var j = 0; j < ranges.length; j++) {
+    var r = ranges[j];
+    var leftPct = Math.max(0, (r.start - t0) / total * 100);
+    var widthPct = Math.max(2, (r.end - r.start) / total * 100);
+    var color = r.fase.status === 'concluida' ? 'var(--ok)' : COLORS[j % COLORS.length];
+    h += '<div class="cron-gantt-seg" style="left:' + leftPct + '%;width:' + widthPct + '%;background:' + color + '" title="' + esc(r.fase.nome) + ' · ' + r.fase.peso + '%">';
+    h += '<span class="cron-gantt-seg-lbl">' + esc(r.fase.nome) + '</span></div>';
+  }
+  h += '<div class="cron-gantt-hoje" style="left:' + hojePct + '%" title="Hoje"></div>';
+  h += '</div><div class="cron-gantt-legend">';
+  for (var k = 0; k < ranges.length; k++) {
+    var lc = ranges[k].fase.status === 'concluida' ? 'var(--ok)' : COLORS[k % COLORS.length];
+    h += '<div class="cgl-item"><span class="cgl-dot" style="background:' + lc + '"></span>' + esc(ranges[k].fase.nome);
+    h += ' <span class="cgl-date">' + fdTS(ranges[k].start) + '–' + fdTS(ranges[k].end) + '</span></div>';
+  }
+  h += '</div></div>';
+  return h;
+}
+
+function cronCalendarHTML(c) {
+  var encs = (c.encontros || []).slice().sort(function(a, b) { return new Date(a.data) - new Date(b.data); });
+  if (!encs.length) return '';
+  var meses = {}, ordem = [];
+  for (var i = 0; i < encs.length; i++) {
+    var ym = encs[i].data.slice(0, 7);
+    if (!meses[ym]) { meses[ym] = []; ordem.push(ym); }
+    meses[ym].push(encs[i]);
+  }
+  var MESES_PT = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  var DOW = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  var hojeISO = (new Date()).toISOString().slice(0, 10);
+  var h = '<div class="cron-cal-wrap sec"><div class="cron-gantt-title">Calendário de encontros</div><div class="cron-cal-months">';
+  for (var m = 0; m < ordem.length; m++) {
+    var ym = ordem[m];
+    var ano = Number(ym.slice(0, 4)), mes = Number(ym.slice(5, 7)) - 1;
+    var primeiroDow = new Date(ano, mes, 1).getDay();
+    var diasNoMes = new Date(ano, mes + 1, 0).getDate();
+    var porDia = {};
+    for (var pd = 0; pd < meses[ym].length; pd++) {
+      var dNum = Number(meses[ym][pd].data.slice(8, 10));
+      if (!porDia[dNum]) porDia[dNum] = [];
+      porDia[dNum].push(meses[ym][pd]);
+    }
+    h += '<div class="cron-cal-month"><div class="cron-cal-month-lbl">' + MESES_PT[mes] + ' ' + ano + '</div><div class="cron-cal-grid">';
+    for (var dw = 0; dw < 7; dw++) h += '<div class="cron-cal-dow">' + DOW[dw] + '</div>';
+    for (var bl = 0; bl < primeiroDow; bl++) h += '<div class="cron-cal-cell empty"></div>';
+    for (var dia = 1; dia <= diasNoMes; dia++) {
+      var iso = ym + '-' + pad(dia);
+      var dEncs = porDia[dia];
+      var cls = 'cron-cal-cell' + (dEncs ? ' has-enc' : '') + (iso === _cronDia ? ' selected' : '') + (iso === hojeISO ? ' is-today' : '');
+      h += '<div class="' + cls + '"' + (dEncs ? ' onclick="cronShowDia(\'' + iso + '\')"' : '') + '><span class="ccd-num">' + dia + '</span>';
+      if (dEncs) {
+        h += '<span class="ccd-dots">';
+        for (var de = 0; de < dEncs.length; de++) {
+          h += '<span class="ccd-dot ' + (dEncs[de].tipo === 'online' ? 'ccd-online' : 'ccd-presencial') + (dEncs[de].status === 'realizado' ? ' ccd-realizado' : '') + '"></span>';
+        }
+        h += '</span>';
+      }
+      h += '</div>';
+    }
+    h += '</div></div>';
+  }
+  h += '</div><div class="cron-cal-legend">';
+  h += '<span><span class="ccd-dot ccd-presencial"></span> Presencial</span>';
+  h += '<span><span class="ccd-dot ccd-online"></span> Online</span>';
+  h += '<span><span class="ccd-dot ccd-realizado"></span> Realizado</span></div>';
+  h += '<div id="cron-dia-detail">' + cronDiaDetailHTML(c) + '</div></div>';
+  return h;
+}
+
+function cronDiaDetailHTML(c) {
+  if (!_cronDia) return '';
+  var encs = (c.encontros || []).filter(function(e) { return e.data === _cronDia; });
+  if (!encs.length) return '';
+  var p = _cronDia.split('-');
+  var h = '<div class="cron-dia-detail-box">';
+  h += '<div class="cron-dia-detail-head">' + p[2] + '/' + p[1] + '/' + p[0] + '<button class="cron-dia-close" onclick="cronShowDia(null)">&times;</button></div>';
+  for (var i = 0; i < encs.length; i++) {
+    var e = encs[i];
+    h += '<div class="cron-dia-enc">';
+    h += '<div class="cron-dia-enc-top"><span class="badge ' + (e.tipo === 'online' ? 'b-online' : 'b-presencial') + '">' + cap(e.tipo) + '</span>';
+    h += '<span class="badge ' + (e.status === 'realizado' ? 'b-ok' : 'b-pend') + '">' + (e.status === 'realizado' ? '&#10003; Realizado' : '&#9675; Agendado') + '</span></div>';
+    h += '<div class="cron-dia-enc-titulo">' + esc(e.titulo) + '</div>';
+    if (e.fase) h += '<div class="cron-dia-enc-fase">' + esc(e.fase) + '</div>';
+    if (e.resumo) h += '<div class="cron-dia-enc-resumo">' + esc(e.resumo) + '</div>';
+    if (e.pauta && e.pauta.length) {
+      h += '<div class="xblock-lbl">Pauta</div>';
+      for (var pi = 0; pi < e.pauta.length; pi++) h += '<div class="xitem"><div class="xdot" style="background:var(--bx)"></div>' + esc(e.pauta[pi]) + '</div>';
+    }
+    if (e.destaques && e.destaques.length) {
+      h += '<div class="xblock-lbl" style="margin-top:.45rem">Destaques</div>';
+      for (var di = 0; di < e.destaques.length; di++) h += '<div class="xitem"><div class="xdot" style="background:var(--gold)"></div>' + esc(e.destaques[di]) + '</div>';
+    }
+    if (e.proximosPassosReuniao && e.proximosPassosReuniao.length) {
+      h += '<div class="xblock-lbl" style="margin-top:.45rem">Próximos passos</div>';
+      for (var ppi = 0; ppi < e.proximosPassosReuniao.length; ppi++) h += '<div class="xitem"><div class="xdot" style="background:var(--ok)"></div>' + esc(e.proximosPassosReuniao[ppi]) + '</div>';
+    }
+    if (e.participantes && e.participantes.length) {
+      h += '<div class="enc-parts" style="margin-top:.45rem">';
+      for (var pp = 0; pp < e.participantes.length; pp++) h += '<span class="enc-chip">' + esc(e.participantes[pp]) + '</span>';
+      h += '</div>';
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function cronShowDia(iso) {
+  _cronDia = (iso === _cronDia) ? null : iso;
+  var box = ge('cron-dia-detail');
+  if (box) { box.innerHTML = cronDiaDetailHTML(_c); }
+  // re-renderiza só os pontos selecionados no calendário, sem perder a posição de scroll
+  renderCronograma(_fE);
+}
+
 function renderCronograma(filtro) {
   _fE = filtro || 'todos';
   var c = _c;
+  var hVisual = cronGanttHTML(c) + cronCalendarHTML(c);
   var all = c.entregas;
   var concl = 0, andamento = 0, pend = 0;
   for (var i = 0; i < all.length; i++) {
@@ -2322,7 +2524,9 @@ function renderCronograma(filtro) {
     else pend++;
   }
   var lista = _fE === 'todos' ? all : all.filter(function(e) { return e.status === _fE; });
-  var h = '<div class="cron-counters sec">';
+  var h = hVisual;
+  h += '<div class="cron-gantt-title" style="margin-top:1.4rem">Entregas do programa</div>';
+  h += '<div class="cron-counters sec">';
   h += '<div class="cc"><div class="cc-num cc-tot">' + all.length + '</div><div class="cc-lbl">Total</div></div>';
   h += '<div class="cc"><div class="cc-num cc-ok">' + concl + '</div><div class="cc-lbl">Concluídas</div></div>';
   h += '<div class="cc"><div class="cc-num cc-wa">' + andamento + '</div><div class="cc-lbl">Em andamento</div></div>';
@@ -2435,7 +2639,9 @@ function renderProximos() {
     h += '<div class="passo-bot"><div class="passo-resp"><div class="passo-av">' + av + '</div>' + esc(p.responsavel) + '</div>';
     h += '<div class="passo-data ' + dcls + '"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + dlbl + '</div></div></div>';
   }
-  h += '</div>' + footer();
+  h += '</div>';
+  h += proximosEncontrosHTML();
+  h += footer();
   sv(h);
 }
 
@@ -2588,10 +2794,8 @@ function renderDecisoes() {
 // ═══════════════════════════════════════════
 // VIEW: NPS
 // ═══════════════════════════════════════════
-function renderNPS() {
-  var hist = _c.nps || [];
-  var med = hist.length ? Math.round(hist.reduce(function(s,n){ return s+n.nota; },0)/hist.length*10)/10 : 0;
-  var h = '<div class="nps-input-card" id="nps-icard">';
+function npsCardHTML() {
+  var h = '<div class="nps-input-card sec" id="nps-icard">';
   h += '<button class="nps-itoggle" onclick="toggleX(\'nps-icard\')">';
   h += '<div class="nps-itoggle-lbl"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="var(--bx)" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>Avaliar o projeto</div>';
   h += chevSVG() + '</button>';
@@ -2604,6 +2808,13 @@ function renderNPS() {
   h += '<button class="nps-submit" onclick="submitNPS()">Enviar avaliação</button>';
   h += '<div class="nps-thanks" id="nps-thanks">&#10003; Obrigado pelo seu feedback!</div>';
   h += '</div></div></div>';
+  return h;
+}
+
+function renderNPS() {
+  var hist = _c.nps || [];
+  var med = hist.length ? Math.round(hist.reduce(function(s,n){ return s+n.nota; },0)/hist.length*10)/10 : 0;
+  var h = npsCardHTML();
 
   if (hist.length) {
     h += '<div class="nps-score-box sec">';
@@ -2969,6 +3180,35 @@ function renderRiscos() {
 // ═══════════════════════════════════════════
 // VIEW: AGENDA
 // ═══════════════════════════════════════════
+function proximosEncontrosHTML() {
+  var agenda = (_c.agenda || []).slice().sort(function(a,b){ return new Date(a.data)-new Date(b.data); });
+  var hoje = new Date(); hoje.setHours(0,0,0,0);
+  var futuros = agenda.filter(function(a){ return new Date(a.data) >= hoje; });
+  var tipoCls = {presencial:'b-presencial',online:'b-online',workshop:'b-workshop',entrega:'b-entrega'};
+  function renderItem(a) {
+    var dt = new Date(a.data + 'T12:00:00');
+    var dia = pad(dt.getDate());
+    var mes = dt.toLocaleDateString('pt-BR',{month:'short'}).toUpperCase();
+    var df = Math.ceil((new Date(a.data) - hoje) / 86400000);
+    var dfLbl = df === 0 ? '<span class="badge b-danger">Hoje</span>' : df === 1 ? '<span class="badge b-warn">Amanhã</span>' : '<span class="badge b-pend">Em '+df+'d</span>';
+    var h2 = '<div class="agenda-item"><div class="ag-date"><div class="ag-day">'+dia+'</div><div class="ag-month">'+mes+'</div></div>';
+    h2 += '<div style="flex:1"><div class="ag-meta"><div class="ag-title">'+esc(a.titulo)+'</div><span class="badge '+(tipoCls[a.tipo]||'b-pend')+'">'+cap(a.tipo)+'</span>'+dfLbl+'</div>';
+    if (a.pauta && a.pauta.length) {
+      h2 += '<div class="ag-pauta">';
+      for (var pi = 0; pi < a.pauta.length; pi++) h2 += '<div class="ag-pauta-item"><div class="ag-pauta-dot"></div>'+esc(a.pauta[pi])+'</div>';
+      h2 += '</div>';
+    }
+    h2 += docsRelHTML(a.docs || []);
+    h2 += '</div></div>';
+    return h2;
+  }
+  if (!futuros.length) return '';
+  var h = '<div class="sec-lbl" style="margin-top:1.5rem">Próximos encontros</div><div class="agenda-list">';
+  for (var i=0;i<futuros.length;i++) h+=renderItem(futuros[i]);
+  h += '</div>';
+  return h;
+}
+
 function renderAgenda() {
   var agenda = (_c.agenda || []).slice().sort(function(a,b){ return new Date(a.data)-new Date(b.data); });
   var hoje = new Date(); hoje.setHours(0,0,0,0);
