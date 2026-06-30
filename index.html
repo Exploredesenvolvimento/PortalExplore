@@ -78,18 +78,6 @@ a{text-decoration:none;color:inherit}
 .tb-export-btn{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border:1px solid rgba(255,255,255,.22);border-radius:5px;background:transparent;color:rgba(255,255,255,.65);font-size:.72rem;font-weight:600;cursor:pointer}
 .tb-export-btn:hover{background:rgba(255,255,255,.1);color:var(--white)}
 
-.status-bar{padding:.48rem 1.25rem;display:flex;align-items:center;gap:.65rem;font-size:.74rem;font-weight:600;position:sticky;top:54px;z-index:99}
-.sb-g{background:#EAF4EE;color:#3B7A57}
-.sb-a{background:#FBF4E6;color:#B07D2A}
-.sb-r{background:#FDECEA;color:#9B2335}
-.sb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.sb-g .sb-dot{background:#3B7A57}.sb-a .sb-dot{background:#B07D2A}.sb-r .sb-dot{background:#9B2335}
-.sb-txt{flex:1}
-.rb{display:inline-flex;align-items:center;padding:.15rem .5rem;border-radius:99px;font-size:.68rem;font-weight:600}
-.rb-ok{background:var(--ok-bg);color:var(--ok)}
-.rb-warn{background:var(--warn-bg);color:var(--warn)}
-.rb-danger{background:var(--danger-bg);color:var(--danger)}
-
 .app-body{display:flex;flex:1;min-height:0}
 
 .sidebar{width:var(--sw);flex-shrink:0;background:var(--white);border-right:1px solid var(--cream-dk);display:flex;flex-direction:column;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
@@ -674,7 +662,7 @@ a{text-decoration:none;color:inherit}
 
 /* print */
 @media print{
-  .sidebar,.topbar,.status-bar,.fb-fab,.fb-modal,.tour-overlay,.checkin-btn,.tb-export-btn,.sb-logout-btn,.sb-back-btn,.sb-consultant,.sb-nav{display:none!important}
+  .sidebar,.topbar,.fb-fab,.fb-modal,.tour-overlay,.checkin-btn,.tb-export-btn,.sb-logout-btn,.sb-back-btn,.sb-consultant,.sb-nav{display:none!important}
   #vc{padding:0!important}
   .xbody,.enc-body,.tl-xbody,.dec-xbody,.kpi-xbody,.eq-xbody,.nps-hbody,.nps-ibody,.gloss-body{max-height:none!important;overflow:visible!important}
 }
@@ -697,7 +685,6 @@ a{text-decoration:none;color:inherit}
   .matrix{display:none}
   .fb-modal{right:.75rem;left:.75rem;width:auto}
   .fb-fab{bottom:1rem;right:1rem}
-  .status-bar{padding:.42rem 1rem;font-size:.71rem}
   .radar-score-grid{grid-template-columns:1fr}
   .ms-grid{grid-template-columns:1fr}
 }
@@ -721,35 +708,49 @@ a{text-decoration:none;color:inherit}
 .cgl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .cgl-date{color:var(--tl);font-size:.68rem}
 .cron-cal-wrap{background:var(--white);border-radius:var(--rl);padding:1.1rem 1.2rem;box-shadow:0 1px 6px rgba(97,43,74,.07);margin-top:.85rem}
-.cron-cal-months{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin-bottom:.7rem}
-.cron-cal-month-lbl{font-size:.78rem;font-weight:700;color:var(--td);margin-bottom:.45rem;text-transform:capitalize}
-.cron-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.cron-cal-dow{font-size:.6rem;font-weight:700;color:var(--tl);text-align:center;padding:.2rem 0}
-.cron-cal-cell{position:relative;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:6px;font-size:.7rem;color:var(--tm)}
+.cron-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.cron-cal-month-lbl{font-size:.92rem;font-weight:700;color:var(--td);text-transform:capitalize;font-family:Georgia,serif}
+.cron-cal-nav{display:flex;align-items:center;gap:.35rem}
+.cron-cal-nav-btn{width:26px;height:26px;border-radius:50%;border:1px solid var(--cream-dk);background:var(--white);color:var(--tm);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;transition:background .15s}
+.cron-cal-nav-btn:hover{background:var(--cream)}
+.cron-cal-today-btn{font-size:.68rem;font-weight:700;color:var(--bx);background:var(--cream);border:none;border-radius:99px;padding:.3rem .65rem;cursor:pointer;margin-left:.3rem}
+.cron-cal-today-btn:hover{background:var(--cream-dk)}
+.cron-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cron-cal-dow{font-size:.62rem;font-weight:700;color:var(--tl);text-align:center;padding:.25rem 0;text-transform:uppercase}
+.cron-cal-cell{position:relative;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;font-size:.76rem;color:var(--tm)}
 .cron-cal-cell.empty{visibility:hidden}
-.cron-cal-cell.has-enc{cursor:pointer;background:var(--cream);font-weight:700;color:var(--td)}
-.cron-cal-cell.has-enc:hover{background:var(--cream-dk)}
+.cron-cal-cell.has-act{cursor:pointer;background:var(--cream);font-weight:700;color:var(--td)}
+.cron-cal-cell.has-act:hover{background:var(--cream-dk)}
 .cron-cal-cell.selected{background:var(--bx);color:var(--white)}
 .cron-cal-cell.is-today{box-shadow:inset 0 0 0 1.5px var(--danger)}
 .ccd-num{line-height:1}
-.ccd-dots{display:flex;gap:1.5px;margin-top:1px}
+.ccd-dots{display:flex;gap:2px;margin-top:2px}
 .ccd-dot{width:5px;height:5px;border-radius:50%;background:var(--bx)}
 .ccd-dot.ccd-online{background:var(--blue)}
 .ccd-dot.ccd-presencial{background:var(--bx)}
 .ccd-dot.ccd-realizado{background:var(--ok)}
+.ccd-dot.ccd-entrega{border-radius:1px;background:var(--gold)}
 .cron-cal-cell.selected .ccd-dot{background:var(--white)}
-.cron-cal-legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.72rem;color:var(--tm);padding-top:.5rem;border-top:1px solid var(--cream-dk)}
+.cron-cal-legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.72rem;color:var(--tm);padding-top:.6rem;margin-top:.5rem;border-top:1px solid var(--cream-dk)}
 .cron-cal-legend span{display:flex;align-items:center;gap:.3rem}
 .cron-dia-detail-box{margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--cream-dk)}
 .cron-dia-detail-head{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:700;color:var(--td);margin-bottom:.6rem}
 .cron-dia-close{background:none;border:none;font-size:1.2rem;color:var(--tl);cursor:pointer;line-height:1;padding:0 .2rem}
-.cron-dia-enc{background:var(--cream);border-radius:var(--r);padding:.75rem .85rem;margin-bottom:.55rem}
-.cron-dia-enc-top{display:flex;gap:.4rem;margin-bottom:.4rem}
-.cron-dia-enc-titulo{font-size:.84rem;font-weight:700;color:var(--td);margin-bottom:.15rem}
-.cron-dia-enc-fase{font-size:.68rem;color:var(--tl);margin-bottom:.4rem}
+.cron-act-item{background:var(--cream);border-radius:var(--r);margin-bottom:.5rem;overflow:hidden}
+.cron-act-btn{width:100%;display:flex;align-items:center;gap:.6rem;padding:.65rem .8rem;background:none;border:none;cursor:pointer;text-align:left}
+.cron-act-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cron-act-dot.enc-presencial{background:var(--bx)}
+.cron-act-dot.enc-online{background:var(--blue)}
+.cron-act-dot.entrega{border-radius:2px;background:var(--gold)}
+.cron-act-main{flex:1;min-width:0}
+.cron-act-titulo{font-size:.81rem;font-weight:700;color:var(--td)}
+.cron-act-sub{font-size:.7rem;color:var(--tl);margin-top:.1rem}
+.cron-act-body{display:none;padding:0 .8rem .8rem 2.2rem}
+.cron-act-item.open .cron-act-body{display:block}
+.cron-act-item.open .xchev{transform:rotate(180deg)}
 .cron-dia-enc-resumo{font-size:.79rem;color:var(--tm);line-height:1.55;margin-bottom:.5rem}
 @media(max-width:768px){
-  .cron-cal-months{grid-template-columns:1fr}
+  .cron-cal-cell{font-size:.7rem}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -805,11 +806,15 @@ a{text-decoration:none;color:inherit}
         <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Exportar
       </button>
+      <button class="tb-export-btn" id="tb-logout-btn" title="Sair do portal">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair
+      </button>
       <span class="tb-tag">Portal do Cliente</span>
     </div>
   </div>
 
-  <div id="status-bar-wrap"></div>
+
 
   <div class="app-body">
     <div class="sb-overlay" id="sb-overlay"></div>
@@ -894,7 +899,8 @@ var SB_TABELAS = {
   decisoes: 'decisoes',
   agenda: 'agenda',
   encontros: 'encontros',
-  equipe: 'equipe'
+  equipe: 'equipe',
+  colaboradores: 'colaboradores'
 };
 
 // Converte uma linha do banco (snake_case) para o formato usado no front (camelCase)
@@ -915,7 +921,7 @@ function sbRowToFront(tabela, row) {
     return { _id: row.id, titulo: row.titulo, probabilidade: row.probabilidade, impacto: row.impacto, mitigacao: row.mitigacao };
   }
   if (tabela === 'kpis') {
-    return { _id: row.id, nome: row.nome, meta: row.meta, atual: row.atual, unidade: row.unidade, tendencia: row.tendencia, descricao: row.descricao, historico: row.historico || [] };
+    return { _id: row.id, nome: row.nome, meta: row.meta, atual: row.atual, unidade: row.unidade, tendencia: row.tendencia, direcao: row.direcao, fase: row.fase, descricao: row.descricao, historico: row.historico || [] };
   }
   if (tabela === 'decisoes') {
     return { _id: row.id, data: row.data, titulo: row.titulo, contexto: row.contexto, responsavel: row.responsavel, docs: row.docs || [] };
@@ -928,6 +934,9 @@ function sbRowToFront(tabela, row) {
   }
   if (tabela === 'equipe') {
     return { _id: row.id, nome: row.nome, papel: row.papel, especialidade: row.especialidade, bio: row.bio, foto: row.foto_url };
+  }
+  if (tabela === 'colaboradores') {
+    return { _id: row.id, nome: row.nome, cargo: row.cargo, email: row.email, telefone: row.telefone, responsavel: !!row.responsavel };
   }
   return row;
 }
@@ -950,7 +959,7 @@ function sbItemToRow(tabela, item, projetoId) {
     return { projeto_id: projetoId, titulo: item.titulo, probabilidade: item.probabilidade, impacto: item.impacto, mitigacao: item.mitigacao || null };
   }
   if (tabela === 'kpis') {
-    return { projeto_id: projetoId, nome: item.nome, meta: item.meta, atual: item.atual, unidade: item.unidade || null, tendencia: item.tendencia || null, descricao: item.descricao || null, historico: item.historico || [] };
+    return { projeto_id: projetoId, nome: item.nome, meta: item.meta, atual: item.atual, unidade: item.unidade || null, tendencia: item.tendencia || null, direcao: item.direcao || null, fase: item.fase || null, descricao: item.descricao || null, historico: item.historico || [] };
   }
   if (tabela === 'decisoes') {
     return { projeto_id: projetoId, data: item.data || null, titulo: item.titulo, contexto: item.contexto || null, responsavel: item.responsavel || null, docs: item.docs || [] };
@@ -963,6 +972,9 @@ function sbItemToRow(tabela, item, projetoId) {
   }
   if (tabela === 'equipe') {
     return { projeto_id: projetoId, nome: item.nome, papel: item.papel || null, especialidade: item.especialidade || null, bio: item.bio || null, foto_url: item.foto || null };
+  }
+  if (tabela === 'colaboradores') {
+    return { projeto_id: projetoId, nome: item.nome, cargo: item.cargo || null, email: item.email || null, telefone: item.telefone || null, responsavel: !!item.responsavel };
   }
   return item;
 }
@@ -988,6 +1000,9 @@ function sbCarregarProjeto(email) {
 
       var nomesTabelas = Object.keys(SB_TABELAS).map(function(k){ return SB_TABELAS[k]; });
       var promessas = nomesTabelas.map(function(tabela) {
+        // Fases precisam vir em ordem cronológica de início (não na ordem de criação do registro).
+        // O sort definitivo ainda acontece no front via ordenarFases(), esta é só uma camada extra.
+        if (tabela === 'fases') return sb.from(tabela).select('*').eq('projeto_id', pid).order('data_inicio', { ascending: true, nullsFirst: false });
         return sb.from(tabela).select('*').eq('projeto_id', pid).order('id', { ascending: true });
       });
 
@@ -996,6 +1011,9 @@ function sbCarregarProjeto(email) {
           _projetoId: pid,
           nome: proj.nome_cliente, empresa: proj.empresa, cargo: proj.cargo,
           projeto: proj.nome_projeto, consultor: proj.consultor, consultorWa: proj.consultor_whatsapp,
+          consultorEmail: proj.consultor_email, consultorTelefone: proj.consultor_telefone, consultorCargo: proj.consultor_cargo,
+          cnpj: proj.cnpj, endereco: proj.endereco, setor: proj.setor,
+          telefoneEmpresa: proj.telefone_empresa, emailEmpresa: proj.email_empresa,
           dataInicio: proj.data_inicio, dataPrevisao: proj.data_previsao,
           ultimaAtualizacao: proj.ultima_atualizacao, atualizadoPor: proj.atualizado_por,
           horasProjeto: proj.horas_projeto, encerrado: proj.encerrado, dataEncerramento: proj.data_encerramento,
@@ -1032,6 +1050,19 @@ function sbExcluirItem(campoFront, itemId) {
     .then(function(res){ if (res.error) throw res.error; return true; });
 }
 
+// Atualiza campos únicos do projeto (não listas), como dados cadastrais da empresa e do
+// consultor. Recebe um objeto em snake_case (colunas da tabela "projetos").
+function sbAtualizarProjetoCampos(projetoId, colunas) {
+  return sb.from('projetos').update(colunas).eq('id', projetoId).select().single()
+    .then(function(res){ if (res.error) throw res.error; return res.data; });
+}
+
+// Limite de tamanho de arquivo assumido para upload de documentos. Ajuste este valor
+// para bater com o limite real configurado em Supabase > Storage > bucket "documentos".
+// Esse número é só para o aviso aparecer ANTES de tentar enviar; o limite que realmente
+// vale é o configurado no painel do Supabase.
+var DOC_MAX_MB = 50;
+
 // Faz upload de um arquivo no Storage e devolve a URL pública
 function sbUploadArquivo(file, projetoId) {
   var caminho = projetoId + '/' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
@@ -1046,10 +1077,18 @@ function sbUploadArquivo(file, projetoId) {
 
 CLIENTES["contato@miniestoque.com.br"] = {
   senha: "MINI2026",
-  dados: Object.assign({"fases": [{"nome": "Diagnóstico", "peso": 25, "status": "concluida", "dataInicio": "2026-03-10", "dataConclusao": "2026-04-20", "docs": ["DOC2026.1", "DOC2026.2", "KCK2026.1"], "descricao": "Mapeamento completo do ambiente organizacional, cultura, rotinas e perfis comportamentais.", "entregaveis": ["Relatório de Diagnóstico", "Mapeamento MRR", "Perfil DISC da equipe"]}, {"nome": "Planejamento", "peso": 25, "status": "ativa", "dataInicio": "2026-04-21", "dataConclusao": null, "docs": ["PLN2026.1"], "descricao": "Construção do Plano de Ação estratégico com base nos achados do diagnóstico, definição de OKRs e alinhamento com liderança.", "entregaveis": ["Plano de Ação Estratégico", "Mapa de OKRs", "Workshop de lideranças"]}, {"nome": "Implementação", "peso": 35, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Execução das iniciativas prioritárias, acompanhamento semanal e desenvolvimento das lideranças.", "entregaveis": ["Relatórios quinzenais", "Sessões de coaching", "Implementação de OKRs"]}, {"nome": "Consolidação", "peso": 15, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Avaliação de resultados, mensuração de impacto e recomendações de continuidade.", "entregaveis": ["Relatório Final", "Dashboard de Resultados"]}], "encontros": [{"data": "2026-03-10", "titulo": "Reunião de Kickoff", "tipo": "presencial", "fase": "Diagnóstico", "docs": ["KCK2026.1"], "participantes": ["Rafael Costa", "Telmo Mendes", "Aexane Alves"], "pauta": ["Apresentação da metodologia EXPLORE", "Definição do escopo e cronograma", "Alinhamento de expectativas", "Apresentação dos instrumentos"], "resumo": "Alinhamento inicial do projeto e definição do cronograma. Rafael reforçou a necessidade de maior autonomia da equipe operacional.", "destaques": ["Expectativa central: time mais autônomo em até 6 meses", "Ponto de atenção: resistência percebida na liderança intermediária", "Cultura oral forte. Processos pouco documentados."], "proximosPassosReuniao": ["Enviar instrumento MRR para toda a equipe até 15/03", "Agendar entrevistas individuais com os 4 gestores"]}, {"data": "2026-04-10", "titulo": "Devolutiva do Diagnóstico", "tipo": "presencial", "fase": "Diagnóstico", "docs": ["DOC2026.1", "DOC2026.2"], "participantes": ["Rafael Costa", "Telmo Mendes", "Aexane Alves"], "pauta": ["Apresentação dos resultados consolidados", "Análise dos perfis DISC", "Discussão dos gargalos identificados", "Validação dos achados", "Definição de prioridades"], "resumo": "Apresentação dos resultados consolidados do diagnóstico. Validação das percepções e alinhamento sobre prioridades.", "destaques": ["Rafael validou todos os achados como precisos", "Surpresa positiva: engajamento de 78%", "Decisão: focar primeiro em clareza de papéis e comunicação"], "proximosPassosReuniao": ["Iniciar rascunho do Plano de Ação", "Agendar workshop de co-criação com lideranças"]}, {"data": "2026-05-08", "titulo": "Workshop de Co-criação do Plano de Ação", "tipo": "workshop", "fase": "Planejamento", "docs": ["DOC2026.1"], "participantes": ["Rafael Costa", "Telmo Mendes", "Aexane Alves", "Equipe de Lideranças"], "pauta": ["Revisão dos achados do diagnóstico", "Priorização de iniciativas com método GUT", "Co-criação dos OKRs do Q3", "Definição de responsáveis", "Alinhamento do cronograma"], "resumo": "Workshop de 4 horas com toda a liderança para co-criar o Plano de Ação usando Design Thinking.", "destaques": ["Alta participação e engajamento de toda a liderança", "12 iniciativas priorizadas, sendo 4 consideradas críticas", "Alinhamento espontâneo em torno de 3 OKRs principais"], "proximosPassosReuniao": ["Redigir Plano de Ação formal", "Apresentar versão preliminar até 20/05 para revisão de Rafael"]}, {"data": "2026-06-03", "titulo": "Revisão do Plano de Ação v1", "tipo": "online", "fase": "Planejamento", "docs": ["PLN2026.1"], "participantes": ["Rafael Costa", "Telmo Mendes"], "pauta": ["Revisão da estrutura do Plano v1", "Análise dos indicadores de sucesso", "Ajuste do cronograma", "Alinhamento sobre Workshop de 28/06"], "resumo": "Reunião de revisão da primeira versão do Plano de Ação. Rafael solicitou ajustes no cronograma e maior detalhamento nos indicadores.", "destaques": ["Cronograma ajustado para sazonalidade em julho", "Indicadores de sucesso expandidos com métricas operacionais", "Rafael aprovou a estrutura geral do plano"], "proximosPassosReuniao": ["Incorporar ajustes e entregar versão final até 25/06", "Preparar material para o Workshop de 28/06"]}], "entregas": [{"nome": "Relatório de Diagnóstico Organizacional", "status": "concluido", "data": "15/04/2026", "dataISO": "2026-04-15", "responsavel": "Telmo Mendes", "inicioISO": "2026-03-10", "docs": ["DOC2026.1"], "descricao": "Análise completa do ambiente, processos e cultura organizacional."}, {"nome": "Mapeamento MRR Completo", "status": "concluido", "data": "22/04/2026", "dataISO": "2026-04-22", "responsavel": "Aexane Alves", "inicioISO": "2026-03-10", "docs": ["DOC2026.2"], "descricao": "Inventário de todas as funções, responsáveis e fluxos de trabalho."}, {"nome": "Plano de Ação Estratégico", "status": "em_andamento", "data": "25/06/2026", "dataISO": "2026-06-25", "responsavel": "Telmo Mendes", "inicioISO": "2026-04-21", "docs": ["PLN2026.1"], "descricao": "Documento central com iniciativas, responsáveis, prazos e KPIs."}, {"nome": "Workshop de Lideranças", "status": "pendente", "data": "28/06/2026", "dataISO": "2026-06-28", "responsavel": "Aexane Alves", "inicioISO": "2026-06-01", "docs": [], "descricao": "Sessão imersiva de alinhamento estratégico com toda a liderança."}, {"nome": "Relatório de Progresso Q2", "status": "pendente", "data": "10/07/2026", "dataISO": "2026-07-10", "responsavel": "Telmo Mendes", "inicioISO": "2026-07-01", "docs": [], "descricao": "Consolidação dos avanços e ajustes do segundo trimestre."}, {"nome": "Implementação de OKRs", "status": "pendente", "data": "20/07/2026", "dataISO": "2026-07-20", "responsavel": "Aexane Alves", "inicioISO": "2026-07-01", "docs": [], "descricao": "Lançamento oficial do ciclo de OKRs com toda a equipe."}, {"nome": "Relatório de Consolidação Final", "status": "pendente", "data": "31/07/2026", "dataISO": "2026-07-31", "responsavel": "Telmo Mendes", "inicioISO": "2026-07-15", "docs": [], "descricao": "Entrega final com resultados, aprendizados e recomendações."}], "documentos": [{"nome": "DOC2026.1", "titulo": "Diagnóstico Organizacional Inicial", "categoria": "diagnostico", "status": "final", "data": "15/04/2026", "tamanho": "3.2 MB", "url": "https://drive.google.com"}, {"nome": "DOC2026.2", "titulo": "Mapeamento MRR Completo", "categoria": "diagnostico", "status": "final", "data": "22/04/2026", "tamanho": "1.8 MB", "url": "https://drive.google.com"}, {"nome": "PLN2026.1", "titulo": "Plano de Ação (rascunho v1)", "categoria": "plano", "status": "revisao", "data": "10/06/2026", "tamanho": "2.1 MB", "url": "https://drive.google.com"}, {"nome": "KCK2026.1", "titulo": "Apresentação de Kickoff", "categoria": "material", "status": "final", "data": "10/03/2026", "tamanho": "4.5 MB", "url": "https://drive.google.com"}, {"nome": "REL2026.1", "titulo": "Relatório de Progresso de Abril", "categoria": "relatorio", "status": "aprovado", "data": "30/04/2026", "tamanho": "2.7 MB", "url": "https://drive.google.com"}], "proximosPassos": [{"titulo": "Reunião de alinhamento estratégico", "descricao": "Revisar o rascunho do Plano de Ação com Rafael antes da versão final.", "prioridade": "alta", "dataLimite": "2026-06-20", "responsavel": "Telmo Mendes"}, {"titulo": "Finalizar e entregar Plano de Ação", "descricao": "Incorporar os ajustes e enviar versão final ao cliente.", "prioridade": "alta", "dataLimite": "2026-06-25", "responsavel": "Telmo Mendes"}, {"titulo": "Workshop de Lideranças: preparação", "descricao": "Montar material e dinâmicas para o workshop do dia 28/06.", "prioridade": "alta", "dataLimite": "2026-06-26", "responsavel": "Aexane Alves"}, {"titulo": "Definir ciclo de OKRs com a equipe", "descricao": "Alinhar os objetivos do Q3 com base no Plano de Ação aprovado.", "prioridade": "media", "dataLimite": "2026-07-05", "responsavel": "Aexane Alves"}, {"titulo": "Agendar sessão de coaching", "descricao": "Programar as sessões individuais do ciclo de implementação.", "prioridade": "media", "dataLimite": "2026-07-08", "responsavel": "Telmo Mendes"}, {"titulo": "Levantar dados para Relatório Q2", "descricao": "Coletar indicadores e percepções da equipe para embasar o relatório.", "prioridade": "baixa", "dataLimite": "2026-07-08", "responsavel": "Aexane Alves"}], "kpis": [{"nome": "Índice de Autonomia da Equipe", "meta": 80, "atual": 47, "unidade": "%", "tendencia": "subindo", "descricao": "Capacidade do time de tomar decisões sem escalonamento", "historico": [{"data": "2026-04-01", "valor": 32}, {"data": "2026-05-01", "valor": 40}]}, {"nome": "Clareza de Papéis", "meta": 90, "atual": 72, "unidade": "%", "tendencia": "subindo", "descricao": "% dos colaboradores que sabem o que se espera deles", "historico": []}, {"nome": "Engajamento da Equipe", "meta": 85, "atual": 78, "unidade": "%", "tendencia": "stable", "descricao": "Índice de engajamento medido pelo diagnóstico inicial", "historico": []}, {"nome": "Entregas no Prazo", "meta": 100, "atual": 100, "unidade": "%", "tendencia": "subindo", "descricao": "% de entregas da consultoria realizadas no prazo", "historico": []}], "decisoes": [{"data": "2026-04-10", "titulo": "Foco inicial em clareza de papéis e comunicação", "docs": ["DOC2026.1"], "contexto": "Definido na devolutiva do diagnóstico. Dentre os 3 eixos identificados, esse foi eleito como prioritário por impacto e viabilidade.", "responsavel": "Rafael Costa"}, {"data": "2026-05-08", "titulo": "Estrutura do Plano de Ação com 12 iniciativas priorizadas", "docs": ["DOC2026.1"], "contexto": "Co-criado no workshop de lideranças. As 12 iniciativas foram priorizadas pelo método GUT, resultando em 4 consideradas críticas.", "responsavel": "Equipe de Lideranças"}, {"data": "2026-06-03", "titulo": "Cronograma ajustado para sazonalidade de julho", "docs": ["PLN2026.1"], "contexto": "Solicitado por Rafael na revisão do Plano v1. A implementação dos OKRs foi deslocada para após o pico operacional de julho.", "responsavel": "Rafael Costa"}], "nps": [{"fase": "Diagnóstico", "nota": 5, "comentario": "Processo muito bem conduzido. A equipe se sentiu ouvida e os resultados foram precisos. Surpreendeu positivamente."}, {"fase": "Planejamento", "nota": 4, "comentario": "Workshop foi muito produtivo. Plano de Ação está alinhado com o que precisamos."}], "riscos": [{"titulo": "Resistência da liderança intermediária", "probabilidade": "alta", "impacto": "alto", "mitigacao": "Workshop de co-criação agendado para 28/06. Abordagem participativa reduz resistência."}, {"titulo": "Sobrecarga operacional em julho", "probabilidade": "alta", "impacto": "medio", "mitigacao": "Cronograma ajustado. Entregas críticas antecipadas para junho."}, {"titulo": "Baixa adoção dos OKRs no time", "probabilidade": "media", "impacto": "alto", "mitigacao": "Sessões de capacitação planejadas antes do lançamento. Facilitador interno identificado."}], "agenda": [{"data": "2026-06-20", "titulo": "Reunião de Alinhamento Estratégico", "tipo": "online", "docs": ["PLN2026.1"], "pauta": ["Revisão do Plano de Ação v1", "Ajuste de indicadores", "Confirmação da pauta do Workshop"]}, {"data": "2026-06-25", "titulo": "Entrega do Plano de Ação Final", "tipo": "entrega", "docs": ["PLN2026.1"], "pauta": ["Apresentação do documento final", "Validação dos OKRs do Q3"]}, {"data": "2026-06-28", "titulo": "Workshop de Lideranças", "tipo": "presencial", "docs": [], "pauta": ["Alinhamento estratégico da liderança", "Dinâmicas de comunicação", "Lançamento dos OKRs"]}, {"data": "2026-07-08", "titulo": "Sessão de Coaching com Lideranças", "tipo": "presencial", "docs": [], "pauta": ["Acompanhamento individual", "Ajustes de rota pós-workshop"]}], "glossario": [{"termo": "OKR", "sigla": "Objectives & Key Results", "definicao": "Metodologia de definição de metas que conecta objetivos inspiradores a resultados mensuráveis. Cada objetivo tem de 2 a 5 resultados-chave que indicam se ele foi alcançado."}, {"termo": "MRR", "sigla": "Mapeamento de Rotinas e Responsabilidades", "definicao": "Instrumento diagnóstico que identifica todas as atividades realizadas na empresa, quem as executa, com que frequência e quanto tempo levam."}, {"termo": "DISC", "sigla": "Dominância, Influência, Estabilidade, Conformidade", "definicao": "Instrumento de mapeamento comportamental que identifica os perfis predominantes de cada pessoa. Auxilia na comunicação, gestão de conflitos e formação de equipes."}, {"termo": "Diagnóstico Organizacional", "sigla": "", "definicao": "Processo estruturado de análise da empresa que avalia cultura, processos, pessoas e resultados. É a base de todo o trabalho da EXPLORE."}, {"termo": "Transição de Complexidade", "sigla": "", "definicao": "Momento em que a empresa cresce além da capacidade de ser gerida informalmente. Processos, lideranças e sistemas precisam evoluir."}], "aprendizados": [{"data": "2026-04-10", "categoria": "pessoas", "texto": "O time operacional tem mais capacidade de desenvolvimento do que a liderança percebia. O engajamento de 78% foi uma surpresa positiva que deve ser usada como alavanca."}, {"data": "2026-04-10", "categoria": "lideranca", "texto": "A liderança intermediária opera em modo reativo. Clareza de papéis é pré-requisito para qualquer mudança cultural real."}, {"data": "2026-05-08", "categoria": "processo", "texto": "Metodologia de co-criação funciona muito bem neste contexto. Rafael e a liderança se engajam mais quando são autores das soluções."}, {"data": "2026-06-03", "categoria": "resultado", "texto": "Sazonalidade de julho impacta significativamente a capacidade de implementação. Projetos futuros devem considerar isso no planejamento."}], "proximaJornada": {"titulo": "Ciclo de Consolidação e Expansão", "descricao": "Com o Plano de Ação implementado e os OKRs operando, o próximo passo natural é um ciclo de revisão e expansão, consolidando o que funcionou e endereçando o que ainda precisa evoluir.", "itens": ["Revisão de OKRs ao final do Q3 e planejamento do ciclo seguinte", "Programa de desenvolvimento de lideranças: foco em tomada de decisão", "Diagnóstico de clima organizacional após 6 meses da implementação"], "prazoSugerido": "Janeiro de 2027", "consultor": "Telmo Mendes"}, "equipe": [{"nome": "Telmo Mendes", "papel": "Sócio-Consultor", "especialidade": "Estratégia & Desenvolvimento Organizacional", "bio": "Especialista em liderança e crescimento organizacional para empresas em transição de complexidade. Mais de 15 anos de experiência com PMEs nos segmentos de varejo, serviços e distribuição.", "foto": null}, {"nome": "Aexane Alves", "papel": "Sócia-Diretora", "especialidade": "Gestão de Pessoas & Cultura Organizacional", "bio": "Consultora especializada em diagnóstico comportamental, desenvolvimento de lideranças e transformação cultural. Referência em aplicação de instrumentos DISC e OKRs.", "foto": null}]}, {
+  dados: Object.assign({"fases": [{"nome": "Diagnóstico", "peso": 25, "status": "concluida", "dataInicio": "2026-03-10", "dataConclusao": "2026-04-20", "docs": ["DOC2026.1", "DOC2026.2", "KCK2026.1"], "descricao": "Mapeamento completo do ambiente organizacional, cultura, rotinas e perfis comportamentais.", "entregaveis": ["Relatório de Diagnóstico", "Mapeamento MRR", "Perfil DISC da equipe"]}, {"nome": "Planejamento", "peso": 25, "status": "ativa", "dataInicio": "2026-04-21", "dataConclusao": null, "docs": ["PLN2026.1"], "descricao": "Construção do Plano de Ação estratégico com base nos achados do diagnóstico, definição de OKRs e alinhamento com liderança.", "entregaveis": ["Plano de Ação Estratégico", "Mapa de OKRs", "Workshop de lideranças"]}, {"nome": "Implementação", "peso": 35, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Execução das iniciativas prioritárias, acompanhamento semanal e desenvolvimento das lideranças.", "entregaveis": ["Relatórios quinzenais", "Sessões de coaching", "Implementação de OKRs"]}, {"nome": "Consolidação", "peso": 15, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Avaliação de resultados, mensuração de impacto e recomendações de continuidade.", "entregaveis": ["Relatório Final", "Dashboard de Resultados"]}], "encontros": [{"data": "2026-03-10", "titulo": "Reunião de Kickoff", "tipo": "presencial", "fase": "Diagnóstico", "docs": ["KCK2026.1"], "participantes": ["Rafael Costa", "Telmo Mendes", "Aexane Alves"], "pauta": ["Apresentação da metodologia EXPLORE", "Definição do escopo e cronograma", "Alinhamento de expectativas", "Apresentação dos instrumentos"], "resumo": "Alinhamento inicial do projeto e definição do cronograma. Rafael reforçou a necessidade de maior autonomia da equipe operacional.", "destaques": ["Expectativa central: time mais autônomo em até 6 meses", "Ponto de atenção: resistência percebida na liderança intermediária", "Cultura oral forte. Processos pouco documentados."], "proximosPassosReuniao": ["Enviar instrumento MRR para toda a equipe até 15/03", "Agendar entrevistas individuais com os 4 gestores"]}, {"data": "2026-04-10", "titulo": "Devolutiva do Diagnóstico", "tipo": "presencial", "fase": "Diagnóstico", "docs": ["DOC2026.1", "DOC2026.2"], "participantes": ["Rafael Costa", "Telmo Mendes", "Aexane Alves"], "pauta": ["Apresentação dos resultados consolidados", "Análise dos perfis DISC", "Discussão dos gargalos identificados", "Validação dos achados", "Definição de prioridades"], "resumo": "Apresentação dos resultados consolidados do diagnóstico. Validação das percepções e alinhamento sobre prioridades.", "destaques": ["Rafael validou todos os achados como precisos", "Surpresa positiva: engajamento de 78%", "Decisão: focar primeiro em clareza de papéis e comunicação"], "proximosPassosReuniao": ["Iniciar rascunho do Plano de Ação", "Agendar workshop de co-criação com lideranças"]}, {"data": "2026-05-08", "titulo": "Workshop de Co-criação do Plano de Ação", "tipo": "workshop", "fase": "Planejamento", "docs": ["DOC2026.1"], "participantes": ["Rafael Costa", "Telmo Mendes", "Aexane Alves", "Equipe de Lideranças"], "pauta": ["Revisão dos achados do diagnóstico", "Priorização de iniciativas com método GUT", "Co-criação dos OKRs do Q3", "Definição de responsáveis", "Alinhamento do cronograma"], "resumo": "Workshop de 4 horas com toda a liderança para co-criar o Plano de Ação usando Design Thinking.", "destaques": ["Alta participação e engajamento de toda a liderança", "12 iniciativas priorizadas, sendo 4 consideradas críticas", "Alinhamento espontâneo em torno de 3 OKRs principais"], "proximosPassosReuniao": ["Redigir Plano de Ação formal", "Apresentar versão preliminar até 20/05 para revisão de Rafael"]}, {"data": "2026-06-03", "titulo": "Revisão do Plano de Ação v1", "tipo": "online", "fase": "Planejamento", "docs": ["PLN2026.1"], "participantes": ["Rafael Costa", "Telmo Mendes"], "pauta": ["Revisão da estrutura do Plano v1", "Análise dos indicadores de sucesso", "Ajuste do cronograma", "Alinhamento sobre Workshop de 28/06"], "resumo": "Reunião de revisão da primeira versão do Plano de Ação. Rafael solicitou ajustes no cronograma e maior detalhamento nos indicadores.", "destaques": ["Cronograma ajustado para sazonalidade em julho", "Indicadores de sucesso expandidos com métricas operacionais", "Rafael aprovou a estrutura geral do plano"], "proximosPassosReuniao": ["Incorporar ajustes e entregar versão final até 25/06", "Preparar material para o Workshop de 28/06"]}], "entregas": [{"nome": "Relatório de Diagnóstico Organizacional", "status": "concluido", "data": "15/04/2026", "dataISO": "2026-04-15", "responsavel": "Telmo Mendes", "inicioISO": "2026-03-10", "docs": ["DOC2026.1"], "descricao": "Análise completa do ambiente, processos e cultura organizacional."}, {"nome": "Mapeamento MRR Completo", "status": "concluido", "data": "22/04/2026", "dataISO": "2026-04-22", "responsavel": "Aexane Alves", "inicioISO": "2026-03-10", "docs": ["DOC2026.2"], "descricao": "Inventário de todas as funções, responsáveis e fluxos de trabalho."}, {"nome": "Plano de Ação Estratégico", "status": "em_andamento", "data": "25/06/2026", "dataISO": "2026-06-25", "responsavel": "Telmo Mendes", "inicioISO": "2026-04-21", "docs": ["PLN2026.1"], "descricao": "Documento central com iniciativas, responsáveis, prazos e KPIs."}, {"nome": "Workshop de Lideranças", "status": "pendente", "data": "28/06/2026", "dataISO": "2026-06-28", "responsavel": "Aexane Alves", "inicioISO": "2026-06-01", "docs": [], "descricao": "Sessão imersiva de alinhamento estratégico com toda a liderança."}, {"nome": "Relatório de Progresso Q2", "status": "pendente", "data": "10/07/2026", "dataISO": "2026-07-10", "responsavel": "Telmo Mendes", "inicioISO": "2026-07-01", "docs": [], "descricao": "Consolidação dos avanços e ajustes do segundo trimestre."}, {"nome": "Implementação de OKRs", "status": "pendente", "data": "20/07/2026", "dataISO": "2026-07-20", "responsavel": "Aexane Alves", "inicioISO": "2026-07-01", "docs": [], "descricao": "Lançamento oficial do ciclo de OKRs com toda a equipe."}, {"nome": "Relatório de Consolidação Final", "status": "pendente", "data": "31/07/2026", "dataISO": "2026-07-31", "responsavel": "Telmo Mendes", "inicioISO": "2026-07-15", "docs": [], "descricao": "Entrega final com resultados, aprendizados e recomendações."}], "documentos": [{"nome": "DOC2026.1", "titulo": "Diagnóstico Organizacional Inicial", "categoria": "diagnostico", "status": "final", "data": "15/04/2026", "tamanho": "3.2 MB", "url": "https://drive.google.com"}, {"nome": "DOC2026.2", "titulo": "Mapeamento MRR Completo", "categoria": "diagnostico", "status": "final", "data": "22/04/2026", "tamanho": "1.8 MB", "url": "https://drive.google.com"}, {"nome": "PLN2026.1", "titulo": "Plano de Ação (rascunho v1)", "categoria": "plano", "status": "revisao", "data": "10/06/2026", "tamanho": "2.1 MB", "url": "https://drive.google.com"}, {"nome": "KCK2026.1", "titulo": "Apresentação de Kickoff", "categoria": "material", "status": "final", "data": "10/03/2026", "tamanho": "4.5 MB", "url": "https://drive.google.com"}, {"nome": "REL2026.1", "titulo": "Relatório de Progresso de Abril", "categoria": "relatorio", "status": "aprovado", "data": "30/04/2026", "tamanho": "2.7 MB", "url": "https://drive.google.com"}], "proximosPassos": [{"titulo": "Reunião de alinhamento estratégico", "descricao": "Revisar o rascunho do Plano de Ação com Rafael antes da versão final.", "prioridade": "alta", "dataLimite": "2026-06-20", "responsavel": "Telmo Mendes"}, {"titulo": "Finalizar e entregar Plano de Ação", "descricao": "Incorporar os ajustes e enviar versão final ao cliente.", "prioridade": "alta", "dataLimite": "2026-06-25", "responsavel": "Telmo Mendes"}, {"titulo": "Workshop de Lideranças: preparação", "descricao": "Montar material e dinâmicas para o workshop do dia 28/06.", "prioridade": "alta", "dataLimite": "2026-06-26", "responsavel": "Aexane Alves"}, {"titulo": "Definir ciclo de OKRs com a equipe", "descricao": "Alinhar os objetivos do Q3 com base no Plano de Ação aprovado.", "prioridade": "media", "dataLimite": "2026-07-05", "responsavel": "Aexane Alves"}, {"titulo": "Agendar sessão de coaching", "descricao": "Programar as sessões individuais do ciclo de implementação.", "prioridade": "media", "dataLimite": "2026-07-08", "responsavel": "Telmo Mendes"}, {"titulo": "Levantar dados para Relatório Q2", "descricao": "Coletar indicadores e percepções da equipe para embasar o relatório.", "prioridade": "baixa", "dataLimite": "2026-07-08", "responsavel": "Aexane Alves"}], "kpis": [{"nome": "Índice de Autonomia da Equipe", "meta": 80, "atual": 47, "unidade": "%", "tendencia": "subindo", "descricao": "Capacidade do time de tomar decisões sem escalonamento", "historico": [{"data": "2026-04-01", "valor": 32}, {"data": "2026-05-01", "valor": 40}]}, {"nome": "Clareza de Papéis", "meta": 90, "atual": 72, "unidade": "%", "tendencia": "subindo", "descricao": "% dos colaboradores que sabem o que se espera deles", "historico": []}, {"nome": "Engajamento da Equipe", "meta": 85, "atual": 78, "unidade": "%", "tendencia": "stable", "descricao": "Índice de engajamento medido pelo diagnóstico inicial", "historico": []}, {"nome": "Entregas no Prazo", "meta": 100, "atual": 100, "unidade": "%", "tendencia": "subindo", "descricao": "% de entregas da consultoria realizadas no prazo", "historico": []}], "decisoes": [{"data": "2026-04-10", "titulo": "Foco inicial em clareza de papéis e comunicação", "docs": ["DOC2026.1"], "contexto": "Definido na devolutiva do diagnóstico. Dentre os 3 eixos identificados, esse foi eleito como prioritário por impacto e viabilidade.", "responsavel": "Rafael Costa"}, {"data": "2026-05-08", "titulo": "Estrutura do Plano de Ação com 12 iniciativas priorizadas", "docs": ["DOC2026.1"], "contexto": "Co-criado no workshop de lideranças. As 12 iniciativas foram priorizadas pelo método GUT, resultando em 4 consideradas críticas.", "responsavel": "Equipe de Lideranças"}, {"data": "2026-06-03", "titulo": "Cronograma ajustado para sazonalidade de julho", "docs": ["PLN2026.1"], "contexto": "Solicitado por Rafael na revisão do Plano v1. A implementação dos OKRs foi deslocada para após o pico operacional de julho.", "responsavel": "Rafael Costa"}], "nps": [{"fase": "Diagnóstico", "nota": 5, "comentario": "Processo muito bem conduzido. A equipe se sentiu ouvida e os resultados foram precisos. Surpreendeu positivamente."}, {"fase": "Planejamento", "nota": 4, "comentario": "Workshop foi muito produtivo. Plano de Ação está alinhado com o que precisamos."}], "riscos": [{"titulo": "Ritmo de adesão da liderança intermediária aos novos processos", "probabilidade": "alta", "impacto": "alto", "mitigacao": "Workshop de co-criação agendado para 28/06. Abordagem participativa reduz resistência."}, {"titulo": "Sobrecarga operacional em julho", "probabilidade": "alta", "impacto": "medio", "mitigacao": "Cronograma ajustado. Entregas críticas antecipadas para junho."}, {"titulo": "Ritmo de adoção dos OKRs pelo time", "probabilidade": "media", "impacto": "alto", "mitigacao": "Sessões de capacitação planejadas antes do lançamento. Facilitador interno identificado."}], "agenda": [{"data": "2026-06-20", "titulo": "Reunião de Alinhamento Estratégico", "tipo": "online", "docs": ["PLN2026.1"], "pauta": ["Revisão do Plano de Ação v1", "Ajuste de indicadores", "Confirmação da pauta do Workshop"]}, {"data": "2026-06-25", "titulo": "Entrega do Plano de Ação Final", "tipo": "entrega", "docs": ["PLN2026.1"], "pauta": ["Apresentação do documento final", "Validação dos OKRs do Q3"]}, {"data": "2026-06-28", "titulo": "Workshop de Lideranças", "tipo": "presencial", "docs": [], "pauta": ["Alinhamento estratégico da liderança", "Dinâmicas de comunicação", "Lançamento dos OKRs"]}, {"data": "2026-07-08", "titulo": "Sessão de Coaching com Lideranças", "tipo": "presencial", "docs": [], "pauta": ["Acompanhamento individual", "Ajustes de rota pós-workshop"]}], "glossario": [{"termo": "OKR", "sigla": "Objectives & Key Results", "definicao": "Metodologia de definição de metas que conecta objetivos inspiradores a resultados mensuráveis. Cada objetivo tem de 2 a 5 resultados-chave que indicam se ele foi alcançado."}, {"termo": "MRR", "sigla": "Mapeamento de Rotinas e Responsabilidades", "definicao": "Instrumento diagnóstico que identifica todas as atividades realizadas na empresa, quem as executa, com que frequência e quanto tempo levam."}, {"termo": "DISC", "sigla": "Dominância, Influência, Estabilidade, Conformidade", "definicao": "Instrumento de mapeamento comportamental que identifica os perfis predominantes de cada pessoa. Auxilia na comunicação, gestão de conflitos e formação de equipes."}, {"termo": "Diagnóstico Organizacional", "sigla": "", "definicao": "Processo estruturado de análise da empresa que avalia cultura, processos, pessoas e resultados. É a base de todo o trabalho da EXPLORE."}, {"termo": "Transição de Complexidade", "sigla": "", "definicao": "Momento em que a empresa cresce além da capacidade de ser gerida informalmente. Processos, lideranças e sistemas precisam evoluir."}], "aprendizados": [{"data": "2026-04-10", "categoria": "pessoas", "texto": "O time operacional tem mais capacidade de desenvolvimento do que a liderança percebia. O engajamento de 78% foi uma surpresa positiva que deve ser usada como alavanca."}, {"data": "2026-04-10", "categoria": "lideranca", "texto": "A liderança intermediária opera em modo reativo. Clareza de papéis é pré-requisito para qualquer mudança cultural real."}, {"data": "2026-05-08", "categoria": "processo", "texto": "Metodologia de co-criação funciona muito bem neste contexto. Rafael e a liderança se engajam mais quando são autores das soluções."}, {"data": "2026-06-03", "categoria": "resultado", "texto": "Sazonalidade de julho impacta significativamente a capacidade de implementação. Projetos futuros devem considerar isso no planejamento."}], "proximaJornada": {"titulo": "Ciclo de Consolidação e Expansão", "descricao": "Com o Plano de Ação implementado e os OKRs operando, o próximo passo natural é um ciclo de revisão e expansão, consolidando o que funcionou e endereçando o que ainda precisa evoluir.", "itens": ["Revisão de OKRs ao final do Q3 e planejamento do ciclo seguinte", "Programa de desenvolvimento de lideranças: foco em tomada de decisão", "Diagnóstico de clima organizacional após 6 meses da implementação"], "prazoSugerido": "Janeiro de 2027", "consultor": "Telmo Mendes"}, "equipe": [{"nome": "Telmo Mendes", "papel": "Sócio-Consultor", "especialidade": "Estratégia & Desenvolvimento Organizacional", "bio": "Especialista em liderança e crescimento organizacional para empresas em transição de complexidade. Mais de 15 anos de experiência com PMEs nos segmentos de varejo, serviços e distribuição.", "foto": null}, {"nome": "Aexane Alves", "papel": "Sócia-Diretora", "especialidade": "Gestão de Pessoas & Cultura Organizacional", "bio": "Consultora especializada em diagnóstico comportamental, desenvolvimento de lideranças e transformação cultural. Referência em aplicação de instrumentos DISC e OKRs.", "foto": null}]}, {
     nome:"Rafael Costa", empresa:"MiniEstoque", cargo:"CEO",
     projeto:"Diagnóstico Organizacional & Plano de Ação",
     consultor:"Telmo Mendes", consultorWa:"5521999990001",
+    consultorEmail:"telmo@exploreconsultoria.com.br", consultorTelefone:"(21) 99999-0001", consultorCargo:"Sócio-Consultor",
+    cnpj:"12.345.678/0001-90", endereco:"Rua das Acácias, 245 - Campo Grande, Rio de Janeiro - RJ",
+    setor:"Varejo / Distribuição", telefoneEmpresa:"(21) 3333-0001", emailEmpresa:"contato@miniestoque.com.br",
+    colaboradores:[
+      {nome:"Rafael Costa", cargo:"CEO", email:"contato@miniestoque.com.br", telefone:"(21) 99999-0001", responsavel:true},
+      {nome:"Juliana Prado", cargo:"Gerente de Operações", email:"juliana@miniestoque.com.br", telefone:"(21) 99999-0002", responsavel:false},
+      {nome:"Marcos Lima", cargo:"Coordenador de Estoque", email:"marcos@miniestoque.com.br", telefone:"(21) 99999-0003", responsavel:false}
+    ],
     dataInicio:"2026-03-10", dataPrevisao:"2026-07-31",
     ultimaAtualizacao:"2026-06-18", atualizadoPor:"Telmo Mendes",
     horasProjeto:96, encerrado:false, dataEncerramento:null,
@@ -1064,6 +1103,13 @@ CLIENTES["treinamento@equinix.com"] = {
     nome:"Patrícia Duarte", empresa:"Equinix Brasil", cargo:"Head de People",
     projeto:"Treinamento Experiencial de Times",
     consultor:"Aexane Alves", consultorWa:"5521999990002",
+    consultorEmail:"aexane@exploreconsultoria.com.br", consultorTelefone:"(21) 99999-0002", consultorCargo:"Sócia-Diretora",
+    cnpj:"45.987.123/0001-22", endereco:"Av. das Américas, 3500 - Barra da Tijuca, Rio de Janeiro - RJ",
+    setor:"Infraestrutura de Dados / Tecnologia", telefoneEmpresa:"(21) 3333-0002", emailEmpresa:"treinamento@equinix.com",
+    colaboradores:[
+      {nome:"Patrícia Duarte", cargo:"Head de People", email:"treinamento@equinix.com", telefone:"(21) 99999-0010", responsavel:true},
+      {nome:"Bruno Tavares", cargo:"Gerente de RH", email:"bruno@equinix.com", telefone:"(21) 99999-0011", responsavel:false}
+    ],
     dataInicio:"2026-05-05", dataPrevisao:"2026-08-15",
     ultimaAtualizacao:"2026-06-18", atualizadoPor:"Aexane Alves",
     horasProjeto:48, encerrado:false, dataEncerramento:null,
@@ -1073,10 +1119,16 @@ CLIENTES["treinamento@equinix.com"] = {
 };
 CLIENTES["leliene@odontologiaintegrativa.com.br"] = {
   senha: "LELIENE2026",
-  dados: Object.assign({"fases": [{"nome": "Imersão e Diagnóstico", "peso": 20, "status": "ativa", "dataInicio": "2026-06-29", "dataConclusao": null, "docs": ["KCK2026.7", "CNTRPS2026.7"], "descricao": "Alinhamento de expectativas, aplicação dos Instrumentos HSP e entrevistas presenciais de mapeamento comportamental e organizacional com a Dra. Leliene e a equipe.", "entregaveis": ["Relatório de Diagnóstico Comportamental", "Mapa de Perfil Individual da Equipe"]}, {"nome": "Estrutura e Processos", "peso": 25, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Treinamentos de Cultura e Perfil, mapeamento dos processos críticos (recepção, agendamento, atendimento, pós-consulta), produção dos POPs por setor e implantação dos rituais de gestão.", "entregaveis": ["Material de Treinamento", "Registro de Participação", "POP Recepção", "POP Agendamento", "POP Atendimento", "POP Pós-Consulta", "Manual de Rituais de Gestão"]}, {"nome": "Implementação e Ajuste", "peso": 20, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Monitoramento semanal da adesão da equipe aos processos implantados, ajustes finos e consolidação da versão definitiva de todos os documentos produzidos.", "entregaveis": ["Checklist de Implantação", "Relatório de Adesão da Equipe", "Relatórios de Acompanhamento Semanal", "Log de Ajustes Realizados", "Versão Definitiva dos Manuais e POPs"]}, {"nome": "Entrega", "peso": 10, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Fechamento formal dos 90 dias, entrega do Organograma e do Dossiê Organizacional Completo e planejamento dos próximos 90 dias. Marca o Encerramento do Programa.", "entregaveis": ["Organograma Formalizado", "Dossiê Organizacional Completo", "Plano de Ação 90 dias"]}, {"nome": "Advisory", "peso": 25, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "3 (três) meses de sessões periódicas de alinhamento com a Dra. Leliene, apoio pontual a decisões de gestão diretamente relacionadas ao escopo do Programa e verificação do andamento dos indicadores do Dossiê Organizacional, conforme Cláusula 4.1 do contrato.", "entregaveis": ["Bônus: Plano de Negócios para a Galeria de Arte"]}], "encontros": [{"data": "2026-06-29", "titulo": "Kickoff do Programa", "tipo": "presencial", "fase": "Imersão e Diagnóstico", "status": "realizado", "docs": ["KCK2026.7"], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": ["Apresentação do programa de 90 dias", "Alinhamento de expectativas", "Definição da agenda de trabalho", "Confirmação dos próximos passos"], "resumo": "Sessão de abertura do programa. Alinhamento de agenda, confirmação dos formatos online e presencial, e definição dos primeiros passos.", "destaques": ["Centralização da liderança confirmada como ponto central", "Equipe qualificada mas sem autonomia declarada", "Processos vivem na cabeça das pessoas, não documentados"], "proximosPassosReuniao": ["Confirmar datas e horários da agenda semanal", "Enviar Instrumentos HSP após confirmação da 1ª parcela"]}, {"data": "2026-07-02", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Imersão e Diagnóstico", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-06", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Imersão e Diagnóstico", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-09", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Imersão e Diagnóstico", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-13", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Imersão e Diagnóstico", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-14", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Imersão e Diagnóstico", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-20", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-21", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-27", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-28", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-03", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-04", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-10", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-11", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-17", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Implementação e Ajuste", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-18", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Implementação e Ajuste", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-31", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Implementação e Ajuste", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-09-01", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Implementação e Ajuste", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-09-14", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Entrega", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-09-15", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Entrega", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-09-28", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Advisory", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-09-29", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Advisory", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}], "entregas": [{"codigo": "E01", "nome": "Relatório de Diagnóstico Comportamental", "fase": "Imersão e Diagnóstico", "status": "em_andamento", "data": "20/07/2026", "dataISO": "2026-07-20", "responsavel": "Aexane Alves", "inicioISO": "2026-06-29", "docs": [], "descricao": "Relatório consolidado dos achados comportamentais e organizacionais da clínica, com base nos Instrumentos HSP e entrevistas."}, {"codigo": "E02", "nome": "Mapa de Perfil Individual da Equipe", "fase": "Imersão e Diagnóstico", "status": "pendente", "data": "20/07/2026", "dataISO": "2026-07-20", "responsavel": "Aexane Alves", "inicioISO": "2026-07-06", "docs": [], "descricao": "Mapeamento individual de perfil comportamental de cada colaborador da clínica."}, {"codigo": "E03", "nome": "Material de Treinamento — Cultura e Perfil", "fase": "Estrutura e Processos", "status": "pendente", "data": "21/07/2026", "dataISO": "2026-07-21", "responsavel": "Aexane Alves", "inicioISO": "2026-07-20", "docs": [], "descricao": "Material de apoio para os 2 treinamentos presenciais de Cultura e Perfil com toda a equipe."}, {"codigo": "E04", "nome": "Registro de Participação", "fase": "Estrutura e Processos", "status": "pendente", "data": "21/07/2026", "dataISO": "2026-07-21", "responsavel": "Aexane Alves", "inicioISO": "2026-07-20", "docs": [], "descricao": "Registro de presença e participação da equipe nos treinamentos de Cultura e Perfil."}, {"codigo": "E05", "nome": "POP — Recepção", "fase": "Estrutura e Processos", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-07-27", "docs": [], "descricao": "Procedimento Operacional Padrão do setor de recepção."}, {"codigo": "E06", "nome": "POP — Agendamento", "fase": "Estrutura e Processos", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-07-27", "docs": [], "descricao": "Procedimento Operacional Padrão do setor de agendamento."}, {"codigo": "E07", "nome": "POP — Atendimento", "fase": "Estrutura e Processos", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-07-27", "docs": [], "descricao": "Procedimento Operacional Padrão do atendimento ao paciente."}, {"codigo": "E08", "nome": "POP — Pós-Consulta", "fase": "Estrutura e Processos", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-07-27", "docs": [], "descricao": "Procedimento Operacional Padrão do acompanhamento pós-consulta."}, {"codigo": "E09", "nome": "Manual de Rituais de Gestão", "fase": "Estrutura e Processos", "status": "pendente", "data": "16/08/2026", "dataISO": "2026-08-16", "responsavel": "Aexane Alves", "inicioISO": "2026-08-03", "docs": [], "descricao": "Modelos de reunião de equipe, 1:1, feedback e rotinas de acompanhamento implantados na clínica."}, {"codigo": "E10", "nome": "Checklist de Implantação", "fase": "Implementação e Ajuste", "status": "pendente", "data": "18/08/2026", "dataISO": "2026-08-18", "responsavel": "Aexane Alves", "inicioISO": "2026-08-17", "docs": [], "descricao": "Checklist de acompanhamento da implantação dos processos e rituais na rotina da clínica."}, {"codigo": "E11", "nome": "Relatório de Adesão da Equipe", "fase": "Implementação e Ajuste", "status": "pendente", "data": "31/08/2026", "dataISO": "2026-08-31", "responsavel": "Aexane Alves", "inicioISO": "2026-08-18", "docs": [], "descricao": "Relatório de monitoramento da adesão da equipe aos processos implantados."}, {"codigo": "E12", "nome": "Relatórios de Acompanhamento Semanal (×3)", "fase": "Implementação e Ajuste", "status": "pendente", "data": "07/09/2026", "dataISO": "2026-09-07", "responsavel": "Aexane Alves", "inicioISO": "2026-08-18", "docs": [], "descricao": "Três relatórios semanais de acompanhamento da fase de Implementação e Ajuste."}, {"codigo": "E13", "nome": "Log de Ajustes Realizados", "fase": "Implementação e Ajuste", "status": "pendente", "data": "13/09/2026", "dataISO": "2026-09-13", "responsavel": "Aexane Alves", "inicioISO": "2026-08-18", "docs": [], "descricao": "Registro consolidado dos ajustes finos realizados nos processos com base nos gaps identificados."}, {"codigo": "E14", "nome": "Versão Definitiva dos Manuais e POPs", "fase": "Implementação e Ajuste", "status": "pendente", "data": "13/09/2026", "dataISO": "2026-09-13", "responsavel": "Aexane Alves", "inicioISO": "2026-09-01", "docs": [], "descricao": "Consolidação e revisão final de todos os documentos operacionais produzidos no programa."}, {"codigo": "E15", "nome": "Organograma Formalizado da Clínica", "fase": "Entrega", "status": "pendente", "data": "27/09/2026", "dataISO": "2026-09-27", "responsavel": "Aexane Alves", "inicioISO": "2026-09-14", "docs": [], "descricao": "Estrutura de papéis, responsabilidades e autonomia por função, formalizada para a clínica."}, {"codigo": "E16", "nome": "Dossiê Organizacional Completo", "fase": "Entrega", "status": "pendente", "data": "27/09/2026", "dataISO": "2026-09-27", "responsavel": "Aexane Alves", "inicioISO": "2026-09-14", "docs": [], "descricao": "Documento consolidado com organograma, mapa de setores, manuais, POPs e plano de ação. Marca o Encerramento do Programa."}, {"codigo": "E17", "nome": "Plano de Ação para os próximos 90 dias", "fase": "Entrega", "status": "pendente", "data": "27/09/2026", "dataISO": "2026-09-27", "responsavel": "Aexane Alves", "inicioISO": "2026-09-14", "docs": [], "descricao": "Próximos passos priorizados com responsáveis e prazos para os 90 dias seguintes ao Encerramento."}, {"codigo": "E18", "nome": "Bônus — Plano de Negócios para a Galeria de Arte", "fase": "Advisory", "status": "pendente", "data": "27/10/2026", "dataISO": "2026-10-27", "responsavel": "Aexane Alves", "inicioISO": "2026-09-27", "docs": [], "descricao": "Entregável adicional sem custo separado: Plano de Negócios para a Galeria de Arte da CONTRATANTE, em até 30 dias após o Encerramento do Programa, condicionado ao fornecimento das informações pela CONTRATANTE (Cláusula 4.3)."}], "documentos": [{"nome": "CNTRPS2026.7", "titulo": "Contrato de Prestação de Serviços", "categoria": "material", "status": "final", "data": "30/06/2026", "tamanho": "1.4 MB", "url": "https://drive.google.com"}, {"nome": "KCK2026.7", "titulo": "Apresentação de Kickoff", "categoria": "material", "status": "final", "data": "29/06/2026", "tamanho": "3.1 MB", "url": "https://drive.google.com"}], "proximosPassos": [{"titulo": "Confirmar datas e horários da agenda", "descricao": "Segunda-feira (online) e dia presencial definidos na reunião de kickoff: 10 encontros estratégicos e 11 encontros táticos-operacionais.", "prioridade": "alta", "dataLimite": "2026-06-29", "responsavel": "Leliene Rodrigues"}, {"titulo": "Avisar a equipe sobre o início do programa", "descricao": "Comunicado simples de que a EXPLORE começa a visitar a clínica esta semana.", "prioridade": "alta", "dataLimite": "2026-06-30", "responsavel": "Leliene Rodrigues"}, {"titulo": "Enviar os Instrumentos HSP", "descricao": "Envio após confirmação do pagamento da 1ª parcela, conforme Condições Precedentes do contrato.", "prioridade": "alta", "dataLimite": "2026-07-01", "responsavel": "Aexane Alves"}, {"titulo": "Primeiro encontro presencial na clínica", "descricao": "Início efetivo do diagnóstico com a equipe.", "prioridade": "alta", "dataLimite": "2026-07-02", "responsavel": "Aexane Alves"}], "kpis": [{"nome": "Tempo da Gestora em Operação", "meta": 20, "atual": 40, "unidade": "%", "tendencia": "stable", "descricao": "Percentual do tempo da Dra. Leliene dedicado a tarefas operacionais em vez de estratégicas", "historico": []}, {"nome": "Processos Documentados", "meta": 100, "atual": 0, "unidade": "%", "tendencia": "stable", "descricao": "Percentual dos processos críticos da clínica formalizados em POP", "historico": []}, {"nome": "Entregas no Prazo", "meta": 100, "atual": 100, "unidade": "%", "tendencia": "subindo", "descricao": "Percentual de entregas da consultoria realizadas no prazo", "historico": []}], "decisoes": [{"data": "2026-06-29", "titulo": "Diagnóstico confirma 3 riscos centrais", "docs": ["KCK2026.7"], "contexto": "Centralização na liderança, processos não documentados e equipe técnica sem senso de pertencimento confirmados como pontos de partida no kickoff.", "responsavel": "Leliene Rodrigues"}], "nps": [], "riscos": [{"titulo": "Centralização na liderança", "probabilidade": "alta", "impacto": "alto", "mitigacao": "Estruturação de organograma e matriz de autonomia por função na Fase 02."}, {"titulo": "Processos não documentados", "probabilidade": "alta", "impacto": "alto", "mitigacao": "Produção de POPs por setor mapeados diretamente na rotina observada da clínica."}, {"titulo": "Equipe técnica sem senso de pertencimento", "probabilidade": "media", "impacto": "alto", "mitigacao": "Implantação de rituais de gestão e reconhecimento na Fase 02 e acompanhamento na Fase 03."}], "agenda": [{"data": "2026-06-29", "titulo": "Kickoff do Programa", "tipo": "presencial", "docs": ["KCK2026.7"], "pauta": ["Alinhamento de expectativas", "Definição da agenda semanal", "Próximos passos"]}], "glossario": [{"termo": "HSP", "sigla": "Instrumentos de Avaliação Comportamental e de Saúde Organizacional", "definicao": "Ferramentas aplicadas pela EXPLORE para diagnóstico do perfil da equipe e da gestora, conforme definido no Contrato CNTRPS2026.7."}, {"termo": "POP", "sigla": "Procedimento Operacional Padrão", "definicao": "Documento que formaliza por escrito as rotinas, responsabilidades e fluxos de cada setor da clínica."}, {"termo": "Dossiê Organizacional", "sigla": "", "definicao": "Conjunto completo de documentos entregues no Encerramento do Programa: organograma, mapa de setores, manuais, POPs e plano dos próximos 90 dias."}, {"termo": "Advisory", "sigla": "", "definicao": "Fase subsequente ao Programa, com duração de 3 meses, composta por sessões de alinhamento periódico e apoio pontual a decisões relacionadas ao escopo já executado, conforme Cláusula 4.1 do contrato."}], "aprendizados": [], "proximaJornada": {"titulo": "Advisory — 3 meses de acompanhamento", "descricao": "Após o Encerramento do Programa, a EXPLORE segue com sessões periódicas de alinhamento, apoio a decisões de gestão e verificação do andamento dos processos e rituais implantados.", "itens": ["12 a 24 sessões de alinhamento ao longo de 3 meses", "Apoio pontual a decisões diretamente relacionadas ao escopo do Programa", "Verificação do andamento dos indicadores definidos no Dossiê"], "prazoSugerido": "Dezembro de 2026", "consultor": "Aexane Alves"}, "equipe": [{"nome": "Aexane Alves", "papel": "Sócia-Diretora", "especialidade": "Gestão de Pessoas e Cultura Organizacional", "bio": "Consultora especializada em diagnóstico comportamental, desenvolvimento de lideranças e transformação cultural. Responsável pela condução do Programa de Desenvolvimento Organizacional da Clínica Odontologia Integrativa.", "foto": null}]}, {
+  dados: Object.assign({"fases": [{"nome": "Imersão e Diagnóstico", "peso": 20, "status": "ativa", "dataInicio": "2026-06-29", "dataConclusao": null, "docs": ["KCK2026.7", "CNTRPS2026.7"], "descricao": "Alinhamento de expectativas, aplicação dos Instrumentos HSP e entrevistas presenciais de mapeamento comportamental e organizacional com a Dra. Leliene e a equipe.", "entregaveis": ["Relatório de Diagnóstico Comportamental", "Mapa de Perfil Individual da Equipe"]}, {"nome": "Estrutura e Processos", "peso": 25, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Treinamentos de Cultura e Perfil, mapeamento dos processos críticos (recepção, agendamento, atendimento, pós-consulta), produção dos POPs por setor e implantação dos rituais de gestão.", "entregaveis": ["Material de Treinamento", "Registro de Participação", "POP Recepção", "POP Agendamento", "POP Atendimento", "POP Pós-Consulta", "Manual de Rituais de Gestão"]}, {"nome": "Implementação e Ajuste", "peso": 20, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Monitoramento semanal da adesão da equipe aos processos implantados, ajustes finos e consolidação da versão definitiva de todos os documentos produzidos.", "entregaveis": ["Checklist de Implantação", "Relatório de Adesão da Equipe", "Relatórios de Acompanhamento Semanal", "Log de Ajustes Realizados", "Versão Definitiva dos Manuais e POPs"]}, {"nome": "Entrega", "peso": 10, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "Fechamento formal dos 90 dias, entrega do Organograma e do Dossiê Organizacional Completo e planejamento dos próximos 90 dias. Marca o Encerramento do Programa.", "entregaveis": ["Organograma Formalizado", "Dossiê Organizacional Completo", "Plano de Ação 90 dias"]}, {"nome": "Advisory", "peso": 25, "status": "futura", "dataInicio": null, "dataConclusao": null, "docs": [], "descricao": "3 (três) meses de sessões periódicas de alinhamento com a Dra. Leliene, apoio pontual a decisões de gestão diretamente relacionadas ao escopo do Programa e verificação do andamento dos indicadores do Dossiê Organizacional, conforme Cláusula 4.1 do contrato.", "entregaveis": ["Bônus: Plano de Negócios para a Galeria de Arte"]}], "encontros": [{"data": "2026-06-29", "titulo": "Kickoff do Programa", "tipo": "presencial", "fase": "Imersão e Diagnóstico", "status": "realizado", "docs": ["KCK2026.7"], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": ["Apresentação do programa de 90 dias", "Alinhamento de expectativas", "Definição da agenda de trabalho", "Confirmação dos próximos passos"], "resumo": "Sessão de abertura do programa. Alinhamento de agenda, confirmação dos formatos online e presencial, e definição dos primeiros passos.", "destaques": ["Centralização da liderança confirmada como ponto central", "Equipe qualificada mas sem autonomia declarada", "Processos vivem na cabeça das pessoas, não documentados"], "proximosPassosReuniao": ["Confirmar datas e horários da agenda semanal", "Enviar Instrumentos HSP após confirmação da 1ª parcela"]}, {"data": "2026-07-02", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Imersão e Diagnóstico", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-06", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Imersão e Diagnóstico", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-09", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Imersão e Diagnóstico", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-13", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Imersão e Diagnóstico", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-14", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Imersão e Diagnóstico", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-20", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-21", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-27", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-07-28", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-03", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-04", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-10", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-11", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Estrutura e Processos", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-17", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Implementação e Ajuste", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-18", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Implementação e Ajuste", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-08-31", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Implementação e Ajuste", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-09-01", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Implementação e Ajuste", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-09-14", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Entrega", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-09-15", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Entrega", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-09-28", "titulo": "Alinhamento Online — Nível Estratégico", "tipo": "online", "fase": "Advisory", "status": "agendado", "docs": [], "participantes": ["Leliene Rodrigues", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}, {"data": "2026-09-29", "titulo": "Encontro Presencial — Nível Tático-Operacional", "tipo": "presencial", "fase": "Advisory", "status": "agendado", "docs": [], "participantes": ["Equipe da Clínica Odontologia Integrativa", "Aexane Alves"], "pauta": [], "resumo": "", "destaques": [], "proximosPassosReuniao": []}], "entregas": [{"codigo": "E01", "nome": "Relatório de Diagnóstico Comportamental", "fase": "Imersão e Diagnóstico", "status": "em_andamento", "data": "20/07/2026", "dataISO": "2026-07-20", "responsavel": "Aexane Alves", "inicioISO": "2026-06-29", "docs": [], "descricao": "Relatório consolidado dos achados comportamentais e organizacionais da clínica, com base nos Instrumentos HSP e entrevistas."}, {"codigo": "E02", "nome": "Mapa de Perfil Individual da Equipe", "fase": "Imersão e Diagnóstico", "status": "pendente", "data": "20/07/2026", "dataISO": "2026-07-20", "responsavel": "Aexane Alves", "inicioISO": "2026-07-06", "docs": [], "descricao": "Mapeamento individual de perfil comportamental de cada colaborador da clínica."}, {"codigo": "E03", "nome": "Material de Treinamento — Cultura e Perfil", "fase": "Estrutura e Processos", "status": "pendente", "data": "21/07/2026", "dataISO": "2026-07-21", "responsavel": "Aexane Alves", "inicioISO": "2026-07-20", "docs": [], "descricao": "Material de apoio para os 2 treinamentos presenciais de Cultura e Perfil com toda a equipe."}, {"codigo": "E04", "nome": "Registro de Participação", "fase": "Estrutura e Processos", "status": "pendente", "data": "21/07/2026", "dataISO": "2026-07-21", "responsavel": "Aexane Alves", "inicioISO": "2026-07-20", "docs": [], "descricao": "Registro de presença e participação da equipe nos treinamentos de Cultura e Perfil."}, {"codigo": "E05", "nome": "POP — Recepção", "fase": "Estrutura e Processos", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-07-27", "docs": [], "descricao": "Procedimento Operacional Padrão do setor de recepção."}, {"codigo": "E06", "nome": "POP — Agendamento", "fase": "Estrutura e Processos", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-07-27", "docs": [], "descricao": "Procedimento Operacional Padrão do setor de agendamento."}, {"codigo": "E07", "nome": "POP — Atendimento", "fase": "Estrutura e Processos", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-07-27", "docs": [], "descricao": "Procedimento Operacional Padrão do atendimento ao paciente."}, {"codigo": "E08", "nome": "POP — Pós-Consulta", "fase": "Estrutura e Processos", "status": "pendente", "data": "10/08/2026", "dataISO": "2026-08-10", "responsavel": "Aexane Alves", "inicioISO": "2026-07-27", "docs": [], "descricao": "Procedimento Operacional Padrão do acompanhamento pós-consulta."}, {"codigo": "E09", "nome": "Manual de Rituais de Gestão", "fase": "Estrutura e Processos", "status": "pendente", "data": "16/08/2026", "dataISO": "2026-08-16", "responsavel": "Aexane Alves", "inicioISO": "2026-08-03", "docs": [], "descricao": "Modelos de reunião de equipe, 1:1, feedback e rotinas de acompanhamento implantados na clínica."}, {"codigo": "E10", "nome": "Checklist de Implantação", "fase": "Implementação e Ajuste", "status": "pendente", "data": "18/08/2026", "dataISO": "2026-08-18", "responsavel": "Aexane Alves", "inicioISO": "2026-08-17", "docs": [], "descricao": "Checklist de acompanhamento da implantação dos processos e rituais na rotina da clínica."}, {"codigo": "E11", "nome": "Relatório de Adesão da Equipe", "fase": "Implementação e Ajuste", "status": "pendente", "data": "31/08/2026", "dataISO": "2026-08-31", "responsavel": "Aexane Alves", "inicioISO": "2026-08-18", "docs": [], "descricao": "Relatório de monitoramento da adesão da equipe aos processos implantados."}, {"codigo": "E12", "nome": "Relatórios de Acompanhamento Semanal (×3)", "fase": "Implementação e Ajuste", "status": "pendente", "data": "07/09/2026", "dataISO": "2026-09-07", "responsavel": "Aexane Alves", "inicioISO": "2026-08-18", "docs": [], "descricao": "Três relatórios semanais de acompanhamento da fase de Implementação e Ajuste."}, {"codigo": "E13", "nome": "Log de Ajustes Realizados", "fase": "Implementação e Ajuste", "status": "pendente", "data": "13/09/2026", "dataISO": "2026-09-13", "responsavel": "Aexane Alves", "inicioISO": "2026-08-18", "docs": [], "descricao": "Registro consolidado dos ajustes finos realizados nos processos com base nos gaps identificados."}, {"codigo": "E14", "nome": "Versão Definitiva dos Manuais e POPs", "fase": "Implementação e Ajuste", "status": "pendente", "data": "13/09/2026", "dataISO": "2026-09-13", "responsavel": "Aexane Alves", "inicioISO": "2026-09-01", "docs": [], "descricao": "Consolidação e revisão final de todos os documentos operacionais produzidos no programa."}, {"codigo": "E15", "nome": "Organograma Formalizado da Clínica", "fase": "Entrega", "status": "pendente", "data": "27/09/2026", "dataISO": "2026-09-27", "responsavel": "Aexane Alves", "inicioISO": "2026-09-14", "docs": [], "descricao": "Estrutura de papéis, responsabilidades e autonomia por função, formalizada para a clínica."}, {"codigo": "E16", "nome": "Dossiê Organizacional Completo", "fase": "Entrega", "status": "pendente", "data": "27/09/2026", "dataISO": "2026-09-27", "responsavel": "Aexane Alves", "inicioISO": "2026-09-14", "docs": [], "descricao": "Documento consolidado com organograma, mapa de setores, manuais, POPs e plano de ação. Marca o Encerramento do Programa."}, {"codigo": "E17", "nome": "Plano de Ação para os próximos 90 dias", "fase": "Entrega", "status": "pendente", "data": "27/09/2026", "dataISO": "2026-09-27", "responsavel": "Aexane Alves", "inicioISO": "2026-09-14", "docs": [], "descricao": "Próximos passos priorizados com responsáveis e prazos para os 90 dias seguintes ao Encerramento."}, {"codigo": "E18", "nome": "Bônus — Plano de Negócios para a Galeria de Arte", "fase": "Advisory", "status": "pendente", "data": "27/10/2026", "dataISO": "2026-10-27", "responsavel": "Aexane Alves", "inicioISO": "2026-09-27", "docs": [], "descricao": "Entregável adicional sem custo separado: Plano de Negócios para a Galeria de Arte da CONTRATANTE, em até 30 dias após o Encerramento do Programa, condicionado ao fornecimento das informações pela CONTRATANTE (Cláusula 4.3)."}], "documentos": [{"nome": "CNTRPS2026.7", "titulo": "Contrato de Prestação de Serviços", "categoria": "material", "status": "final", "data": "30/06/2026", "tamanho": "1.4 MB", "url": "https://drive.google.com"}, {"nome": "KCK2026.7", "titulo": "Apresentação de Kickoff", "categoria": "material", "status": "final", "data": "29/06/2026", "tamanho": "3.1 MB", "url": "https://drive.google.com"}], "proximosPassos": [{"titulo": "Confirmar datas e horários da agenda", "descricao": "Segunda-feira (online) e dia presencial definidos na reunião de kickoff: 10 encontros estratégicos e 11 encontros táticos-operacionais.", "prioridade": "alta", "dataLimite": "2026-06-29", "responsavel": "Leliene Rodrigues"}, {"titulo": "Avisar a equipe sobre o início do programa", "descricao": "Comunicado simples de que a EXPLORE começa a visitar a clínica esta semana.", "prioridade": "alta", "dataLimite": "2026-06-30", "responsavel": "Leliene Rodrigues"}, {"titulo": "Enviar os Instrumentos HSP", "descricao": "Envio após confirmação do pagamento da 1ª parcela, conforme Condições Precedentes do contrato.", "prioridade": "alta", "dataLimite": "2026-07-01", "responsavel": "Aexane Alves"}, {"titulo": "Primeiro encontro presencial na clínica", "descricao": "Início efetivo do diagnóstico com a equipe.", "prioridade": "alta", "dataLimite": "2026-07-02", "responsavel": "Aexane Alves"}], "kpis": [{"nome": "Tempo da Gestora em Operação", "meta": 20, "atual": 40, "unidade": "%", "tendencia": "stable", "descricao": "Percentual do tempo da Dra. Leliene dedicado a tarefas operacionais em vez de estratégicas", "historico": []}, {"nome": "Processos Documentados", "meta": 100, "atual": 0, "unidade": "%", "tendencia": "stable", "descricao": "Percentual dos processos críticos da clínica formalizados em POP", "historico": []}, {"nome": "Entregas no Prazo", "meta": 100, "atual": 100, "unidade": "%", "tendencia": "subindo", "descricao": "Percentual de entregas da consultoria realizadas no prazo", "historico": []}], "decisoes": [{"data": "2026-06-29", "titulo": "Diagnóstico confirma 3 riscos centrais", "docs": ["KCK2026.7"], "contexto": "Centralização na liderança, processos não documentados e equipe técnica sem senso de pertencimento confirmados como pontos de partida no kickoff.", "responsavel": "Leliene Rodrigues"}], "nps": [], "riscos": [{"titulo": "Baixa distribuição de autonomia decisória", "probabilidade": "alta", "impacto": "alto", "mitigacao": "Estruturação de organograma e matriz de autonomia por função na Fase 02."}, {"titulo": "Processos não documentados", "probabilidade": "alta", "impacto": "alto", "mitigacao": "Produção de POPs por setor mapeados diretamente na rotina observada da clínica."}, {"titulo": "Engajamento da equipe técnica com a cultura da clínica em construção", "probabilidade": "media", "impacto": "alto", "mitigacao": "Implantação de rituais de gestão e reconhecimento na Fase 02 e acompanhamento na Fase 03."}], "agenda": [{"data": "2026-06-29", "titulo": "Kickoff do Programa", "tipo": "presencial", "docs": ["KCK2026.7"], "pauta": ["Alinhamento de expectativas", "Definição da agenda semanal", "Próximos passos"]}], "glossario": [{"termo": "HSP", "sigla": "Instrumentos de Avaliação Comportamental e de Saúde Organizacional", "definicao": "Ferramentas aplicadas pela EXPLORE para diagnóstico do perfil da equipe e da gestora, conforme definido no Contrato CNTRPS2026.7."}, {"termo": "POP", "sigla": "Procedimento Operacional Padrão", "definicao": "Documento que formaliza por escrito as rotinas, responsabilidades e fluxos de cada setor da clínica."}, {"termo": "Dossiê Organizacional", "sigla": "", "definicao": "Conjunto completo de documentos entregues no Encerramento do Programa: organograma, mapa de setores, manuais, POPs e plano dos próximos 90 dias."}, {"termo": "Advisory", "sigla": "", "definicao": "Fase subsequente ao Programa, com duração de 3 meses, composta por sessões de alinhamento periódico e apoio pontual a decisões relacionadas ao escopo já executado, conforme Cláusula 4.1 do contrato."}], "aprendizados": [], "proximaJornada": {"titulo": "Advisory — 3 meses de acompanhamento", "descricao": "Após o Encerramento do Programa, a EXPLORE segue com sessões periódicas de alinhamento, apoio a decisões de gestão e verificação do andamento dos processos e rituais implantados.", "itens": ["12 a 24 sessões de alinhamento ao longo de 3 meses", "Apoio pontual a decisões diretamente relacionadas ao escopo do Programa", "Verificação do andamento dos indicadores definidos no Dossiê"], "prazoSugerido": "Dezembro de 2026", "consultor": "Aexane Alves"}, "equipe": [{"nome": "Aexane Alves", "papel": "Sócia-Diretora", "especialidade": "Gestão de Pessoas e Cultura Organizacional", "bio": "Consultora especializada em diagnóstico comportamental, desenvolvimento de lideranças e transformação cultural. Responsável pela condução do Programa de Desenvolvimento Organizacional da Clínica Odontologia Integrativa.", "foto": null}]}, {
     nome:"Leliene Rodrigues", empresa:"Clínica Odontologia Integrativa", cargo:"Sócia-Gestora",
     projeto:"Programa de Desenvolvimento Organizacional",
     consultor:"Aexane Alves", consultorWa:"5521987482710",
+    consultorEmail:"aexane@exploreconsultoria.com.br", consultorTelefone:"(21) 98748-2710", consultorCargo:"Sócia-Diretora",
+    cnpj:"33.221.456/0001-77", endereco:"Rua Visconde de Pirajá, 550 - Ipanema, Rio de Janeiro - RJ",
+    setor:"Saúde / Odontologia", telefoneEmpresa:"(21) 3333-0003", emailEmpresa:"leliene@odontologiaintegrativa.com.br",
+    colaboradores:[
+      {nome:"Leliene Rodrigues", cargo:"Sócia-Gestora", email:"leliene@odontologiaintegrativa.com.br", telefone:"(21) 98748-2710", responsavel:true}
+    ],
     dataInicio:"2026-06-29", dataPrevisao:"2026-12-21",
     ultimaAtualizacao:"2026-06-30", atualizadoPor:"Aexane Alves",
     horasProjeto:0, encerrado:false, dataEncerramento:null,
@@ -1098,6 +1150,7 @@ var _fE = 'todos';
 var _fD = 'todos';
 var _fTL = 'todos';
 var _cronDia = null; // dia selecionado no calendário do Cronograma (YYYY-MM-DD)
+var _cronMes = null; // mês exibido no calendário do Cronograma (YYYY-MM)
 var _npsVal = 0;
 var _fbSel = '';
 var _tourStep = 0;
@@ -1148,6 +1201,23 @@ function cprog(fases) {
   }
   return Math.round(p);
 }
+// Garante que as fases do projeto fiquem sempre em ordem cronológica (por dataInicio),
+// independente da ordem em que foram cadastradas/editadas no banco. Fases sem data
+// definida (futuras, ainda não iniciadas) vão para o final, mantendo a ordem relativa
+// entre si. Chamada uma única vez no carregamento do cliente e após qualquer edição
+// de fases no painel admin, refletindo automaticamente em todas as telas que usam c.fases.
+function ordenarFases(fases) {
+  if (!fases || !fases.length) return fases;
+  fases.sort(function(a, b) {
+    var da = a.dataInicio ? new Date(a.dataInicio).getTime() : null;
+    var db = b.dataInicio ? new Date(b.dataInicio).getTime() : null;
+    if (da !== null && db !== null) return da - db;
+    if (da !== null) return -1;
+    if (db !== null) return 1;
+    return 0;
+  });
+  return fases;
+}
 function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 function ini2(nome) {
   var parts = nome.split(' ');
@@ -1162,6 +1232,7 @@ function proxEnt(entregas) {
 
 function lsGet(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
+function lsDel(k) { try { localStorage.removeItem(k); } catch(e) {} }
 
 function esc(s) {
   if (!s) return '';
@@ -1249,6 +1320,7 @@ function icoPNG(tipo) {
     decisoes: '<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
     nps: '<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>',
     equipe: '<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    dadosEmpresa: '<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><line x1="9" y1="9" x2="9" y2="9.01"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="9" y1="15" x2="9" y2="15.01"/><line x1="9" y1="18" x2="9" y2="18.01"/></svg>',
     radar: '<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5"/></svg>',
     heatmap: '<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>',
     burndown: '<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/><polyline points="17,6 23,6 23,12"/></svg>',
@@ -1266,6 +1338,15 @@ function icoPNG(tipo) {
 // ═══════════════════════════════════════════
 // AUTH
 // ═══════════════════════════════════════════
+// Sessão: guarda só e-mail/papel/origem no navegador (nunca a senha), para a pessoa
+// não precisar logar de novo a cada atualização de página.
+function salvarSessao(email, papel, origem) {
+  lsSet('explore_sessao', JSON.stringify({ email: email, papel: papel, origem: origem }));
+}
+function limparSessao() {
+  lsDel('explore_sessao');
+}
+
 function doLogin() {
   var email = (ge('inp-email').value || '').trim().toLowerCase();
   var senha = ge('inp-senha').value || '';
@@ -1295,6 +1376,7 @@ function doLogin() {
     }
     if (usuario.papel === 'consultor') {
       _isMaster = true;
+      salvarSessao(email, 'consultor', 'sb');
       ge('login-screen').style.display = 'none';
       renderMasterSupabase();
       return;
@@ -1303,6 +1385,8 @@ function doLogin() {
     _isMaster = false;
     sbCarregarProjeto(email).then(function(dados) {
       if (!dados) { err.textContent = 'Projeto não encontrado para este e-mail.'; err.style.display = 'block'; return; }
+      salvarSessao(email, 'cliente', 'sb');
+      ge('login-screen').style.display = 'none';
       openClient(dados);
     }).catch(function(e) {
       console.error(e);
@@ -1322,6 +1406,7 @@ function doLoginLocal(email, senha) {
   if (MASTER[email] && MASTER[email].senha === senha) {
     err.style.display = 'none';
     _isMaster = true;
+    salvarSessao(email, 'consultor', 'local');
     ge('login-screen').style.display = 'none';
     renderMaster();
     return;
@@ -1333,7 +1418,49 @@ function doLoginLocal(email, senha) {
   }
   err.style.display = 'none';
   _isMaster = false;
+  salvarSessao(email, 'cliente', 'local');
+  ge('login-screen').style.display = 'none';
   openClient(reg.dados);
+}
+
+// Tenta restaurar a sessão salva no navegador (chamada uma vez, ao carregar a página).
+// Se der certo, pula a tela de login direto para onde a pessoa estava.
+function tentarRestaurarSessao() {
+  var raw = lsGet('explore_sessao');
+  if (!raw) return;
+  var sess;
+  try { sess = JSON.parse(raw); } catch(e) { limparSessao(); return; }
+  if (!sess || !sess.email || !sess.papel) { limparSessao(); return; }
+
+  if (sess.papel === 'consultor') {
+    _isMaster = true;
+    ge('login-screen').style.display = 'none';
+    if (sb && sess.origem === 'sb') renderMasterSupabase();
+    else renderMaster();
+    return;
+  }
+
+  // papel === 'cliente'
+  if (sb && sess.origem === 'sb') {
+    sbCarregarProjeto(sess.email).then(function(dados) {
+      if (!dados) { limparSessao(); return; }
+      _isMaster = false;
+      ge('login-screen').style.display = 'none';
+      openClient(dados);
+    }).catch(function(e) {
+      console.error('Falha ao restaurar sessão:', e);
+      // não desloga por causa de erro de rede passageiro; mantém a tela de login disponível
+    });
+    return;
+  }
+  var reg = CLIENTES[sess.email];
+  if (reg) {
+    _isMaster = false;
+    ge('login-screen').style.display = 'none';
+    openClient(reg.dados);
+  } else {
+    limparSessao();
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -1408,7 +1535,9 @@ var CE_CATEGORIAS = [
       { k:'meta', label:'Meta', tipo:'number', req:true },
       { k:'atual', label:'Valor atual', tipo:'number', req:true },
       { k:'unidade', label:'Unidade (ex: %, h, dias)', tipo:'text' },
+      { k:'direcao', label:'Direção (o que conta como melhora)', tipo:'select', opcoes:[['crescente','Quanto maior, melhor'],['decrescente','Quanto menor, melhor']] },
       { k:'tendencia', label:'Tendência', tipo:'select', opcoes:[['subindo','Subindo'],['stable','Estável'],['descendo','Descendo']] },
+      { k:'fase', label:'Fase relacionada (opcional, nome exato da fase)', tipo:'text' },
       { k:'descricao', label:'Descrição', tipo:'textarea' }
     ]
   },
@@ -1457,6 +1586,29 @@ var CE_CATEGORIAS = [
       { k:'especialidade', label:'Especialidade', tipo:'text' },
       { k:'bio', label:'Bio', tipo:'textarea' }
     ]
+  },
+  { id:'colaboradores', label:'Colaboradores da Empresa', campo:'colaboradores',
+    titulo: function(i){ return i.nome; },
+    sub: function(i){ return (i.cargo||'') + (i.responsavel ? ' · Responsável pelo projeto' : ''); },
+    campos: [
+      { k:'nome', label:'Nome', tipo:'text', req:true },
+      { k:'cargo', label:'Cargo', tipo:'text' },
+      { k:'email', label:'E-mail', tipo:'text' },
+      { k:'telefone', label:'Telefone', tipo:'text' },
+      { k:'responsavel', label:'É o responsável principal pelo projeto?', tipo:'select', opcoes:[['','Não'],['sim','Sim']] }
+    ]
+  },
+  { id:'dadosEmpresa', label:'Dados da Empresa e Consultor', tipo:'single',
+    campos: [
+      { k:'cnpj', label:'CNPJ', tipo:'text', col:'cnpj' },
+      { k:'setor', label:'Setor / atividade', tipo:'text', col:'setor' },
+      { k:'endereco', label:'Endereço', tipo:'text', col:'endereco' },
+      { k:'telefoneEmpresa', label:'Telefone da empresa', tipo:'text', col:'telefone_empresa' },
+      { k:'emailEmpresa', label:'E-mail da empresa', tipo:'text', col:'email_empresa' },
+      { k:'consultorCargo', label:'Cargo do consultor responsável na EXPLORE', tipo:'text', col:'consultor_cargo' },
+      { k:'consultorEmail', label:'E-mail do consultor responsável', tipo:'text', col:'consultor_email' },
+      { k:'consultorTelefone', label:'Telefone do consultor responsável', tipo:'text', col:'consultor_telefone' }
+    ]
   }
 ];
 
@@ -1485,10 +1637,14 @@ function ceRenderCategorias() {
   var h = '<div class="ce-cat-grid">';
   for (var i = 0; i < CE_CATEGORIAS.length; i++) {
     var c = CE_CATEGORIAS[i];
-    var arr = _c[c.campo] || [];
     h += '<div class="ce-cat-card" onclick="ceOpenCategoria(\'' + c.id + '\')">';
     h += '<div class="ce-cat-name">' + esc(c.label) + '</div>';
-    h += '<div class="ce-cat-count">' + arr.length + ' ' + (arr.length===1?'item':'itens') + '</div>';
+    if (c.tipo === 'single') {
+      h += '<div class="ce-cat-count">Editar ficha</div>';
+    } else {
+      var arr = _c[c.campo] || [];
+      h += '<div class="ce-cat-count">' + arr.length + ' ' + (arr.length===1?'item':'itens') + '</div>';
+    }
     h += '</div>';
   }
   h += '</div>';
@@ -1503,7 +1659,47 @@ function ceFindCat(id) {
 function ceOpenCategoria(id) {
   _ceCat = ceFindCat(id);
   _ceEditIdx = null;
+  if (_ceCat.tipo === 'single') { ceRenderFormSingle(); return; }
   ceRenderLista();
+}
+
+// Formulário de campos únicos do projeto (dados cadastrais), sem lista nem múltiplos itens
+function ceRenderFormSingle() {
+  var cat = _ceCat;
+  ge('ce-title').textContent = cat.label;
+  var h = '<button class="ce-back" onclick="ceRenderCategorias()">&#8592; Todas as categorias</button>';
+  for (var i = 0; i < cat.campos.length; i++) {
+    var f = cat.campos[i];
+    var val = _c[f.k] != null ? _c[f.k] : '';
+    h += '<div class="ce-form-row"><label class="ce-form-label">' + esc(f.label) + '</label>';
+    h += '<input class="ce-form-input" type="text" id="ce-f-' + f.k + '" value="' + esc(val) + '">';
+    h += '</div>';
+  }
+  h += '<div class="ce-form-actions">';
+  h += '<button class="ce-btn-save" id="ce-btn-save" onclick="ceSaveSingle()">Salvar</button>';
+  h += '<button class="ce-btn-cancel" onclick="ceRenderCategorias()">Cancelar</button>';
+  h += '</div>';
+  ge('ce-body').innerHTML = h;
+}
+
+function ceSaveSingle() {
+  var cat = _ceCat;
+  var colunas = {};
+  for (var i = 0; i < cat.campos.length; i++) {
+    var f = cat.campos[i];
+    var el = ge('ce-f-' + f.k);
+    var val = el.value;
+    _c[f.k] = val;
+    colunas[f.col] = val || null;
+  }
+  ceRenderCategorias();
+  if (!sb || !_c._projetoId) { ceToast(); return; }
+  sbAtualizarProjetoCampos(_c._projetoId, colunas).then(function() {
+    ceToast();
+  }).catch(function(e) {
+    console.error('Erro ao salvar dados cadastrais:', e);
+    alert('Os dados foram atualizados na tela, mas não foi possível salvar no banco. Verifique sua conexão e tente novamente.');
+  });
 }
 
 function ceRenderLista() {
@@ -1606,6 +1802,11 @@ function ceSaveItem() {
     var file = fileEl.files && fileEl.files[0];
     if (file) {
       if (!sb || !_c._projetoId) { alert('Não é possível anexar arquivos sem conexão com o banco de dados.'); return; }
+      var tamanhoMB = file.size / 1024 / 1024;
+      if (tamanhoMB > DOC_MAX_MB) {
+        alert('O arquivo "' + file.name + '" tem ' + tamanhoMB.toFixed(1) + ' MB. O limite configurado neste portal é de ' + DOC_MAX_MB + ' MB. Reduza o tamanho do arquivo (ex: compactar o PDF) ou peça para o responsável técnico aumentar o limite no Supabase, em Storage > bucket "documentos".');
+        return;
+      }
       var btnSave = ge('ce-btn-save');
       if (btnSave) { btnSave.disabled = true; btnSave.textContent = 'Enviando arquivo...'; }
       sbUploadArquivo(file, _c._projetoId).then(function(url) {
@@ -1615,7 +1816,8 @@ function ceSaveItem() {
       }).catch(function(e) {
         console.error('Erro no upload:', e);
         if (btnSave) { btnSave.disabled = false; btnSave.textContent = 'Salvar'; }
-        alert('Não foi possível enviar o arquivo. Verifique o tamanho (máx. 50 MB) e tente novamente.');
+        var motivo = (e && e.message) ? e.message : 'motivo não identificado pelo sistema';
+        alert('Não foi possível enviar o arquivo.\n\nMotivo retornado: ' + motivo + '\n\nSe a mensagem mencionar tamanho ou "exceeded", o limite real configurado no Supabase (Storage > bucket "documentos") está menor do que o esperado. Avise o responsável técnico para ajustar lá.');
       });
       return; // espera o upload terminar antes de continuar
     }
@@ -1631,9 +1833,9 @@ function ceFinalizarSalvamento(cat, item) {
   var isNovo = (_ceEditIdx === -1);
   if (isNovo) _c[cat.campo].push(item);
   else _c[cat.campo][_ceEditIdx] = item;
+  if (cat.campo === 'fases') ordenarFases(_c.fases);
   ceRenderLista();
   if (_currentView === cat.id || (cat.id === 'proximosPassos' && _currentView === 'proximos')) setView(_currentView);
-  renderStatusBar();
 
   // Se não há conexão com o banco ou não sabemos o id do projeto, paramos aqui
   // (a mudança fica só na memória desta sessão, igual ao comportamento anterior)
@@ -1662,7 +1864,6 @@ function ceDeleteItem(i) {
   _c[cat.campo].splice(i, 1);
   ceRenderLista();
   if (_currentView === cat.id) setView(_currentView);
-  renderStatusBar();
 
   if (!sb || !item._id) { ceToast(); return; }
 
@@ -1676,6 +1877,7 @@ function ceDeleteItem(i) {
 
 function openClient(dados) {
   _c = dados;
+  if (_c.fases) ordenarFases(_c.fases);
   ge('master-screen').style.display = 'none';
   var app = ge('app');
   app.className = 'on';
@@ -1713,6 +1915,7 @@ function openClient(dados) {
 }
 
 function doLogout() {
+  limparSessao();
   _c = null; _isMaster = false;
   ge('app').className = '';
   ge('master-screen').style.display = 'none';
@@ -1722,7 +1925,6 @@ function doLogout() {
   ge('l-err').style.display = 'none';
   document.documentElement.style.removeProperty('--bx');
   ge('fb-fab').className = 'fb-fab';
-  ge('status-bar-wrap').innerHTML = '';
   ge('vc').innerHTML = '';
 }
 
@@ -1831,11 +2033,11 @@ var NAV_SECTIONS = [
   ]},
   { lbl: 'Acompanhamento', items: [
     { id:'kpis', label:'KPIs do Projeto' },
-    { id:'timeline', label:'Atividades do Projeto' },
     { id:'radar', label:'Radar de Saúde' },
     { id:'riscos', label:'Riscos' }
   ]},
   { lbl: 'Projeto', items: [
+    { id:'dadosEmpresa', label:'Dados da Empresa' },
     { id:'equipe', label:'Equipe EXPLORE' },
     { id:'valor', label:'Valor Entregue' },
     { id:'aprendizados', label:'Aprendizados' },
@@ -1875,8 +2077,6 @@ function setView(view) {
   // scroll to top
   var vc = ge('vc');
   if (vc) vc.scrollTop = 0;
-  // render status bar
-  renderStatusBar();
   // render view
   var renders = {
     dashboard:   renderDashboard,
@@ -1885,10 +2085,10 @@ function setView(view) {
     documentos:  function(){ renderDocumentos('todos'); },
     proximos:    renderProximos,
     kpis:        renderKPIs,
-    timeline:    function(){ renderTimeline('todos'); },
     decisoes:    renderDecisoes,
     nps:         renderNPS,
     equipe:      renderEquipe,
+    dadosEmpresa: renderDadosEmpresa,
     radar:       renderRadar,
     heatmap:     renderHeatmap,
     burndown:    renderBurndown,
@@ -1903,63 +2103,6 @@ function setView(view) {
   var fn = renders[view];
   if (fn) fn();
   else sv('<p style="padding:2rem;color:var(--tl)">Seção em construção.</p>');
-}
-
-// ═══════════════════════════════════════════
-// STATUS BAR
-// ═══════════════════════════════════════════
-function renderStatusBar() {
-  var wrap = ge('status-bar-wrap');
-  if (!wrap || !_c) return;
-  if (_c.encerrado) {
-    wrap.innerHTML = '<div style="padding:.45rem 1.25rem;background:#F2F0EE;color:#9C8490;font-size:.74rem;font-weight:600">Projeto encerrado em ' + fd(_c.dataEncerramento || '') + '. Acesso somente leitura.</div>';
-    return;
-  }
-  var pct = cprog(_c.fases);
-  var hoje = new Date();
-  var fim = new Date(_c.dataPrevisao);
-  var diasFim = Math.ceil((fim - hoje) / 86400000);
-  var riscCrit = 0;
-  var riscos = _c.riscos || [];
-  for (var i = 0; i < riscos.length; i++) {
-    if (riscos[i].probabilidade === 'alta' && riscos[i].impacto === 'alto') riscCrit++;
-  }
-  var atrasadas = 0;
-  for (var j = 0; j < _c.entregas.length; j++) {
-    var e = _c.entregas[j];
-    if (e.status !== 'concluido' && new Date(e.dataISO) < hoje) atrasadas++;
-  }
-  var cor = diasFim < 0 || atrasadas > 0 || riscCrit > 0 ? 'r' : diasFim <= 14 ? 'a' : 'g';
-  var stTxt = {g:'No prazo', a:'Atenção necessária', r:'Requer ação imediata'}[cor];
-
-  // ritmo
-  var ini = new Date(_c.dataInicio);
-  var totDias = Math.max(1, Math.floor((fim - ini) / 86400000));
-  var passDias = Math.max(1, Math.floor((hoje - ini) / 86400000));
-  var concl = 0; for (var k = 0; k < _c.entregas.length; k++) { if (_c.entregas[k].status === 'concluido') concl++; }
-  var total = _c.entregas.length;
-  var pend = total - concl;
-  var taxa = concl / passDias;
-  var ritmoHTML = '';
-  if (taxa > 0 && pend > 0) {
-    var diasNec = pend / taxa;
-    var diasRest2 = Math.max(0, Math.ceil((fim - hoje) / 86400000));
-    var diff = Math.round(diasRest2 - diasNec);
-    if (diff >= 7) ritmoHTML = '<span class="rb rb-ok">&#8593; ' + diff + 'd adiantado</span>';
-    else if (diff >= -3) ritmoHTML = '<span class="rb rb-ok">&#8594; No ritmo</span>';
-    else if (diff >= -14) ritmoHTML = '<span class="rb rb-warn">&#8595; ' + Math.abs(diff) + 'd de risco</span>';
-    else ritmoHTML = '<span class="rb rb-danger">&#9888; ' + Math.abs(diff) + 'd atrasado</span>';
-  }
-
-  var faseAtiva = null;
-  for (var f = 0; f < _c.fases.length; f++) { if (_c.fases[f].status === 'ativa') { faseAtiva = _c.fases[f]; break; } }
-
-  wrap.innerHTML = '<div class="status-bar sb-' + cor + '">' +
-    '<div class="sb-dot"></div>' +
-    '<div class="sb-txt"><strong>' + stTxt + '</strong>' +
-    (faseAtiva ? ' · ' + faseAtiva.nome : '') +
-    ' · ' + pct + '% concluído · ' + concl + '/' + total + ' entregas</div>' +
-    ritmoHTML + '</div>';
 }
 
 // ═══════════════════════════════════════════
@@ -2223,6 +2366,7 @@ function renderDashboard() {
   trackHTML += '</div>';
 
   var h = '<div class="hero">';
+  if (c.encerrado) h += '<div class="hero-ts" style="background:var(--cream-dk);color:var(--tm);margin-bottom:.6rem"><div class="ts-dot" style="background:var(--tl)"></div>Projeto encerrado em ' + fd(c.dataEncerramento || '') + ' · Acesso somente leitura</div>';
   h += '<div class="hero-greet">' + saud + ', ' + esc(c.nome) + '.</div>';
   h += '<div class="hero-title serif">' + esc(c.projeto) + '</div>';
   h += '<div class="hero-meta">';
@@ -2415,71 +2559,137 @@ function cronGanttHTML(c) {
   return h;
 }
 
-function cronCalendarHTML(c) {
-  var encs = (c.encontros || []).slice().sort(function(a, b) { return new Date(a.data) - new Date(b.data); });
-  if (!encs.length) return '';
-  var meses = {}, ordem = [];
+// Lista unificada de atividades com data: encontros (reuniões) + entregas (prazos de entregáveis)
+function cronTodasAtividades(c) {
+  var lista = [];
+  var encs = c.encontros || [];
   for (var i = 0; i < encs.length; i++) {
-    var ym = encs[i].data.slice(0, 7);
-    if (!meses[ym]) { meses[ym] = []; ordem.push(ym); }
-    meses[ym].push(encs[i]);
+    if (!encs[i].data) continue;
+    lista.push({ id: 'enc-' + i, iso: encs[i].data, tipo: 'encontro', raw: encs[i] });
   }
-  var MESES_PT = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-  var DOW = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  var ents = c.entregas || [];
+  for (var j = 0; j < ents.length; j++) {
+    if (!ents[j].dataISO) continue;
+    lista.push({ id: 'ent-' + j, iso: ents[j].dataISO, tipo: 'entrega', raw: ents[j] });
+  }
+  return lista;
+}
+
+var MESES_PT = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+function cronCalendarHTML(c) {
+  var todas = cronTodasAtividades(c);
+  if (!todas.length) return '';
   var hojeISO = (new Date()).toISOString().slice(0, 10);
-  var h = '<div class="cron-cal-wrap sec"><div class="cron-gantt-title">Calendário de encontros</div><div class="cron-cal-months">';
-  for (var m = 0; m < ordem.length; m++) {
-    var ym = ordem[m];
-    var ano = Number(ym.slice(0, 4)), mes = Number(ym.slice(5, 7)) - 1;
-    var primeiroDow = new Date(ano, mes, 1).getDay();
-    var diasNoMes = new Date(ano, mes + 1, 0).getDate();
-    var porDia = {};
-    for (var pd = 0; pd < meses[ym].length; pd++) {
-      var dNum = Number(meses[ym][pd].data.slice(8, 10));
-      if (!porDia[dNum]) porDia[dNum] = [];
-      porDia[dNum].push(meses[ym][pd]);
-    }
-    h += '<div class="cron-cal-month"><div class="cron-cal-month-lbl">' + MESES_PT[mes] + ' ' + ano + '</div><div class="cron-cal-grid">';
-    for (var dw = 0; dw < 7; dw++) h += '<div class="cron-cal-dow">' + DOW[dw] + '</div>';
-    for (var bl = 0; bl < primeiroDow; bl++) h += '<div class="cron-cal-cell empty"></div>';
-    for (var dia = 1; dia <= diasNoMes; dia++) {
-      var iso = ym + '-' + pad(dia);
-      var dEncs = porDia[dia];
-      var cls = 'cron-cal-cell' + (dEncs ? ' has-enc' : '') + (iso === _cronDia ? ' selected' : '') + (iso === hojeISO ? ' is-today' : '');
-      h += '<div class="' + cls + '"' + (dEncs ? ' onclick="cronShowDia(\'' + iso + '\')"' : '') + '><span class="ccd-num">' + dia + '</span>';
-      if (dEncs) {
-        h += '<span class="ccd-dots">';
-        for (var de = 0; de < dEncs.length; de++) {
-          h += '<span class="ccd-dot ' + (dEncs[de].tipo === 'online' ? 'ccd-online' : 'ccd-presencial') + (dEncs[de].status === 'realizado' ? ' ccd-realizado' : '') + '"></span>';
-        }
-        h += '</span>';
+  if (!_cronMes) _cronMes = hojeISO.slice(0, 7);
+  var ym = _cronMes;
+  var ano = Number(ym.slice(0, 4)), mes = Number(ym.slice(5, 7)) - 1;
+  var DOW = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  var primeiroDow = new Date(ano, mes, 1).getDay();
+  var diasNoMes = new Date(ano, mes + 1, 0).getDate();
+  var porDia = {};
+  for (var i = 0; i < todas.length; i++) {
+    if (todas[i].iso.slice(0, 7) !== ym) continue;
+    var dNum = Number(todas[i].iso.slice(8, 10));
+    if (!porDia[dNum]) porDia[dNum] = [];
+    porDia[dNum].push(todas[i]);
+  }
+  var h = '<div class="cron-cal-wrap sec"><div class="cron-gantt-title">Calendário do projeto</div>';
+  h += '<div class="cron-cal-header"><div class="cron-cal-month-lbl">' + MESES_PT[mes] + ' ' + ano + '</div>';
+  h += '<div class="cron-cal-nav"><button class="cron-cal-nav-btn" onclick="cronNavMes(-1)" aria-label="Mês anterior">&#8249;</button>';
+  h += '<button class="cron-cal-nav-btn" onclick="cronNavMes(1)" aria-label="Próximo mês">&#8250;</button>';
+  h += '<button class="cron-cal-today-btn" onclick="cronIrHoje()">Hoje</button></div></div>';
+  h += '<div class="cron-cal-grid">';
+  for (var dw = 0; dw < 7; dw++) h += '<div class="cron-cal-dow">' + DOW[dw] + '</div>';
+  for (var bl = 0; bl < primeiroDow; bl++) h += '<div class="cron-cal-cell empty"></div>';
+  for (var dia = 1; dia <= diasNoMes; dia++) {
+    var iso = ym + '-' + pad(dia);
+    var dAtvs = porDia[dia];
+    var cls = 'cron-cal-cell' + (dAtvs ? ' has-act' : '') + (iso === _cronDia ? ' selected' : '') + (iso === hojeISO ? ' is-today' : '');
+    h += '<div class="' + cls + '"' + (dAtvs ? ' onclick="cronShowDia(\'' + iso + '\')"' : '') + '><span class="ccd-num">' + dia + '</span>';
+    if (dAtvs) {
+      h += '<span class="ccd-dots">';
+      var mostrar = dAtvs.slice(0, 4);
+      for (var de = 0; de < mostrar.length; de++) {
+        var at = mostrar[de];
+        var dotCls = at.tipo === 'entrega' ? 'ccd-entrega' : (at.raw.tipo === 'online' ? 'ccd-online' : 'ccd-presencial');
+        h += '<span class="ccd-dot ' + dotCls + '"></span>';
       }
-      h += '</div>';
+      h += '</span>';
     }
-    h += '</div></div>';
+    h += '</div>';
   }
   h += '</div><div class="cron-cal-legend">';
-  h += '<span><span class="ccd-dot ccd-presencial"></span> Presencial</span>';
-  h += '<span><span class="ccd-dot ccd-online"></span> Online</span>';
-  h += '<span><span class="ccd-dot ccd-realizado"></span> Realizado</span></div>';
+  h += '<span><span class="ccd-dot ccd-presencial"></span> Encontro presencial</span>';
+  h += '<span><span class="ccd-dot ccd-online"></span> Encontro online</span>';
+  h += '<span><span class="ccd-dot ccd-entrega"></span> Prazo de entrega</span></div>';
   h += '<div id="cron-dia-detail">' + cronDiaDetailHTML(c) + '</div></div>';
   return h;
 }
 
+function cronNavMes(delta) {
+  var ym = _cronMes || (new Date()).toISOString().slice(0, 7);
+  var ano = Number(ym.slice(0, 4)), mes = Number(ym.slice(5, 7)) - 1;
+  var d = new Date(ano, mes + delta, 1);
+  _cronMes = d.getFullYear() + '-' + pad(d.getMonth() + 1);
+  renderCronograma(_fE);
+}
+
+function cronIrHoje() {
+  var hoje = new Date();
+  _cronMes = hoje.getFullYear() + '-' + pad(hoje.getMonth() + 1);
+  _cronDia = hoje.toISOString().slice(0, 10);
+  renderCronograma(_fE);
+}
+
+function cronShowDia(iso) {
+  _cronDia = (iso === _cronDia) ? null : iso;
+  renderCronograma(_fE);
+}
+
 function cronDiaDetailHTML(c) {
-  if (!_cronDia) return '';
-  var encs = (c.encontros || []).filter(function(e) { return e.data === _cronDia; });
-  if (!encs.length) return '';
+  if (!_cronDia) return '<p style="font-size:.79rem;color:var(--tl);padding-top:.7rem">Selecione um dia com atividade para ver os detalhes.</p>';
+  var atvs = cronTodasAtividades(c).filter(function(a) { return a.iso === _cronDia; });
+  if (!atvs.length) return '';
   var p = _cronDia.split('-');
   var h = '<div class="cron-dia-detail-box">';
   h += '<div class="cron-dia-detail-head">' + p[2] + '/' + p[1] + '/' + p[0] + '<button class="cron-dia-close" onclick="cronShowDia(null)">&times;</button></div>';
-  for (var i = 0; i < encs.length; i++) {
-    var e = encs[i];
-    h += '<div class="cron-dia-enc">';
-    h += '<div class="cron-dia-enc-top"><span class="badge ' + (e.tipo === 'online' ? 'b-online' : 'b-presencial') + '">' + cap(e.tipo) + '</span>';
-    h += '<span class="badge ' + (e.status === 'realizado' ? 'b-ok' : 'b-pend') + '">' + (e.status === 'realizado' ? '&#10003; Realizado' : '&#9675; Agendado') + '</span></div>';
-    h += '<div class="cron-dia-enc-titulo">' + esc(e.titulo) + '</div>';
-    if (e.fase) h += '<div class="cron-dia-enc-fase">' + esc(e.fase) + '</div>';
+  for (var i = 0; i < atvs.length; i++) h += cronAtividadeItemHTML(atvs[i]);
+  h += '</div>';
+  return h;
+}
+
+// Card clicável de uma atividade (encontro ou entrega) dentro do detalhe do dia.
+// Clique abre/fecha o descritivo completo daquela atividade, uma por vez.
+function cronAtividadeItemHTML(item) {
+  var aid = 'cronact-' + item.id;
+  var titulo, sub, dotCls;
+  if (item.tipo === 'encontro') {
+    var e = item.raw;
+    dotCls = e.tipo === 'online' ? 'enc-online' : 'enc-presencial';
+    titulo = e.titulo;
+    sub = 'Encontro' + (e.fase ? ' · ' + e.fase : '') + (e.status === 'realizado' ? ' · Realizado' : ' · Agendado');
+  } else {
+    var ent = item.raw;
+    dotCls = 'entrega';
+    titulo = ent.nome;
+    var stTxt = ent.status === 'concluido' ? 'Concluída' : ent.status === 'em_andamento' ? 'Em andamento' : 'Pendente';
+    sub = 'Entrega · ' + stTxt + (ent.responsavel ? ' · ' + ent.responsavel : '');
+  }
+  var h = '<div class="cron-act-item" id="' + aid + '" data-group="cronact">';
+  h += '<button class="cron-act-btn" onclick="toggleX(\'' + aid + '\',\'cronact\')"><span class="cron-act-dot ' + dotCls + '"></span>';
+  h += '<div class="cron-act-main"><div class="cron-act-titulo">' + esc(titulo) + '</div><div class="cron-act-sub">' + esc(sub) + '</div></div>';
+  h += chevSVG() + '</button>';
+  h += '<div class="cron-act-body">' + cronAtividadeDetHTML(item) + '</div>';
+  h += '</div>';
+  return h;
+}
+
+// Descritivo completo de uma atividade individual (o que abre ao clicar nela)
+function cronAtividadeDetHTML(item) {
+  var h = '';
+  if (item.tipo === 'encontro') {
+    var e = item.raw;
     if (e.resumo) h += '<div class="cron-dia-enc-resumo">' + esc(e.resumo) + '</div>';
     if (e.pauta && e.pauta.length) {
       h += '<div class="xblock-lbl">Pauta</div>';
@@ -2498,18 +2708,14 @@ function cronDiaDetailHTML(c) {
       for (var pp = 0; pp < e.participantes.length; pp++) h += '<span class="enc-chip">' + esc(e.participantes[pp]) + '</span>';
       h += '</div>';
     }
-    h += '</div>';
+    h += docsRelHTML(e.docs || []);
+  } else {
+    var ent = item.raw;
+    h += '<div class="cron-dia-enc-resumo">' + esc(ent.descricao || '') + '</div>';
+    if (ent.responsavel) h += '<div class="xitem"><div class="xdot" style="background:var(--bx)"></div>Responsável: ' + esc(ent.responsavel) + '</div>';
+    h += docsRelHTML(ent.docs || []);
   }
-  h += '</div>';
   return h;
-}
-
-function cronShowDia(iso) {
-  _cronDia = (iso === _cronDia) ? null : iso;
-  var box = ge('cron-dia-detail');
-  if (box) { box.innerHTML = cronDiaDetailHTML(_c); }
-  // re-renderiza só os pontos selecionados no calendário, sem perder a posição de scroll
-  renderCronograma(_fE);
 }
 
 function renderCronograma(filtro) {
@@ -2648,47 +2854,107 @@ function renderProximos() {
 // ═══════════════════════════════════════════
 // VIEW: KPIs
 // ═══════════════════════════════════════════
+// Calcula o % de progresso de um KPI considerando a direção: para indicadores onde
+// "quanto menor, melhor" (ex: tempo gasto em tarefas operacionais), o cálculo se inverte.
+function kpiProgresso(k) {
+  var dir = k.direcao || 'crescente';
+  if (dir === 'decrescente') {
+    if (k.atual <= k.meta) return 100;
+    return Math.max(0, Math.round(k.meta / k.atual * 100));
+  }
+  return Math.min(100, Math.round(k.atual / k.meta * 100));
+}
+
+// Mesma lógica aplicada à interpretação da tendência: "subindo" só é bom se o indicador
+// for crescente; se for decrescente, "descendo" é que é a boa notícia.
+function kpiTendenciaInfo(k) {
+  var dir = k.direcao || 'crescente';
+  var neutra = !k.tendencia || k.tendencia === 'stable';
+  var boa = (dir === 'crescente' && k.tendencia === 'subindo') || (dir === 'decrescente' && k.tendencia === 'descendo');
+  var cls = neutra ? 'kt-stable' : (boa ? 'kt-up' : 'kt-down');
+  var col = neutra ? 'var(--warn)' : (boa ? 'var(--ok)' : 'var(--danger)');
+  var icon = k.tendencia === 'subindo' ? '&#8593; Subindo' : k.tendencia === 'descendo' ? '&#8595; Descendo' : '&#8594; Estável';
+  return { cls: cls, col: col, icon: icon };
+}
+
+function kpiFaltamTexto(k) {
+  var dir = k.direcao || 'crescente';
+  var unid = k.unidade || '';
+  if (dir === 'decrescente') {
+    if (k.atual <= k.meta) return 'Meta atingida';
+    return (Math.round((k.atual - k.meta) * 100) / 100) + unid + ' acima da meta';
+  }
+  return Math.max(0, k.meta - k.atual) + unid + ' até a meta';
+}
+
+function kpiCardHTML(k, idx) {
+  var pct = kpiProgresso(k);
+  var tInfo = kpiTendenciaInfo(k);
+  var kid = 'kpi-' + idx;
+  var h = '<div class="kpi-card" id="' + kid + '">';
+  h += '<button class="kpi-toggle" onclick="toggleX(\'' + kid + '\',\'kpis\')">';
+  h += '<div class="kpi-left"><div class="kpi-nome">' + esc(k.nome) + '</div>';
+  h += '<div class="kpi-vals"><span class="kpi-atual">' + k.atual + '</span><span class="kpi-unid">' + esc(k.unidade || '') + '</span></div>';
+  h += '<div class="kpi-meta-lbl">Meta: <strong>' + k.meta + (k.unidade || '') + '</strong> · ' + pct + '% atingido</div>';
+  h += '<div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:' + pct + '%;background:' + tInfo.col + '"></div></div>';
+  h += '<span class="kpi-trend ' + tInfo.cls + '">' + tInfo.icon + '</span></div>';
+  h += chevSVG() + '</button>';
+  h += '<div class="kpi-xbody"><div class="kpi-xinner">';
+  h += '<div style="height:1px;background:var(--cream-dk);margin:.5rem 0"></div>';
+  h += '<div style="font-size:.81rem;color:var(--tm);margin-bottom:.55rem">' + esc(k.descricao || '') + '</div>';
+  h += '<div style="font-size:.81rem;color:var(--tm);margin-bottom:.55rem">' + pct + '% da meta atingido · ' + kpiFaltamTexto(k) + '</div>';
+  if (k.historico && k.historico.length) {
+    h += '<div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);margin-bottom:.35rem">Evolução histórica</div>';
+    for (var hi = 0; hi < k.historico.length; hi++) {
+      h += '<div class="kpi-hist-row"><span style="color:var(--tl)">' + fd(k.historico[hi].data) + '</span><span class="kpi-hist-val">' + k.historico[hi].valor + (k.unidade || '') + '</span></div>';
+    }
+    h += '<div class="kpi-hist-row"><span style="font-weight:700;color:var(--tm)">Atual</span><span class="kpi-hist-val" style="color:var(--ok)">' + k.atual + (k.unidade || '') + '</span></div>';
+  }
+  h += '</div></div></div>';
+  return h;
+}
+
 function renderKPIs() {
   var kpis = _c.kpis || [];
   if (!kpis.length) { sv('<p style="padding:2rem;color:var(--tl)">Nenhum KPI cadastrado.</p>' + footer()); return; }
-  var h = '<div class="sec-lbl">Indicadores de resultado</div><div class="kpi-grid">';
-  for (var i = 0; i < kpis.length; i++) {
-    var k = kpis[i];
-    var pct = Math.min(100, Math.round(k.atual / k.meta * 100));
-    var tc = k.tendencia === 'subindo' ? 'kt-up' : k.tendencia === 'descendo' ? 'kt-down' : 'kt-stable';
-    var barCol = k.tendencia === 'subindo' ? 'var(--ok)' : k.tendencia === 'descendo' ? 'var(--danger)' : 'var(--warn)';
-    var tIcon = k.tendencia === 'subindo' ? '&#8593; Subindo' : k.tendencia === 'descendo' ? '&#8595; Descendo' : '&#8594; Estável';
-    var kid = 'kpi-' + i;
-    h += '<div class="kpi-card" id="' + kid + '">';
-    h += '<button class="kpi-toggle" onclick="toggleX(\'' + kid + '\',\'kpis\')">';
-    h += '<div class="kpi-left"><div class="kpi-nome">' + esc(k.nome) + '</div>';
-    h += '<div class="kpi-vals"><span class="kpi-atual">' + k.atual + '</span><span class="kpi-unid">' + esc(k.unidade) + '</span></div>';
-    h += '<div class="kpi-meta-lbl">Meta: <strong>' + k.meta + k.unidade + '</strong> · ' + pct + '% atingido</div>';
-    h += '<div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:' + pct + '%;background:' + barCol + '"></div></div>';
-    h += '<span class="kpi-trend ' + tc + '">' + tIcon + '</span></div>';
-    h += chevSVG() + '</button>';
-    h += '<div class="kpi-xbody"><div class="kpi-xinner">';
-    h += '<div style="height:1px;background:var(--cream-dk);margin:.5rem 0"></div>';
-    h += '<div style="font-size:.81rem;color:var(--tm);margin-bottom:.55rem">' + esc(k.descricao) + '</div>';
-    h += '<div style="font-size:.81rem;color:var(--tm);margin-bottom:.55rem">' + pct + '% da meta atingido · faltam ' + Math.max(0, k.meta - k.atual) + k.unidade + '</div>';
-    if (k.historico && k.historico.length) {
-      h += '<div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);margin-bottom:.35rem">Evolução histórica</div>';
-      for (var hi = 0; hi < k.historico.length; hi++) {
-        h += '<div class="kpi-hist-row"><span style="color:var(--tl)">' + fd(k.historico[hi].data) + '</span><span class="kpi-hist-val">' + k.historico[hi].valor + k.unidade + '</span></div>';
-      }
-      h += '<div class="kpi-hist-row"><span style="font-weight:700;color:var(--tm)">Atual</span><span class="kpi-hist-val" style="color:var(--ok)">' + k.atual + k.unidade + '</span></div>';
+  var h = '';
+  var temFase = kpis.some(function(k) { return k.fase; });
+  if (temFase) {
+    // Agrupa por fase do projeto, na mesma ordem cronológica das fases. Indicadores
+    // sem fase definida (ou com fase que não bate com nenhuma cadastrada) caem em
+    // "Outros indicadores" no final, sem quebrar nada.
+    var nomesFases = (_c.fases || []).map(function(f) { return f.nome; });
+    var usados = {};
+    for (var fi = 0; fi < nomesFases.length; fi++) {
+      var nomeFase = nomesFases[fi];
+      var doGrupo = kpis.filter(function(k) { return k.fase === nomeFase; });
+      if (!doGrupo.length) continue;
+      usados[nomeFase] = true;
+      h += '<div class="sec-lbl"' + (fi > 0 ? ' style="margin-top:1.4rem"' : '') + '>' + esc(nomeFase) + '</div><div class="kpi-grid">';
+      for (var di = 0; di < doGrupo.length; di++) h += kpiCardHTML(doGrupo[di], kpis.indexOf(doGrupo[di]));
+      h += '</div>';
     }
-    h += '</div></div></div>';
+    var semFase = kpis.filter(function(k) { return !k.fase || !usados[k.fase]; });
+    if (semFase.length) {
+      h += '<div class="sec-lbl" style="margin-top:1.4rem">Outros indicadores</div><div class="kpi-grid">';
+      for (var si = 0; si < semFase.length; si++) h += kpiCardHTML(semFase[si], kpis.indexOf(semFase[si]));
+      h += '</div>';
+    }
+  } else {
+    h += '<div class="sec-lbl">Indicadores de resultado</div><div class="kpi-grid">';
+    for (var i = 0; i < kpis.length; i++) h += kpiCardHTML(kpis[i], i);
+    h += '</div>';
   }
-  h += '</div>' + footer();
+  h += footer();
   sv(h);
 }
 
 // ═══════════════════════════════════════════
 // VIEW: TIMELINE
 // ═══════════════════════════════════════════
-function renderTimeline(filtro) {
-  _fTL = filtro || 'todos';
+// Lista unificada do histórico do projeto: encontros + entregas concluídas + documentos + decisões.
+// Usada pela aba "Valor Entregue" (sem o limite de 10 itens da versão antiga e com filtro por tipo).
+function valorHistoricoItens() {
   var c = _c;
   var items = [];
   var encs = c.encontros || [];
@@ -2711,11 +2977,17 @@ function renderTimeline(filtro) {
     items.push({data:decs[l].data,tipo:'dec',titulo:decs[l].titulo,badge:'decisão',sub:decs[l].responsavel,detail:{contexto:decs[l].contexto,responsavel:decs[l].responsavel,docs:decs[l].docs||[]}});
   }
   items.sort(function(a,b){ return new Date(b.data)-new Date(a.data); });
+  return items;
+}
+
+function valorHistoricoHTML(filtro) {
+  _fTL = filtro || 'todos';
+  var items = valorHistoricoItens();
   var lista = _fTL === 'todos' ? items : items.filter(function(it){ return it.tipo === _fTL; });
 
-  var h = '<div class="cf-row">';
+  var h = '<div class="sec-lbl" style="margin-top:1.4rem">Histórico consolidado</div><div class="cf-row">';
   var tlFilters = [{v:'todos',l:'Todos'},{v:'enc',l:'Encontros'},{v:'ent',l:'Entregas'},{v:'doc',l:'Documentos'},{v:'dec',l:'Decisões'}];
-  for (var tf = 0; tf < tlFilters.length; tf++) h += '<button class="cf-btn'+(_fTL===tlFilters[tf].v?' on':'')+'" onclick="renderTimeline(\''+tlFilters[tf].v+'\')">'+tlFilters[tf].l+'</button>';
+  for (var tf = 0; tf < tlFilters.length; tf++) h += '<button class="cf-btn'+(_fTL===tlFilters[tf].v?' on':'')+'" onclick="renderValor(\''+tlFilters[tf].v+'\')">'+tlFilters[tf].l+'</button>';
   h += '</div><div class="tl-list">';
   if (!lista.length) h += '<p style="font-size:.83rem;color:var(--tl);padding:1rem 0">Nenhum item neste filtro.</p>';
   var dotCls = {enc:'tl-d-enc',ent:'tl-d-ent',doc:'tl-d-doc',dec:'tl-d-dec'};
@@ -2762,8 +3034,8 @@ function renderTimeline(filtro) {
     h += '<div class="tl-xbody"><div class="tl-xinner"><div style="height:1px;background:var(--cream-dk);margin:.4rem 0 .65rem"></div>'+detHTML+'</div></div>';
     h += '</div></div>';
   }
-  h += '</div>' + footer();
-  sv(h);
+  h += '</div>';
+  return h;
 }
 
 // ═══════════════════════════════════════════
@@ -2856,6 +3128,57 @@ function submitNPS() {
   if (!_npsVal) return;
   var t = ge('nps-thanks'); if (t) t.style.display = 'block';
   var s = document.querySelector('.nps-submit'); if (s) { s.disabled = true; s.style.opacity = '.5'; }
+}
+
+// ═══════════════════════════════════════════
+// VIEW: DADOS DA EMPRESA
+// ═══════════════════════════════════════════
+function renderDadosEmpresa() {
+  var c = _c;
+  var h = '';
+
+  h += '<div class="hero"><div class="sec-lbl" style="margin-bottom:.9rem">Dados da empresa</div><div class="hero-meta">';
+  h += '<div class="hm-item"><div class="hm-key">Empresa</div><div class="hm-val">' + esc(c.empresa || '—') + '</div></div>';
+  h += '<div class="hm-item"><div class="hm-key">CNPJ</div><div class="hm-val">' + esc(c.cnpj || '—') + '</div></div>';
+  h += '<div class="hm-item"><div class="hm-key">Setor / atividade</div><div class="hm-val">' + esc(c.setor || '—') + '</div></div>';
+  h += '<div class="hm-item"><div class="hm-key">Endereço</div><div class="hm-val">' + esc(c.endereco || '—') + '</div></div>';
+  h += '<div class="hm-item"><div class="hm-key">Telefone</div><div class="hm-val">' + esc(c.telefoneEmpresa || '—') + '</div></div>';
+  h += '<div class="hm-item"><div class="hm-key">E-mail</div><div class="hm-val">' + esc(c.emailEmpresa || '—') + '</div></div>';
+  h += '</div></div>';
+
+  h += '<div class="hero"><div class="sec-lbl" style="margin-bottom:.9rem">Consultor responsável</div><div class="hero-meta">';
+  h += '<div class="hm-item"><div class="hm-key">Nome</div><div class="hm-val">' + esc(c.consultor || '—') + '</div></div>';
+  h += '<div class="hm-item"><div class="hm-key">Cargo</div><div class="hm-val">' + esc(c.consultorCargo || '—') + '</div></div>';
+  h += '<div class="hm-item"><div class="hm-key">E-mail</div><div class="hm-val">' + esc(c.consultorEmail || '—') + '</div></div>';
+  h += '<div class="hm-item"><div class="hm-key">Telefone</div><div class="hm-val">' + esc(c.consultorTelefone || '—') + '</div></div>';
+  h += '</div></div>';
+
+  var colabs = c.colaboradores || [];
+  h += '<div class="sec-lbl">Colaboradores</div>';
+  if (!colabs.length) {
+    h += '<p style="padding:.5rem 0 1rem;color:var(--tl);font-size:.85rem">Nenhum colaborador cadastrado ainda.</p>';
+  } else {
+    h += '<div class="equipe-grid">';
+    for (var i = 0; i < colabs.length; i++) {
+      var p = colabs[i];
+      var cid = 'colab-' + i;
+      var av = ini2(p.nome);
+      var isResp = p.responsavel === true || p.responsavel === 'sim';
+      h += '<div class="eq-card" id="' + cid + '">';
+      h += '<button class="eq-toggle" onclick="toggleX(\'' + cid + '\',\'colab\')">';
+      h += '<div style="display:flex;align-items:center;gap:.75rem"><div class="eq-av"><span>' + av + '</span></div>';
+      h += '<div><div class="eq-nome serif">' + esc(p.nome) + '</div><div class="eq-papel">' + esc(p.cargo || '') + (isResp ? ' · Responsável pelo projeto' : '') + '</div></div></div>';
+      h += chevSVG() + '</button>';
+      h += '<div class="eq-xbody"><div class="eq-xinner"><div style="height:1px;background:var(--cream-dk);margin:.4rem 0 .65rem"></div>';
+      h += p.email ? '<div style="font-size:.81rem;color:var(--tm);margin-bottom:.3rem">E-mail: ' + esc(p.email) + '</div>' : '';
+      h += p.telefone ? '<div style="font-size:.81rem;color:var(--tm)">Telefone: ' + esc(p.telefone) + '</div>' : '';
+      h += '</div></div></div>';
+    }
+    h += '</div>';
+  }
+
+  h += footer();
+  sv(h);
 }
 
 // ═══════════════════════════════════════════
@@ -3263,18 +3586,11 @@ function renderGlossario() {
 // ═══════════════════════════════════════════
 // VIEW: VALOR ENTREGUE
 // ═══════════════════════════════════════════
-function renderValor() {
+function renderValor(filtro) {
   var c = _c;
   var concl = 0; for (var i=0;i<c.entregas.length;i++) { if(c.entregas[i].status==='concluido') concl++; }
   var nenc=(c.encontros||[]).length, ndoc=c.documentos.length, ndec=(c.decisoes||[]).length;
   var kpis=c.kpis||[]; var metasAt=kpis.filter(function(k){ return k.atual>=k.meta; }).length;
-  var items = [];
-  for (var j=0;j<c.entregas.length;j++) { if(c.entregas[j].status==='concluido') items.push({data:c.entregas[j].dataISO,texto:c.entregas[j].nome,tipo:'entrega'}); }
-  for (var k=0;k<(c.encontros||[]).length;k++) items.push({data:c.encontros[k].data,texto:c.encontros[k].titulo,tipo:'encontro'});
-  for (var l=0;l<(c.decisoes||[]).length;l++) items.push({data:c.decisoes[l].data,texto:c.decisoes[l].titulo,tipo:'decisao'});
-  items.sort(function(a,b){ return new Date(b.data)-new Date(a.data); });
-  items = items.slice(0,10);
-  var tipoBdg={entrega:'b-ok',encontro:'b-presencial',decisao:'b-warn'};
   var h = '<div class="valor-hero"><div class="vh-title">Valor entregue até hoje</div><div class="vh-sub">'+fdhoje()+' · '+cdias(c.dataInicio)+' dias de projeto</div></div>';
   h += '<div class="valor-grid sec">';
   h += '<div class="vg-card"><div class="vg-num">'+c.horasProjeto+'</div><div class="vg-unit">horas</div><div class="vg-lbl">de consultoria</div></div>';
@@ -3284,13 +3600,7 @@ function renderValor() {
   h += '<div class="vg-card"><div class="vg-num">'+ndec+'</div><div class="vg-unit">decisões</div><div class="vg-lbl">estratégicas</div></div>';
   if (kpis.length) h += '<div class="vg-card"><div class="vg-num">'+metasAt+'/'+kpis.length+'</div><div class="vg-unit">KPIs</div><div class="vg-lbl">metas atingidas</div></div>';
   h += '</div>';
-  if (items.length) {
-    h += '<div class="sec-lbl">Histórico consolidado</div><div class="valor-tl">';
-    for (var ti=0;ti<items.length;ti++) {
-      h += '<div class="vtl-item"><div class="vtl-date">'+fdbr(items[ti].data)+'</div><div class="vtl-text">'+esc(items[ti].texto)+'</div><span class="badge '+(tipoBdg[items[ti].tipo]||'b-pend')+'">'+cap(items[ti].tipo)+'</span></div>';
-    }
-    h += '</div>';
-  }
+  h += valorHistoricoHTML(filtro);
   h += footer();
   sv(h);
 }
@@ -3407,6 +3717,10 @@ function renderSobre() {
   var sbLogout = document.getElementById('sb-logout-btn');
   if (sbLogout) sbLogout.addEventListener('click', doLogout);
 
+  // Topbar logout (mesma ação, mais visível, sem precisar abrir a sidebar)
+  var tbLogout = document.getElementById('tb-logout-btn');
+  if (tbLogout) tbLogout.addEventListener('click', doLogout);
+
   // Export button
   var btnExport = document.getElementById('btn-export');
   if (btnExport) btnExport.addEventListener('click', doExport);
@@ -3444,6 +3758,9 @@ function renderSobre() {
   if (tourOverlay) tourOverlay.addEventListener('click', function(e) {
     if (e.target === tourOverlay) closeTour();
   });
+
+  // Restaura sessão salva (evita deslogar ao atualizar a página)
+  tentarRestaurarSessao();
 
 })();
 
