@@ -2012,6 +2012,22 @@ function ceRenderForm(item) {
   ge('ce-body').innerHTML = h;
 }
 
+// Lê o erro real devolvido pelo Supabase e dá uma dica certeira, em vez de sempre
+// sugerir "tamanho" (que só é a causa em parte dos casos).
+function diagnosticoErroUpload(motivo) {
+  var m = (motivo || '').toLowerCase();
+  if (m.indexOf('row-level security') !== -1 || m.indexOf('policy') !== -1) {
+    return 'Isso é falta de permissão no banco (RLS), não é tamanho de arquivo. O bucket "documentos" do Storage precisa de uma política de acesso liberada. Avise o responsável técnico para configurar isso no Supabase.';
+  }
+  if (m.indexOf('exceed') !== -1 || m.indexOf('too large') !== -1 || m.indexOf('payload') !== -1 || m.indexOf('size') !== -1) {
+    return 'O limite real configurado no Supabase (Storage > bucket "documentos") está menor do que o esperado. Avise o responsável técnico para ajustar lá.';
+  }
+  if (m.indexOf('bucket') !== -1 && m.indexOf('not found') !== -1) {
+    return 'O bucket "documentos" pode não existir no Storage do Supabase, ou o nome está diferente. Avise o responsável técnico para conferir.';
+  }
+  return 'Verifique sua conexão e tente novamente. Se persistir, avise o responsável técnico com esta mensagem de erro.';
+}
+
 function ceSaveItem() {
   var cat = _ceCat;
   var item = _ceEditIdx === -1 ? {} : Object.assign({}, _c[cat.campo][_ceEditIdx]);
@@ -2056,7 +2072,8 @@ function ceSaveItem() {
         console.error('Erro no upload:', e);
         if (btnSave) { btnSave.disabled = false; btnSave.textContent = 'Salvar'; }
         var motivo = (e && e.message) ? e.message : 'motivo não identificado pelo sistema';
-        showAlert('Não foi possível enviar o arquivo.\n\nMotivo retornado: ' + motivo + '\n\nSe a mensagem mencionar tamanho ou "exceeded", o limite real configurado no Supabase (Storage > bucket "documentos") está menor do que o esperado. Avise o responsável técnico para ajustar lá.', {danger:true});
+        var dica = diagnosticoErroUpload(motivo);
+        showAlert('Não foi possível enviar o arquivo.\n\nMotivo retornado: ' + motivo + '\n\n' + dica, {danger:true});
       });
       return; // espera o upload terminar antes de continuar
     }
