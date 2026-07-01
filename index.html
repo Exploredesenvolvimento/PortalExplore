@@ -1884,7 +1884,9 @@ function ceSaveSingle() {
     ceToast();
   }).catch(function(e) {
     console.error('Erro ao salvar dados cadastrais:', e);
-    showAlert('Os dados foram atualizados na tela, mas não foi possível salvar no banco. Verifique sua conexão e tente novamente.', {danger:true});
+    var motivo = (e && e.message) ? e.message : 'motivo não identificado pelo sistema';
+    var dica = diagnosticoErroSupabase(motivo, 'tabela');
+    showAlert('Os dados foram atualizados na tela, mas não foi possível salvar no banco.\n\nMotivo retornado: ' + motivo + '\n\n' + dica, {danger:true});
   });
 }
 
@@ -2044,15 +2046,19 @@ function ceRenderForm(item) {
   ge('ce-body').innerHTML = h;
 }
 
-// Lê o erro real devolvido pelo Supabase e dá uma dica certeira, em vez de sempre
-// sugerir "tamanho" (que só é a causa em parte dos casos).
-function diagnosticoErroUpload(motivo) {
+// Lê o erro real devolvido pelo Supabase (tabela ou storage) e dá uma dica certeira,
+// em vez de sempre sugerir "tamanho" (que só é a causa em parte dos casos).
+function diagnosticoErroSupabase(motivo, contexto) {
   var m = (motivo || '').toLowerCase();
+  var alvo = contexto === 'tabela' ? 'a tabela "projetos"' : 'o bucket "documentos" do Storage';
   if (m.indexOf('row-level security') !== -1 || m.indexOf('policy') !== -1) {
-    return 'Isso é falta de permissão no banco (RLS), não é tamanho de arquivo. O bucket "documentos" do Storage precisa de uma política de acesso liberada. Avise o responsável técnico para configurar isso no Supabase.';
+    return 'Isso é falta de permissão no banco (RLS), não é outra coisa. ' + cap(alvo) + ' precisa de uma política de acesso liberada. Avise o responsável técnico para configurar isso no Supabase.';
   }
   if (m.indexOf('exceed') !== -1 || m.indexOf('too large') !== -1 || m.indexOf('payload') !== -1 || m.indexOf('size') !== -1) {
-    return 'O limite real configurado no Supabase (Storage > bucket "documentos") está menor do que o esperado. Avise o responsável técnico para ajustar lá.';
+    return 'O limite real configurado no Supabase está menor do que o esperado. Avise o responsável técnico para ajustar lá.';
+  }
+  if (m.indexOf('column') !== -1 && (m.indexOf('does not exist') !== -1 || m.indexOf('not found') !== -1)) {
+    return 'Uma das colunas usadas aqui ainda não existe na tabela "projetos" do Supabase. Avise o responsável técnico, provavelmente falta rodar um SQL de atualização da estrutura do banco.';
   }
   if (m.indexOf('bucket') !== -1 && m.indexOf('not found') !== -1) {
     return 'O bucket "documentos" pode não existir no Storage do Supabase, ou o nome está diferente. Avise o responsável técnico para conferir.';
@@ -2104,7 +2110,7 @@ function ceSaveItem() {
         console.error('Erro no upload:', e);
         if (btnSave) { btnSave.disabled = false; btnSave.textContent = 'Salvar'; }
         var motivo = (e && e.message) ? e.message : 'motivo não identificado pelo sistema';
-        var dica = diagnosticoErroUpload(motivo);
+        var dica = diagnosticoErroSupabase(motivo, 'storage');
         showAlert('Não foi possível enviar o arquivo.\n\nMotivo retornado: ' + motivo + '\n\n' + dica, {danger:true});
       });
       return; // espera o upload terminar antes de continuar
