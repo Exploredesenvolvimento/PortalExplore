@@ -984,7 +984,7 @@ function sbRowToFront(tabela, row) {
     return { _id: row.id, nome: row.codigo, titulo: row.titulo, categoria: row.categoria, status: row.status, data: row.data ? fd(row.data) : '', tamanho: row.tamanho, url: row.url };
   }
   if (tabela === 'proximos_passos') {
-    return { _id: row.id, titulo: row.titulo, descricao: row.descricao, prioridade: row.prioridade, dataLimite: row.data_limite, responsavel: row.responsavel, concluido: !!row.concluido };
+    return { _id: row.id, titulo: row.titulo, descricao: row.descricao, prioridade: row.prioridade, dataLimite: row.data_limite, responsavel: row.responsavel, concluido: !!row.concluido, concluidoEm: row.concluido_em };
   }
   if (tabela === 'riscos') {
     return { _id: row.id, titulo: row.titulo, probabilidade: row.probabilidade, impacto: row.impacto, mitigacao: row.mitigacao };
@@ -1022,7 +1022,7 @@ function sbItemToRow(tabela, item, projetoId) {
     return { projeto_id: projetoId, codigo: item.nome, titulo: item.titulo, categoria: item.categoria || null, status: item.status || null, data: item.data || null, tamanho: item.tamanho || null, url: item.url || null };
   }
   if (tabela === 'proximos_passos') {
-    return { projeto_id: projetoId, titulo: item.titulo, descricao: item.descricao || null, prioridade: item.prioridade || null, data_limite: item.dataLimite || null, responsavel: item.responsavel || null, concluido: item.concluido === true || item.concluido === 'sim' };
+    return { projeto_id: projetoId, titulo: item.titulo, descricao: item.descricao || null, prioridade: item.prioridade || null, data_limite: item.dataLimite || null, responsavel: item.responsavel || null, concluido: item.concluido === true || item.concluido === 'sim', concluido_em: item.concluidoEm || null };
   }
   if (tabela === 'riscos') {
     return { projeto_id: projetoId, titulo: item.titulo, probabilidade: item.probabilidade, impacto: item.impacto, mitigacao: item.mitigacao || null };
@@ -1953,6 +1953,17 @@ function ceSaveAcesso() {
   });
 }
 
+function ceItemRowHTML(it, i) {
+  var h = '<div class="ce-list-item">';
+  h += '<div class="ce-item-main"><div class="ce-item-title">' + esc(_ceCat.titulo(it)) + '</div>';
+  h += '<div class="ce-item-sub">' + esc(_ceCat.sub(it)) + '</div></div>';
+  h += '<div class="ce-item-actions">';
+  h += '<button class="ce-ic-btn" title="Editar" onclick="ceEditItem(' + i + ')">&#9998;</button>';
+  h += '<button class="ce-ic-btn danger" title="Excluir" onclick="ceDeleteItem(' + i + ')">&#128465;</button>';
+  h += '</div></div>';
+  return h;
+}
+
 function ceRenderLista() {
   var cat = _ceCat;
   ge('ce-title').textContent = cat.label;
@@ -1960,17 +1971,26 @@ function ceRenderLista() {
   var h = '<button class="ce-back" onclick="ceClose()">&#8592; Fechar</button>';
   if (!arr.length) {
     h += '<div class="ce-empty">Nenhum item cadastrado ainda. Use o botão abaixo para adicionar o primeiro.</div>';
-  } else {
-    for (var i = 0; i < arr.length; i++) {
-      var it = arr[i];
-      h += '<div class="ce-list-item">';
-      h += '<div class="ce-item-main"><div class="ce-item-title">' + esc(cat.titulo(it)) + '</div>';
-      h += '<div class="ce-item-sub">' + esc(cat.sub(it)) + '</div></div>';
-      h += '<div class="ce-item-actions">';
-      h += '<button class="ce-ic-btn" title="Editar" onclick="ceEditItem(' + i + ')">&#9998;</button>';
-      h += '<button class="ce-ic-btn danger" title="Excluir" onclick="ceDeleteItem(' + i + ')">&#128465;</button>';
-      h += '</div></div>';
+  } else if (cat.campo === 'proximosPassos') {
+    // Passos concluídos ficam escondidos numa seção separada, para não misturar
+    // com o que ainda precisa de atenção — mesmo padrão da tela principal.
+    var idxPend = [], idxConcl = [];
+    for (var pi = 0; pi < arr.length; pi++) { (arr[pi].concluido ? idxConcl : idxPend).push(pi); }
+    if (!idxPend.length) {
+      h += '<div class="ce-empty">Nenhum passo em aberto. Tudo concluído por aqui.</div>';
+    } else {
+      for (var a = 0; a < idxPend.length; a++) h += ceItemRowHTML(arr[idxPend[a]], idxPend[a]);
     }
+    if (idxConcl.length) {
+      h += '<button class="passo-concluidos-toggle" onclick="toggleX(\'ce-concl-body\')">';
+      h += '<svg class="xchev" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>';
+      h += 'Ver concluídos (' + idxConcl.length + ')</button>';
+      h += '<div class="passo-concluidos-body" id="ce-concl-body">';
+      for (var b = 0; b < idxConcl.length; b++) h += ceItemRowHTML(arr[idxConcl[b]], idxConcl[b]);
+      h += '</div>';
+    }
+  } else {
+    for (var i = 0; i < arr.length; i++) h += ceItemRowHTML(arr[i], i);
   }
   h += '<button class="ce-add-btn" onclick="ceNewItem()">+ Adicionar ' + esc(cat.label.replace(/s$/,'')) + '</button>';
   ge('ce-body').innerHTML = h;
@@ -2100,6 +2120,7 @@ function toggleProximoPassoConcluido(idx) {
   var item = _c.proximosPassos[idx];
   if (!item) return;
   item.concluido = !item.concluido;
+  item.concluidoEm = item.concluido ? new Date().toISOString().slice(0, 10) : null;
   setView(_currentView);
   if (!sb || !_c._projetoId || !item._id) { ceToast(); return; }
   sbSalvarItem('proximosPassos', item, _c._projetoId).then(function(salvo) {
@@ -2108,6 +2129,7 @@ function toggleProximoPassoConcluido(idx) {
   }).catch(function(e) {
     console.error('Erro ao marcar próximo passo:', e);
     item.concluido = !item.concluido;
+    item.concluidoEm = item.concluido ? new Date().toISOString().slice(0, 10) : null;
     setView(_currentView);
     showAlert('Não foi possível salvar essa alteração no banco. Tente novamente.', {danger:true});
   });
@@ -3325,6 +3347,13 @@ function valorHistoricoItens() {
   for (var l = 0; l < decs.length; l++) {
     items.push({data:decs[l].data,tipo:'dec',titulo:decs[l].titulo,badge:'decisão',sub:decs[l].responsavel,detail:{contexto:decs[l].contexto,responsavel:decs[l].responsavel,docs:decs[l].docs||[]}});
   }
+  var passos = c.proximosPassos || [];
+  for (var m = 0; m < passos.length; m++) {
+    if (passos[m].concluido) {
+      var t = passos[m];
+      items.push({data:t.concluidoEm||t.dataLimite,tipo:'tarefa',titulo:t.titulo,badge:'tarefa',sub:'Tarefa concluída · '+(t.responsavel||''),detail:{descricao:t.descricao,responsavel:t.responsavel,docs:[]}});
+    }
+  }
   items.sort(function(a,b){ return new Date(b.data)-new Date(a.data); });
   return items;
 }
@@ -3335,12 +3364,12 @@ function valorHistoricoHTML(filtro) {
   var lista = _fTL === 'todos' ? items : items.filter(function(it){ return it.tipo === _fTL; });
 
   var h = '<div class="sec-lbl-row" style="margin-top:1.4rem"><div class="sec-lbl" style="margin:0;padding:0;border:none">Histórico consolidado</div>' + ceAddBtnHTML('decisoes', 'Adicionar decisão') + '</div><div class="cf-row">';
-  var tlFilters = [{v:'todos',l:'Todos'},{v:'enc',l:'Encontros'},{v:'ent',l:'Entregas'},{v:'doc',l:'Documentos'},{v:'dec',l:'Decisões'}];
+  var tlFilters = [{v:'todos',l:'Todos'},{v:'enc',l:'Encontros'},{v:'ent',l:'Entregas'},{v:'tarefa',l:'Tarefas'},{v:'doc',l:'Documentos'},{v:'dec',l:'Decisões'}];
   for (var tf = 0; tf < tlFilters.length; tf++) h += '<button class="cf-btn'+(_fTL===tlFilters[tf].v?' on':'')+'" onclick="renderValor(\''+tlFilters[tf].v+'\')">'+tlFilters[tf].l+'</button>';
   h += '</div><div class="tl-list">';
   if (!lista.length) h += '<p style="font-size:.83rem;color:var(--tl);padding:1rem 0">Nenhum item neste filtro. Tente selecionar outro tipo.</p>';
-  var dotCls = {enc:'tl-d-enc',ent:'tl-d-ent',doc:'tl-d-doc',dec:'tl-d-dec'};
-  var badgeCls = {enc:'b-presencial',ent:'b-ok',doc:'b-blue',dec:'b-warn',presencial:'b-presencial',online:'b-online',workshop:'b-workshop',entrega:'b-ok',diagnostico:'b-alta',plano:'b-baixa',relatorio:'b-media',material:'b-blue',decisão:'b-warn'};
+  var dotCls = {enc:'tl-d-enc',ent:'tl-d-ent',doc:'tl-d-doc',dec:'tl-d-dec',tarefa:'tl-d-ent'};
+  var badgeCls = {enc:'b-presencial',ent:'b-ok',doc:'b-blue',dec:'b-warn',tarefa:'b-ok',presencial:'b-presencial',online:'b-online',workshop:'b-workshop',entrega:'b-ok',diagnostico:'b-alta',plano:'b-baixa',relatorio:'b-media',material:'b-blue',decisão:'b-warn'};
   for (var ti = 0; ti < lista.length; ti++) {
     var item = lista[ti];
     var tlid = 'tl-' + ti;
@@ -3369,6 +3398,9 @@ function valorHistoricoHTML(filtro) {
       detHTML += '<a href="'+esc(det.url)+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.35rem;padding:.38rem .85rem;background:var(--bx);color:var(--white);border-radius:var(--r);font-size:.76rem;font-weight:700">Acessar documento &#8599;</a>';
     } else if (item.tipo === 'dec') {
       detHTML += '<div class="xblock-lbl">Contexto</div><div style="font-size:.81rem;color:var(--tm);line-height:1.6;margin-bottom:.5rem">'+esc(det.contexto)+'</div>';
+      detHTML += '<div class="xblock-lbl">Responsável</div><div style="font-size:.81rem;color:var(--tm)">'+esc(det.responsavel)+'</div>';
+    } else if (item.tipo === 'tarefa') {
+      if (det.descricao) detHTML += '<div class="xblock-lbl">Descrição</div><div style="font-size:.81rem;color:var(--tm);line-height:1.6;margin-bottom:.5rem">'+esc(det.descricao)+'</div>';
       detHTML += '<div class="xblock-lbl">Responsável</div><div style="font-size:.81rem;color:var(--tm)">'+esc(det.responsavel)+'</div>';
     }
     detHTML += docsRelHTML(det.docs || []);
@@ -3767,12 +3799,14 @@ function renderValor(filtro) {
   var c = _c;
   var concl = 0; for (var i=0;i<c.entregas.length;i++) { if(c.entregas[i].status==='concluido') concl++; }
   var nenc=(c.encontros||[]).length, ndoc=c.documentos.length, ndec=(c.decisoes||[]).length;
+  var ntarefas = (c.proximosPassos||[]).filter(function(p){ return p.concluido; }).length;
   var kpis=c.kpis||[]; var metasAt=kpis.filter(function(k){ return k.atual>=k.meta; }).length;
   var h = '<div class="valor-hero"><div class="vh-title">Valor entregue até hoje</div><div class="vh-sub">'+fdhoje()+' · '+cdias(c.dataInicio)+' dias de projeto</div></div>';
   h += '<div class="valor-grid sec">';
   h += '<div class="vg-card"><div class="vg-num">'+c.horasProjeto+'</div><div class="vg-unit">horas</div><div class="vg-lbl">de consultoria</div></div>';
   h += '<div class="vg-card"><div class="vg-num">'+nenc+'</div><div class="vg-unit">encontros</div><div class="vg-lbl">realizados</div></div>';
   h += '<div class="vg-card"><div class="vg-num">'+concl+'</div><div class="vg-unit">entregas</div><div class="vg-lbl">concluídas</div></div>';
+  h += '<div class="vg-card"><div class="vg-num">'+ntarefas+'</div><div class="vg-unit">tarefas</div><div class="vg-lbl">concluídas</div></div>';
   h += '<div class="vg-card"><div class="vg-num">'+ndoc+'</div><div class="vg-unit">documentos</div><div class="vg-lbl">produzidos</div></div>';
   h += '<div class="vg-card"><div class="vg-num">'+ndec+'</div><div class="vg-unit">decisões</div><div class="vg-lbl">estratégicas</div></div>';
   if (kpis.length) h += '<div class="vg-card"><div class="vg-num">'+metasAt+'/'+kpis.length+'</div><div class="vg-unit">KPIs</div><div class="vg-lbl">metas atingidas</div></div>';
