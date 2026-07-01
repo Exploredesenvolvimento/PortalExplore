@@ -26,6 +26,9 @@ a{text-decoration:none;color:inherit}
 
 /* LOGIN */
 #login-screen{min-height:100vh;background:var(--bx);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem}
+.l-restoring{display:flex;flex-direction:column;align-items:center;gap:.9rem;color:var(--white);font-size:.82rem}
+.l-restoring-spinner{width:26px;height:26px;border-radius:50%;border:2.5px solid rgba(255,255,255,.25);border-top-color:var(--white);animation:l-spin .7s linear infinite}
+@keyframes l-spin{to{transform:rotate(360deg)}}
 .l-logo{margin-bottom:2rem;text-align:center}
 .l-logo-name{font-family:Georgia,serif;font-size:2rem;font-weight:bold;letter-spacing:.2em;color:var(--gold-lt)}
 .l-logo-sub{font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:.4rem}
@@ -106,9 +109,6 @@ a{text-decoration:none;color:inherit}
 .sb-back-btn.on{display:block}
 
 /* CENTRAL DE EDIÇÃO */
-.sb-edit-btn{display:none;margin:.4rem 1.1rem .2rem;width:calc(100% - 2.2rem);padding:.5rem;border:none;border-radius:var(--r);background:var(--bx);color:var(--white);font-size:.76rem;font-weight:700;cursor:pointer;text-align:center;letter-spacing:.03em}
-.sb-edit-btn.on{display:block}
-.sb-edit-btn:hover{background:var(--bx-dk)}
 
 .ce-overlay{display:none;position:fixed;inset:0;background:rgba(44,26,36,.55);z-index:500;align-items:flex-start;justify-content:center;padding:2.5rem 1rem;overflow-y:auto}
 .ce-overlay.on{display:flex}
@@ -153,6 +153,25 @@ a{text-decoration:none;color:inherit}
 .ce-empty{text-align:center;color:var(--tl);font-size:.84rem;padding:1.5rem 0}
 .ce-saved-toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--ok);color:var(--white);padding:.7rem 1.3rem;border-radius:var(--r);font-size:.84rem;font-weight:700;z-index:600;transition:.25s;box-shadow:0 6px 20px rgba(0,0,0,.2)}
 .ce-saved-toast.on{transform:translateX(-50%) translateY(0)}
+
+/* modal próprio, substitui alert()/confirm() nativos do navegador */
+.app-modal-overlay{display:none;position:fixed;inset:0;background:rgba(44,26,36,.5);z-index:9999;align-items:center;justify-content:center;padding:1.2rem}
+.app-modal-overlay.on{display:flex}
+.app-modal{background:var(--white);border-radius:var(--rl);max-width:380px;width:100%;padding:1.7rem 1.6rem 1.5rem;box-shadow:0 24px 60px rgba(44,26,36,.35);text-align:center;animation:modalIn .18s ease-out}
+@keyframes modalIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.app-modal-icon{width:44px;height:44px;border-radius:50%;margin:0 auto .9rem;display:flex;align-items:center;justify-content:center}
+.app-modal-icon.info{background:var(--cream);color:var(--bx)}
+.app-modal-icon.danger{background:var(--danger-bg);color:var(--danger)}
+.app-modal-icon.warn{background:var(--warn-bg);color:var(--warn)}
+.app-modal-msg{font-size:.87rem;color:var(--td);line-height:1.65;white-space:pre-line;margin-bottom:1.4rem}
+.app-modal-actions{display:flex;gap:.6rem;justify-content:center}
+.app-modal-btn{flex:1;padding:.62rem 1rem;border-radius:var(--r);font-size:.82rem;font-weight:700;cursor:pointer;border:none;transition:opacity .15s,background .15s}
+.app-modal-btn.primary{background:var(--bx);color:var(--white)}
+.app-modal-btn.primary:hover{background:var(--bx-dk)}
+.app-modal-btn.ghost{background:var(--cream);color:var(--tm)}
+.app-modal-btn.ghost:hover{background:var(--cream-dk)}
+.app-modal-btn.danger{background:var(--danger);color:var(--white)}
+.app-modal-btn.danger:hover{opacity:.88}
 .sb-logout-btn{margin:.55rem 1.1rem 1.1rem;width:calc(100% - 2.2rem);padding:.45rem;border:1.5px solid var(--cream-dk);border-radius:var(--r);background:transparent;color:var(--tl);font-size:.74rem;cursor:pointer}
 .sb-logout-btn:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-bg)}
 .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:299}
@@ -163,6 +182,14 @@ a{text-decoration:none;color:inherit}
 /* Shared components */
 .sec{margin-bottom:1.75rem}
 .sec-lbl{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tl);margin-bottom:.85rem;padding-bottom:.45rem;border-bottom:1px solid var(--cream-dk)}
+.sec-lbl-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.85rem;padding-bottom:.45rem;border-bottom:1px solid var(--cream-dk)}
+.sec-lbl-row .sec-lbl{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.ce-inline-add{display:inline-flex;align-items:center;gap:.3rem;padding:.32rem .75rem;border-radius:99px;border:1.5px solid var(--bx);background:var(--white);color:var(--bx);font-size:.7rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s;flex-shrink:0}
+.ce-inline-add:hover{background:var(--bx);color:var(--white)}
+.ce-inline-edit{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;border:none;background:transparent;color:var(--tl);cursor:pointer;flex-shrink:0;transition:background .15s,color .15s}
+.ce-inline-edit:hover{background:var(--cream);color:var(--bx)}
+.ce-edit-abs{position:absolute;top:.55rem;right:.55rem;z-index:3}
+.ce-edit-abs .ce-inline-edit{background:var(--white);box-shadow:0 1px 4px rgba(97,43,74,.15)}
 .badge{display:inline-flex;align-items:center;padding:.18rem .55rem;border-radius:99px;font-size:.7rem;font-weight:700;white-space:nowrap}
 .b-ok{background:var(--ok-bg);color:var(--ok)}
 .b-warn{background:var(--warn-bg);color:var(--warn)}
@@ -300,7 +327,7 @@ a{text-decoration:none;color:inherit}
 .enc-section{border-top:1px solid var(--cream-dk);padding:.75rem 1.25rem 1rem}
 .enc-sec-lbl{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:.55rem;display:flex;align-items:center;gap:.4rem}
 .enc-count{font-size:.62rem;font-weight:700;padding:.08rem .38rem;border-radius:99px;background:var(--cream-dk);color:var(--tm)}
-.enc-card{border:1px solid var(--cream-dk);border-radius:var(--r);overflow:hidden;margin-bottom:.4rem}
+.enc-card{border:1px solid var(--cream-dk);border-radius:var(--r);overflow:hidden;margin-bottom:.4rem;position:relative}
 .enc-toggle{width:100%;background:var(--cream);border:none;padding:.58rem .85rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;cursor:pointer;text-align:left}
 .enc-toggle:hover{background:var(--cream-dk)}
 .enc-tl{display:flex;align-items:center;gap:.6rem;min-width:0}
@@ -364,6 +391,7 @@ a{text-decoration:none;color:inherit}
 .ds{background:var(--white);border-radius:var(--r);padding:.42rem .8rem;box-shadow:0 1px 6px rgba(97,43,74,.07);display:flex;align-items:center;gap:.32rem;font-size:.77rem;color:var(--tm)}
 .ds-num{font-family:Georgia,serif;font-size:.98rem;font-weight:bold;color:var(--bx)}
 .doc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem}
+.doc-card-wrap{position:relative}
 .doc-card{background:var(--white);border-radius:var(--rl);padding:1rem;box-shadow:0 1px 6px rgba(97,43,74,.07);border:1.5px solid transparent;display:flex;flex-direction:column;gap:.55rem;text-decoration:none;color:inherit;transition:all .2s}
 .doc-card:hover{border-color:var(--gold);box-shadow:0 2px 16px rgba(97,43,74,.10);transform:translateY(-2px)}
 .dc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.55rem}
@@ -397,7 +425,7 @@ a{text-decoration:none;color:inherit}
 
 /* kpis */
 .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
-.kpi-card{background:var(--white);border-radius:var(--rl);box-shadow:0 1px 6px rgba(97,43,74,.07);overflow:hidden}
+.kpi-card{background:var(--white);border-radius:var(--rl);box-shadow:0 1px 6px rgba(97,43,74,.07);overflow:hidden;position:relative}
 .kpi-toggle{width:100%;background:var(--white);border:none;padding:1.1rem;display:flex;align-items:flex-start;justify-content:space-between;gap:.65rem;cursor:pointer;text-align:left}
 .kpi-toggle:hover{background:#fdfcfa}
 .kpi-nome{font-size:.76rem;font-weight:700;color:var(--tm);margin-bottom:.5rem}
@@ -487,7 +515,7 @@ a{text-decoration:none;color:inherit}
 
 /* equipe */
 .equipe-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
-.eq-card{background:var(--white);border-radius:var(--rl);box-shadow:0 1px 6px rgba(97,43,74,.07);overflow:hidden}
+.eq-card{background:var(--white);border-radius:var(--rl);box-shadow:0 1px 6px rgba(97,43,74,.07);overflow:hidden;position:relative}
 .eq-toggle{width:100%;background:var(--white);border:none;padding:1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.65rem;cursor:pointer;text-align:left}
 .eq-toggle:hover{background:#fdfcfa}
 .eq-av{width:40px;height:40px;border-radius:50%;background:var(--bx);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:1rem;font-weight:bold;color:var(--gold-lt);flex-shrink:0;overflow:hidden}
@@ -781,12 +809,16 @@ a{text-decoration:none;color:inherit}
 
 <!-- LOGIN -->
 <div id="login-screen">
-  <div class="l-logo">
+  <div class="l-restoring" id="l-restoring" style="display:none">
+    <div class="l-restoring-spinner"></div>
+    <div>Carregando sua sessão...</div>
+  </div>
+  <div class="l-logo" id="l-logo">
     <div class="l-logo-name">EXPLORE</div>
     <div class="l-logo-sub">Desenvolvimento de Gente &amp; Gestão</div>
     <div class="l-phrase">"Clareza sobre onde você está é o primeiro passo para chegar onde quer estar."</div>
   </div>
-  <div class="l-card">
+  <div class="l-card" id="l-card">
     <div class="l-title serif">Portal do Cliente</div>
     <div class="l-sub">Acompanhe cada etapa do seu projeto</div>
     <label class="l-label" for="inp-email">E-mail</label>
@@ -857,7 +889,6 @@ a{text-decoration:none;color:inherit}
         </a>
       </div>
       <button class="sb-back-btn" id="sb-back-btn">&#8592; Todos os projetos</button>
-      <button class="sb-edit-btn" id="sb-edit-btn" onclick="ceOpen()">&#9998; Editar Projeto</button>
       <button class="sb-logout-btn" id="sb-logout-btn">Sair do portal</button>
     </aside>
     <div id="vc"></div>
@@ -873,6 +904,14 @@ a{text-decoration:none;color:inherit}
     </div>
   </div>
   <div class="ce-saved-toast" id="ce-toast">&#10003; Altera&#231;&#227;o salva</div>
+
+  <div class="app-modal-overlay" id="app-modal-overlay">
+    <div class="app-modal">
+      <div class="app-modal-icon" id="app-modal-icon"></div>
+      <div class="app-modal-msg" id="app-modal-msg"></div>
+      <div class="app-modal-actions" id="app-modal-actions"></div>
+    </div>
+  </div>
 
   <button class="fb-fab" id="fb-fab">
     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -1413,28 +1452,32 @@ function doLogin() {
   }
 
   sbLogin(email, senha).then(function(usuario) {
-    restaurarBotao();
     if (!usuario) {
+      restaurarBotao();
       // fallback: tenta login local (dados embutidos no código), caso o e-mail
       // ainda não exista no banco
       doLoginLocal(email, senha);
       return;
     }
     if (usuario.papel === 'consultor') {
+      restaurarBotao();
       _isMaster = true;
       salvarSessao(email, 'consultor', 'sb');
       ge('login-screen').style.display = 'none';
       renderMasterSupabase();
       return;
     }
-    // papel === 'cliente'
+    // papel === 'cliente' — mantém o botão travado, ainda falta carregar o projeto
+    if (btn) btn.textContent = 'Carregando projeto...';
     _isMaster = false;
     sbCarregarProjeto(email).then(function(dados) {
+      restaurarBotao();
       if (!dados) { err.textContent = 'Projeto não encontrado para este e-mail.'; err.style.display = 'block'; return; }
       salvarSessao(email, 'cliente', 'sb');
       ge('login-screen').style.display = 'none';
       openClient(dados);
     }).catch(function(e) {
+      restaurarBotao();
       console.error(e);
       err.textContent = 'Erro ao carregar o projeto. Tente novamente.';
       err.style.display = 'block';
@@ -1489,14 +1532,18 @@ function tentarRestaurarSessao() {
 
   // papel === 'cliente'
   if (sb && sess.origem === 'sb') {
+    ge('l-restoring').style.display = 'flex';
+    ge('l-logo').style.display = 'none';
+    ge('l-card').style.display = 'none';
     sbCarregarProjeto(sess.email).then(function(dados) {
-      if (!dados) { limparSessao(); return; }
+      if (!dados) { limparSessao(); mostrarFormularioLogin(); return; }
       _isMaster = false;
       ge('login-screen').style.display = 'none';
       openClient(dados);
     }).catch(function(e) {
       console.error('Falha ao restaurar sessão:', e);
-      // não desloga por causa de erro de rede passageiro; mantém a tela de login disponível
+      // não desloga por causa de erro de rede passageiro; volta a mostrar o formulário
+      mostrarFormularioLogin();
     });
     return;
   }
@@ -1509,6 +1556,13 @@ function tentarRestaurarSessao() {
   } else {
     limparSessao();
   }
+}
+
+// Volta a tela de login do estado "verificando sessão" para o formulário normal
+function mostrarFormularioLogin() {
+  var r = ge('l-restoring'); if (r) r.style.display = 'none';
+  var lg = ge('l-logo'); if (lg) lg.style.display = '';
+  var lc = ge('l-card'); if (lc) lc.style.display = '';
 }
 
 // ═══════════════════════════════════════════
@@ -1646,13 +1700,17 @@ var CE_CATEGORIAS = [
       { k:'responsavel', label:'É o responsável principal pelo projeto?', tipo:'select', opcoes:[['','Não'],['sim','Sim']] }
     ]
   },
-  { id:'dadosEmpresa', label:'Dados da Empresa e Consultor', tipo:'single',
+  { id:'dadosEmpresa', label:'Dados da Empresa', tipo:'single',
     campos: [
       { k:'cnpj', label:'CNPJ', tipo:'text', col:'cnpj' },
       { k:'setor', label:'Setor / atividade', tipo:'text', col:'setor' },
       { k:'endereco', label:'Endereço', tipo:'text', col:'endereco' },
       { k:'telefoneEmpresa', label:'Telefone da empresa', tipo:'text', col:'telefone_empresa' },
-      { k:'emailEmpresa', label:'E-mail da empresa', tipo:'text', col:'email_empresa' },
+      { k:'emailEmpresa', label:'E-mail da empresa', tipo:'text', col:'email_empresa' }
+    ]
+  },
+  { id:'dadosConsultor', label:'Dados do Consultor', tipo:'single',
+    campos: [
       { k:'consultorCargo', label:'Cargo do consultor responsável na EXPLORE', tipo:'text', col:'consultor_cargo' },
       { k:'consultorEmail', label:'E-mail do consultor responsável', tipo:'text', col:'consultor_email' },
       { k:'consultorTelefone', label:'Telefone do consultor responsável', tipo:'text', col:'consultor_telefone' }
@@ -1666,40 +1724,111 @@ function badgeStLabel(s) {
   return m[s] || s;
 }
 
-function ceOpen() {
-  _ceCat = null; _ceEditIdx = null;
-  ge('ce-overlay').className = 'ce-overlay on';
-  ceRenderCategorias();
-}
 function ceClose() {
   ge('ce-overlay').className = 'ce-overlay';
 }
+
+// Ícone de lápis reutilizado nos atalhos de edição contextual espalhados pelas telas
+function pencilSVG() {
+  return '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+}
+
+// Monta o botão "+ Adicionar X" usado no topo das listas, direto nas telas do cliente.
+// Só aparece para o consultor (_isMaster). Pula a grade da Central de Edição e vai
+// direto pro formulário de cadastro daquela categoria.
+function ceAddBtnHTML(catId, label) {
+  if (!_isMaster) return '';
+  return '<button class="ce-inline-add" onclick="ceQuickAdd(\'' + catId + '\')">+ ' + esc(label) + '</button>';
+}
+
+// Monta o ícone de lápis usado em cada item já existente nas telas do cliente.
+// idx é a posição do item no array daquela categoria (_c[campo][idx]).
+function ceEditIconHTML(catId, idx) {
+  if (!_isMaster) return '';
+  return '<button class="ce-inline-edit" onclick="event.stopPropagation();ceQuickEdit(\'' + catId + '\',' + idx + ')" title="Editar">' + pencilSVG() + '</button>';
+}
+
+function ceQuickAdd(catId) {
+  ge('ce-overlay').className = 'ce-overlay on';
+  _ceCat = ceFindCat(catId);
+  _ceEditIdx = -1;
+  ceRenderForm({});
+}
+
+function ceQuickEdit(catId, idx) {
+  ge('ce-overlay').className = 'ce-overlay on';
+  _ceCat = ceFindCat(catId);
+  _ceEditIdx = idx;
+  ceRenderForm(_c[_ceCat.campo][idx]);
+}
+
+// Mesma lógica, mas para categorias de campo único (tipo 'single'), como os blocos
+// de Empresa e Consultor dentro de Dados da Empresa.
+function ceQuickEditSingle(catId) {
+  ge('ce-overlay').className = 'ce-overlay on';
+  _ceCat = ceFindCat(catId);
+  ceRenderFormSingle();
+}
+
+// Atalho para a categoria de acesso (login do cliente)
+function ceQuickAcesso() {
+  ge('ce-overlay').className = 'ce-overlay on';
+  _ceCat = ceFindCat('acessoCliente');
+  ceRenderFormAcesso();
+}
+
+// Botão "✎ Editar X", usado nas categorias de campo único (não são listas)
+function ceEditSingleBtnHTML(catId, label) {
+  if (!_isMaster) return '';
+  return '<button class="ce-inline-add" onclick="ceQuickEditSingle(\'' + catId + '\')">' + pencilSVG() + ' ' + esc(label) + '</button>';
+}
+
+// ═══════════════════════════════════════════
+// MODAL PRÓPRIO — substitui alert()/confirm() nativos do navegador,
+// mantendo o padrão visual do produto (bordô/dourado/creme).
+// ═══════════════════════════════════════════
+var _modalConfirmCb = null;
+var ICO_INFO = '<svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+var ICO_DANGER = '<svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+
+// Substitui alert(). opts.danger = true para mensagens de erro/falha (ícone de atenção).
+function showAlert(msg, opts) {
+  opts = opts || {};
+  var icon = ge('app-modal-icon');
+  icon.className = 'app-modal-icon ' + (opts.danger ? 'danger' : 'info');
+  icon.innerHTML = opts.danger ? ICO_DANGER : ICO_INFO;
+  ge('app-modal-msg').textContent = msg;
+  ge('app-modal-actions').innerHTML = '<button class="app-modal-btn primary" onclick="closeAppModal()">Entendi</button>';
+  ge('app-modal-overlay').className = 'app-modal-overlay on';
+}
+
+// Substitui confirm(). onConfirm só roda se a pessoa confirmar; se cancelar, nada acontece.
+function showConfirm(msg, onConfirm, opts) {
+  opts = opts || {};
+  var icon = ge('app-modal-icon');
+  icon.className = 'app-modal-icon danger';
+  icon.innerHTML = ICO_DANGER;
+  ge('app-modal-msg').textContent = msg;
+  _modalConfirmCb = onConfirm;
+  ge('app-modal-actions').innerHTML = '<button class="app-modal-btn ghost" onclick="closeAppModal()">Cancelar</button><button class="app-modal-btn danger" onclick="confirmAppModal()">' + esc(opts.confirmLabel || 'Excluir') + '</button>';
+  ge('app-modal-overlay').className = 'app-modal-overlay on';
+}
+
+function closeAppModal() {
+  ge('app-modal-overlay').className = 'app-modal-overlay';
+  _modalConfirmCb = null;
+}
+
+function confirmAppModal() {
+  var cb = _modalConfirmCb;
+  closeAppModal();
+  if (cb) cb();
+}
+
 function ceToast() {
   var t = ge('ce-toast');
   t.className = 'ce-saved-toast on';
   setTimeout(function(){ t.className = 'ce-saved-toast'; }, 1800);
-}
-
-function ceRenderCategorias() {
-  _ceCat = null;
-  ge('ce-title').textContent = 'Central de Edição — ' + (_c.empresa||'');
-  var h = '<div class="ce-cat-grid">';
-  for (var i = 0; i < CE_CATEGORIAS.length; i++) {
-    var c = CE_CATEGORIAS[i];
-    h += '<div class="ce-cat-card" onclick="ceOpenCategoria(\'' + c.id + '\')">';
-    h += '<div class="ce-cat-name">' + esc(c.label) + '</div>';
-    if (c.tipo === 'single') {
-      h += '<div class="ce-cat-count">Editar ficha</div>';
-    } else if (c.tipo === 'acesso') {
-      h += '<div class="ce-cat-count">' + esc(_c._loginEmail || 'Editar acesso') + '</div>';
-    } else {
-      var arr = _c[c.campo] || [];
-      h += '<div class="ce-cat-count">' + arr.length + ' ' + (arr.length===1?'item':'itens') + '</div>';
-    }
-    h += '</div>';
-  }
-  h += '</div>';
-  ge('ce-body').innerHTML = h;
 }
 
 function ceFindCat(id) {
@@ -1707,19 +1836,11 @@ function ceFindCat(id) {
   return null;
 }
 
-function ceOpenCategoria(id) {
-  _ceCat = ceFindCat(id);
-  _ceEditIdx = null;
-  if (_ceCat.tipo === 'single') { ceRenderFormSingle(); return; }
-  if (_ceCat.tipo === 'acesso') { ceRenderFormAcesso(); return; }
-  ceRenderLista();
-}
-
 // Formulário de campos únicos do projeto (dados cadastrais), sem lista nem múltiplos itens
 function ceRenderFormSingle() {
   var cat = _ceCat;
   ge('ce-title').textContent = cat.label;
-  var h = '<button class="ce-back" onclick="ceRenderCategorias()">&#8592; Todas as categorias</button>';
+  var h = '<button class="ce-back" onclick="ceClose()">&#8592; Fechar</button>';
   for (var i = 0; i < cat.campos.length; i++) {
     var f = cat.campos[i];
     var val = _c[f.k] != null ? _c[f.k] : '';
@@ -1729,7 +1850,7 @@ function ceRenderFormSingle() {
   }
   h += '<div class="ce-form-actions">';
   h += '<button class="ce-btn-save" id="ce-btn-save" onclick="ceSaveSingle()">Salvar</button>';
-  h += '<button class="ce-btn-cancel" onclick="ceRenderCategorias()">Cancelar</button>';
+  h += '<button class="ce-btn-cancel" onclick="ceClose()">Cancelar</button>';
   h += '</div>';
   ge('ce-body').innerHTML = h;
 }
@@ -1744,13 +1865,14 @@ function ceSaveSingle() {
     _c[f.k] = val;
     colunas[f.col] = val || null;
   }
-  ceRenderCategorias();
+  ceClose();
+  setView(_currentView);
   if (!sb || !_c._projetoId) { ceToast(); return; }
   sbAtualizarProjetoCampos(_c._projetoId, colunas).then(function() {
     ceToast();
   }).catch(function(e) {
     console.error('Erro ao salvar dados cadastrais:', e);
-    alert('Os dados foram atualizados na tela, mas não foi possível salvar no banco. Verifique sua conexão e tente novamente.');
+    showAlert('Os dados foram atualizados na tela, mas não foi possível salvar no banco. Verifique sua conexão e tente novamente.', {danger:true});
   });
 }
 
@@ -1759,24 +1881,24 @@ function ceSaveSingle() {
 // (são as duas colunas que precisam ficar iguais para o login continuar funcionando).
 function ceRenderFormAcesso() {
   ge('ce-title').textContent = 'Acesso do Cliente';
-  var h = '<button class="ce-back" onclick="ceRenderCategorias()">&#8592; Todas as categorias</button>';
+  var h = '<button class="ce-back" onclick="ceClose()">&#8592; Fechar</button>';
   h += '<div style="font-size:.79rem;color:var(--tm);line-height:1.6;margin-bottom:1.1rem;padding:.85rem 1rem;background:var(--cream);border-radius:var(--r);border-left:3px solid var(--gold)">Trocar o e-mail aqui desloga o cliente em qualquer sessão já aberta com o e-mail antigo. Ele vai precisar entrar de novo com o e-mail novo. Deixe a senha em branco se não quiser alterá-la.</div>';
   h += '<div class="ce-form-row"><label class="ce-form-label">E-mail de login</label>';
   h += '<input class="ce-form-input" type="text" id="ce-acesso-email" value="' + esc(_c._loginEmail || '') + '"></div>';
   h += '<div class="ce-form-row"><label class="ce-form-label">Nova senha</label>';
-  h += '<input class="ce-form-input" type="text" id="ce-acesso-senha1" placeholder="Deixe em branco para não alterar"></div>';
+  h += '<input class="ce-form-input" type="password" id="ce-acesso-senha1" placeholder="Deixe em branco para não alterar" autocomplete="new-password"></div>';
   h += '<div class="ce-form-row"><label class="ce-form-label">Confirmar nova senha</label>';
-  h += '<input class="ce-form-input" type="text" id="ce-acesso-senha2" placeholder="Repita a nova senha"></div>';
+  h += '<input class="ce-form-input" type="password" id="ce-acesso-senha2" placeholder="Repita a nova senha" autocomplete="new-password"></div>';
   h += '<div class="ce-form-actions">';
   h += '<button class="ce-btn-save" id="ce-btn-save" onclick="ceSaveAcesso()">Salvar</button>';
-  h += '<button class="ce-btn-cancel" onclick="ceRenderCategorias()">Cancelar</button>';
+  h += '<button class="ce-btn-cancel" onclick="ceClose()">Cancelar</button>';
   h += '</div>';
   ge('ce-body').innerHTML = h;
 }
 
 function ceSaveAcesso() {
   if (!sb || !_c._projetoId || !_c._loginEmail) {
-    alert('Esse cliente ainda não tem login real conectado ao banco de dados, então não é possível alterar acesso por aqui.');
+    showAlert('Esse cliente ainda não tem login real conectado ao banco de dados, então não é possível alterar acesso por aqui.');
     return;
   }
   var emailAntigo = _c._loginEmail;
@@ -1785,12 +1907,12 @@ function ceSaveAcesso() {
   var senha2 = ge('ce-acesso-senha2').value || '';
 
   if (!emailNovo || emailNovo.indexOf('@') === -1 || emailNovo.indexOf('.') === -1) {
-    alert('Digite um e-mail válido.');
+    showAlert('Digite um e-mail válido.');
     return;
   }
   if (senha1 || senha2) {
-    if (senha1 !== senha2) { alert('As duas senhas digitadas não são iguais.'); return; }
-    if (senha1.length < 4) { alert('Use uma senha com pelo menos 4 caracteres.'); return; }
+    if (senha1 !== senha2) { showAlert('As duas senhas digitadas não são iguais.'); return; }
+    if (senha1.length < 4) { showAlert('Use uma senha com pelo menos 4 caracteres.'); return; }
   }
 
   var colunasUsuario = {};
@@ -1798,7 +1920,7 @@ function ceSaveAcesso() {
   if (emailMudou) colunasUsuario.email = emailNovo;
   if (senha1) colunasUsuario.senha = senha1;
 
-  if (!emailMudou && !senha1) { ceRenderCategorias(); ceToast(); return; }
+  if (!emailMudou && !senha1) { ceClose(); ceToast(); return; }
 
   var btnSave = ge('ce-btn-save');
   if (btnSave) { btnSave.disabled = true; btnSave.textContent = 'Salvando...'; }
@@ -1808,13 +1930,14 @@ function ceSaveAcesso() {
     return sbAtualizarProjetoCampos(_c._projetoId, { cliente_email: emailNovo });
   }).then(function() {
     if (emailMudou) _c._loginEmail = emailNovo;
-    ceRenderCategorias();
+    ceClose();
+    setView(_currentView);
     ceToast();
   }).catch(function(e) {
     console.error('Erro ao atualizar acesso do cliente:', e);
     if (btnSave) { btnSave.disabled = false; btnSave.textContent = 'Salvar'; }
     var motivo = (e && e.message) ? e.message : 'motivo não identificado';
-    alert('Não foi possível atualizar o acesso.\n\nMotivo retornado: ' + motivo);
+    showAlert('Não foi possível atualizar o acesso.\n\nMotivo retornado: ' + motivo, {danger:true});
   });
 }
 
@@ -1822,9 +1945,9 @@ function ceRenderLista() {
   var cat = _ceCat;
   ge('ce-title').textContent = cat.label;
   var arr = _c[cat.campo] || [];
-  var h = '<button class="ce-back" onclick="ceRenderCategorias()">&#8592; Todas as categorias</button>';
+  var h = '<button class="ce-back" onclick="ceClose()">&#8592; Fechar</button>';
   if (!arr.length) {
-    h += '<div class="ce-empty">Nenhum item cadastrado ainda.</div>';
+    h += '<div class="ce-empty">Nenhum item cadastrado ainda. Use o botão abaixo para adicionar o primeiro.</div>';
   } else {
     for (var i = 0; i < arr.length; i++) {
       var it = arr[i];
@@ -1899,7 +2022,7 @@ function ceSaveItem() {
     if (f.tipo === 'file') continue;
     var el = ge('ce-f-' + f.k);
     var val = el.value;
-    if (f.req && !val) { alert('Preencha o campo "' + f.label + '"'); return; }
+    if (f.req && !val) { showAlert('Preencha o campo "' + f.label + '"'); return; }
     if (f.tipo === 'list') {
       item[f.k] = val.split('\n').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
     } else if (f.tipo === 'taglist') {
@@ -1917,10 +2040,10 @@ function ceSaveItem() {
     var fileEl = ge('ce-f-' + campoArquivo.k);
     var file = fileEl.files && fileEl.files[0];
     if (file) {
-      if (!sb || !_c._projetoId) { alert('Não é possível anexar arquivos sem conexão com o banco de dados.'); return; }
+      if (!sb || !_c._projetoId) { showAlert('Não é possível anexar arquivos sem conexão com o banco de dados.'); return; }
       var tamanhoMB = file.size / 1024 / 1024;
       if (tamanhoMB > DOC_MAX_MB) {
-        alert('O arquivo "' + file.name + '" tem ' + tamanhoMB.toFixed(1) + ' MB. O limite configurado neste portal é de ' + DOC_MAX_MB + ' MB. Reduza o tamanho do arquivo (ex: compactar o PDF) ou peça para o responsável técnico aumentar o limite no Supabase, em Storage > bucket "documentos".');
+        showAlert('O arquivo "' + file.name + '" tem ' + tamanhoMB.toFixed(1) + ' MB. O limite configurado neste portal é de ' + DOC_MAX_MB + ' MB. Reduza o tamanho do arquivo (ex: compactar o PDF) ou peça para o responsável técnico aumentar o limite no Supabase, em Storage > bucket "documentos".', {danger:true});
         return;
       }
       var btnSave = ge('ce-btn-save');
@@ -1933,7 +2056,7 @@ function ceSaveItem() {
         console.error('Erro no upload:', e);
         if (btnSave) { btnSave.disabled = false; btnSave.textContent = 'Salvar'; }
         var motivo = (e && e.message) ? e.message : 'motivo não identificado pelo sistema';
-        alert('Não foi possível enviar o arquivo.\n\nMotivo retornado: ' + motivo + '\n\nSe a mensagem mencionar tamanho ou "exceeded", o limite real configurado no Supabase (Storage > bucket "documentos") está menor do que o esperado. Avise o responsável técnico para ajustar lá.');
+        showAlert('Não foi possível enviar o arquivo.\n\nMotivo retornado: ' + motivo + '\n\nSe a mensagem mencionar tamanho ou "exceeded", o limite real configurado no Supabase (Storage > bucket "documentos") está menor do que o esperado. Avise o responsável técnico para ajustar lá.', {danger:true});
       });
       return; // espera o upload terminar antes de continuar
     }
@@ -1952,7 +2075,7 @@ function ceFinalizarSalvamento(cat, item) {
   if (cat.campo === 'fases') ordenarFases(_c.fases);
   if (cat.campo === 'entregas') ordenarEntregas(_c.entregas);
   ceRenderLista();
-  if (_currentView === cat.id || (cat.id === 'proximosPassos' && _currentView === 'proximos')) setView(_currentView);
+  setView(_currentView);
 
   // Se não há conexão com o banco ou não sabemos o id do projeto, paramos aqui
   // (a mudança fica só na memória desta sessão, igual ao comportamento anterior)
@@ -1968,19 +2091,24 @@ function ceFinalizarSalvamento(cat, item) {
     ceToast();
   }).catch(function(e) {
     console.error('Erro ao salvar no banco:', e);
-    alert('A alteração apareceu na tela, mas não foi possível salvar no banco de dados. Verifique sua conexão e tente novamente.');
+    showAlert('A alteração apareceu na tela, mas não foi possível salvar no banco de dados. Verifique sua conexão e tente novamente.', {danger:true});
   });
 }
 
 function ceDeleteItem(i) {
-  if (!confirm('Tem certeza que deseja excluir este item?')) return;
+  showConfirm('Tem certeza que deseja excluir este item?', function() {
+    ceDeleteItemConfirmado(i);
+  }, {confirmLabel:'Excluir'});
+}
+
+function ceDeleteItemConfirmado(i) {
   var item = _c[_ceCat.campo][i];
   var cat = _ceCat;
 
   // Remoção otimista
   _c[cat.campo].splice(i, 1);
   ceRenderLista();
-  if (_currentView === cat.id) setView(_currentView);
+  setView(_currentView);
 
   if (!sb || !item._id) { ceToast(); return; }
 
@@ -1988,7 +2116,7 @@ function ceDeleteItem(i) {
     ceToast();
   }).catch(function(e) {
     console.error('Erro ao excluir no banco:', e);
-    alert('O item sumiu da tela, mas não foi possível excluir no banco de dados. Recarregue a página para conferir.');
+    showAlert('O item sumiu da tela, mas não foi possível excluir no banco de dados. Recarregue a página para conferir.', {danger:true});
   });
 }
 
@@ -2014,10 +2142,6 @@ function openClient(dados) {
   var backBtn = ge('sb-back-btn');
   if (_isMaster) backBtn.className = 'sb-back-btn on';
   else backBtn.className = 'sb-back-btn';
-
-  var editBtn = ge('sb-edit-btn');
-  if (_isMaster) editBtn.className = 'sb-edit-btn on';
-  else editBtn.className = 'sb-edit-btn';
 
   buildNav();
   setView('dashboard');
@@ -2107,7 +2231,7 @@ function renderMasterSupabase() {
   sb.from('projetos').select('cliente_email').then(function(res) {
     if (res.error) { grid.innerHTML = '<p style="color:#f88;padding:1rem">Erro ao carregar projetos.</p>'; console.error(res.error); return; }
     var emails = (res.data || []).map(function(p){ return p.cliente_email; });
-    if (!emails.length) { grid.innerHTML = '<p style="color:rgba(255,255,255,.6);padding:1rem">Nenhum projeto cadastrado ainda.</p>'; return; }
+    if (!emails.length) { grid.innerHTML = '<p style="color:rgba(255,255,255,.6);padding:1rem">Nenhum projeto cadastrado ainda. Cadastre um cliente no banco de dados para começar.</p>'; return; }
 
     Promise.all(emails.map(function(email){ return sbCarregarProjeto(email); })).then(function(todos) {
       var html = '';
@@ -2146,7 +2270,6 @@ var NAV_SECTIONS = [
     { id:'dashboard', label:'Visão Geral' },
     { id:'progresso', label:'Progresso' },
     { id:'cronograma', label:'Cronograma' },
-    { id:'agenda', label:'Agenda' },
     { id:'documentos', label:'Documentos' },
     { id:'proximos', label:'Próximos Passos' }
   ]},
@@ -2159,10 +2282,7 @@ var NAV_SECTIONS = [
     { id:'dadosEmpresa', label:'Dados da Empresa' },
     { id:'equipe', label:'Equipe EXPLORE' },
     { id:'valor', label:'Valor Entregue' },
-    { id:'aprendizados', label:'Aprendizados' },
-    { id:'proxima', label:'Próxima Jornada' },
-    { id:'sobre', label:'Sobre a EXPLORE' },
-    { id:'glossario', label:'Glossário' }
+    { id:'sobre', label:'Sobre a EXPLORE' }
   ]}
 ];
 
@@ -2204,19 +2324,11 @@ function setView(view) {
     documentos:  function(){ renderDocumentos('todos'); },
     proximos:    renderProximos,
     kpis:        renderKPIs,
-    decisoes:    renderDecisoes,
-    nps:         renderNPS,
     equipe:      renderEquipe,
     dadosEmpresa: renderDadosEmpresa,
     radar:       renderRadar,
-    heatmap:     renderHeatmap,
-    burndown:    renderBurndown,
     riscos:      renderRiscos,
-    agenda:      renderAgenda,
-    glossario:   renderGlossario,
     valor:       renderValor,
-    aprendizados:renderAprendizados,
-    proxima:     renderProximaJornada,
     sobre:       renderSobre
   };
   var fn = renders[view];
@@ -2384,7 +2496,7 @@ function doExport() {
   var proxPassos = _c.proximosPassos.filter(function(p) { return p.prioridade === 'alta'; }).slice(0, 5);
   var decs = (_c.decisoes || []).slice(0, 4);
   var win = window.open('', '_blank');
-  if (!win) { alert('Permita popups para exportar o relatório.'); return; }
+  if (!win) { showAlert('Permita popups para exportar o relatório.'); return; }
   var body = '<html><head><meta charset="UTF-8"><title>Relatório '+esc(_c.empresa)+' '+hoje+'</title>';
   body += '<style>body{font-family:system-ui,sans-serif;color:#2C1A24;padding:2rem;max-width:760px;margin:0 auto;line-height:1.6}';
   body += 'h1{font-family:Georgia,serif;font-size:1.5rem;font-weight:bold;color:#612B4A;margin-bottom:.4rem}';
@@ -2568,7 +2680,7 @@ function renderProgresso() {
   h += '<div class="ptb-end-row"><div class="ptb-end"><span class="ptb-end-date">' + fd(c.dataInicio) + '</span>Início</div>';
   h += '<div class="ptb-end fim"><span class="ptb-end-date">' + fd(c.dataPrevisao) + '</span>Previsão</div></div>';
   h += '</div>';
-  h += '<div class="sec-lbl">Fases do projeto</div>';
+  h += '<div class="sec-lbl-row"><div class="sec-lbl">Fases do projeto</div>' + ceAddBtnHTML('fases', 'Adicionar fase') + '</div>';
   h += '<div class="phase-list">';
 
   for (var fi = 0; fi < c.fases.length; fi++) {
@@ -2580,7 +2692,7 @@ function renderProgresso() {
 
     h += '<div class="phase-card ' + cls + '">';
     h += '<div class="pc-hdr"><div><div class="pc-name serif">' + esc(f.nome) + '</div><div class="pc-dates">' + dts + '</div></div>';
-    h += '<div class="pc-right"><div class="pc-peso-lbl">Peso</div><div class="pc-peso">' + f.peso + '%</div>' + bdg + '</div></div>';
+    h += '<div class="pc-right"><div class="pc-peso-lbl">Peso</div><div class="pc-peso">' + f.peso + '%</div>' + bdg + ceEditIconHTML('fases', fi) + '</div></div>';
     h += '<div class="pc-body"><div class="pc-desc">' + esc(f.descricao) + '</div>';
     h += '<div class="pc-ents-lbl">Entregáveis</div>';
     for (var ei = 0; ei < f.entregaveis.length; ei++) {
@@ -2601,7 +2713,7 @@ function renderProgresso() {
         h += '<div class="enc-card" id="' + eid + '">';
         h += '<button class="enc-toggle" onclick="toggleEnc(\'' + eid + '\')">';
         h += '<div class="enc-tl"><span class="enc-date">' + fdbr(enc.data) + '</span><span class="enc-title">' + esc(enc.titulo) + '</span></div>';
-        h += '<div class="enc-tr"><span class="badge ' + tipoCls + '">' + cap(enc.tipo) + '</span>' + chevSVG().replace('xchev','enc-chev') + '</div></button>';
+        h += '<div class="enc-tr"><span class="badge ' + tipoCls + '">' + cap(enc.tipo) + '</span>' + chevSVG().replace('xchev','enc-chev') + '</div></button><div class="ce-edit-abs" style="right:2.15rem;top:.4rem">' + ceEditIconHTML('encontros', c.encontros.indexOf(enc)) + '</div>';
         h += '<div class="enc-body"><div class="enc-inner">';
         if (enc.pauta && enc.pauta.length) {
           h += '<div class="enc-block"><div class="enc-block-lbl">Pauta</div>';
@@ -2875,7 +2987,8 @@ function renderCronograma(filtro) {
   }
   var lista = _fE === 'todos' ? all : all.filter(function(e) { return e.status === _fE; });
   var h = hVisual;
-  h += '<div class="cron-gantt-title" style="margin-top:1.4rem">Entregas do programa</div>';
+  h += agendaSectionHTML();
+  h += '<div class="sec-lbl-row" style="margin-top:1.4rem;border-bottom:none"><div class="cron-gantt-title" style="margin:0">Entregas do programa</div>' + ceAddBtnHTML('entregas', 'Adicionar entrega') + '</div>';
   h += '<div class="cron-counters sec">';
   h += '<div class="cc"><div class="cc-num cc-tot">' + all.length + '</div><div class="cc-lbl">Total</div></div>';
   h += '<div class="cc"><div class="cc-num cc-ok">' + concl + '</div><div class="cc-lbl">Concluídas</div></div>';
@@ -2888,9 +3001,10 @@ function renderCronograma(filtro) {
     h += '<button class="cf-btn' + (_fE === filters[fi].v ? ' on' : '') + '" onclick="renderCronograma(\'' + filters[fi].v + '\')">' + filters[fi].l + '</button>';
   }
   h += '</div><div class="ec-list">';
-  if (!lista.length) { h += '<p style="font-size:.83rem;color:var(--tl);padding:1rem 0">Nenhuma entrega neste filtro.</p>'; }
+  if (!lista.length) { h += '<p style="font-size:.83rem;color:var(--tl);padding:1rem 0">Nenhuma entrega neste filtro. Tente selecionar "Todas" ou outro status.</p>'; }
   for (var j = 0; j < lista.length; j++) {
     var e = lista[j];
+    var eIdx = all.indexOf(e);
     var cls = e.status === 'concluido' ? 'eco' : e.status === 'em_andamento' ? 'ecw' : 'ecp';
     var pr = cpraz(e.inicioISO, e.dataISO);
     var pc = e.status === 'concluido' ? 'var(--ok)' : pr > 85 ? 'var(--danger)' : pr > 60 ? 'var(--warn)' : 'var(--bx)';
@@ -2904,7 +3018,7 @@ function renderCronograma(filtro) {
     h += '<div class="ec-right"><div class="ec-data-lbl">Previsão</div><div class="ec-data">' + esc(e.data) + '</div>';
     h += '<div class="ec-pbar"><div class="ec-pfill" style="width:' + pr + '%;background:' + pc + '"></div></div>';
     if (hasDocs) h += chevSVG();
-    h += '</div></div>';
+    h += '</div>' + ceEditIconHTML('entregas', eIdx) + '</div>';
     if (hasDocs) {
       h += '<div class="xbody" id="' + ecid + '-b"><div class="xinner">' + docsRelHTML(e.docs) + '</div></div>';
     }
@@ -2941,10 +3055,12 @@ function renderDocumentos(filtro) {
     var cnt = all.filter(function(d) { return d.categoria === cats[ci]; }).length;
     h += '<button class="cf-btn' + (_fD === cats[ci] ? ' on' : '') + '" onclick="renderDocumentos(\'' + cats[ci] + '\')">' + cap(cats[ci]) + ' (' + cnt + ')</button>';
   }
-  h += '</div><div class="doc-grid">';
-  if (!lista.length) h += '<p style="font-size:.83rem;color:var(--tl);grid-column:1/-1;padding:1rem 0">Nenhum documento neste filtro.</p>';
+  h += '</div><div style="text-align:right;margin:.7rem 0">' + ceAddBtnHTML('documentos', 'Adicionar documento') + '</div><div class="doc-grid">';
+  if (!lista.length) h += '<p style="font-size:.83rem;color:var(--tl);grid-column:1/-1;padding:1rem 0">Nenhum documento neste filtro. Tente selecionar outra categoria.</p>';
   for (var j = 0; j < lista.length; j++) {
     var d = lista[j];
+    var docIdx = c.documentos.indexOf(d);
+    h += '<div class="doc-card-wrap">';
     h += '<a class="doc-card" href="' + esc(d.url) + '" target="_blank" rel="noopener">';
     h += '<div class="dc-top">' + docIco(d.categoria);
     h += '<div class="dc-tags"><span class="badge b-' + (d.categoria === 'diagnostico' ? 'alta' : d.categoria === 'plano' ? 'baixa' : d.categoria === 'relatorio' ? 'media' : 'blue') + '">' + cap(d.categoria) + '</span>';
@@ -2952,6 +3068,7 @@ function renderDocumentos(filtro) {
     h += '<div class="dc-nome">' + esc(d.titulo || d.nome) + '</div>';
     h += '<div class="dc-bot"><div><div class="dc-data">' + esc(d.data) + '</div><div class="dc-data" style="font-size:.67rem;opacity:.7">' + esc(d.tamanho) + '</div></div>';
     h += '<div class="dc-link">Acessar &#8599;</div></div></a>';
+    h += '<div class="ce-edit-abs">' + ceEditIconHTML('documentos', docIdx) + '</div></div>';
   }
   h += '</div>' + footer();
   sv(h);
@@ -2976,21 +3093,21 @@ function renderProximos() {
   h += '<div class="prc prc-a"><div class="prc-num">' + na + '</div><div class="prc-lbl">Alta prioridade</div></div>';
   h += '<div class="prc prc-m"><div class="prc-num">' + nm + '</div><div class="prc-lbl">Média prioridade</div></div>';
   h += '<div class="prc prc-b"><div class="prc-num">' + nb + '</div><div class="prc-lbl">Baixa prioridade</div></div>';
-  h += '</div><div class="sec-lbl">Itens priorizados por urgência</div><div class="passo-list">';
+  h += '</div><div class="sec-lbl-row"><div class="sec-lbl">Itens priorizados por urgência</div>' + ceAddBtnHTML('proximosPassos', 'Adicionar passo') + '</div><div class="passo-list">';
   for (var j = 0; j < passos.length; j++) {
     var p = passos[j];
+    var pIdx = c.proximosPassos.indexOf(p);
     var dias2 = drest(p.dataLimite);
     var dcls = dias2 < 0 || dias2 <= 3 ? 'pd-urg' : dias2 <= 7 ? 'pd-warn' : 'pd-norm';
     var dlbl = dias2 < 0 ? '&#9888; ' + Math.abs(dias2) + 'd em atraso' : dias2 === 0 ? '&#9888; Vence hoje' : dias2 <= 3 ? '&#8987; ' + dias2 + 'd restantes' : fdbr2(p.dataLimite);
     var av = ini2(p.responsavel);
     h += '<div class="passo pa-' + p.prioridade.charAt(0) + '">';
-    h += '<div class="passo-top"><div class="passo-titulo">' + esc(p.titulo) + '</div><span class="badge b-' + p.prioridade + '">' + cap(p.prioridade) + '</span></div>';
+    h += '<div class="passo-top"><div class="passo-titulo">' + esc(p.titulo) + '</div><div style="display:flex;align-items:center;gap:.3rem"><span class="badge b-' + p.prioridade + '">' + cap(p.prioridade) + '</span>' + ceEditIconHTML('proximosPassos', pIdx) + '</div></div>';
     h += '<div class="passo-desc">' + esc(p.descricao) + '</div>';
     h += '<div class="passo-bot"><div class="passo-resp"><div class="passo-av">' + av + '</div>' + esc(p.responsavel) + '</div>';
     h += '<div class="passo-data ' + dcls + '"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + dlbl + '</div></div></div>';
   }
   h += '</div>';
-  h += proximosEncontrosHTML();
   h += footer();
   sv(h);
 }
@@ -3042,7 +3159,7 @@ function kpiCardHTML(k, idx) {
   h += '<div class="kpi-meta-lbl">Meta: <strong>' + k.meta + (k.unidade || '') + '</strong> · ' + pct + '% atingido</div>';
   h += '<div class="kpi-bar-bg"><div class="kpi-bar-fill" style="width:' + pct + '%;background:' + tInfo.col + '"></div></div>';
   h += '<span class="kpi-trend ' + tInfo.cls + '">' + tInfo.icon + '</span></div>';
-  h += chevSVG() + '</button>';
+  h += chevSVG() + '</button><div class="ce-edit-abs">' + ceEditIconHTML('kpis', idx) + '</div>';
   h += '<div class="kpi-xbody"><div class="kpi-xinner">';
   h += '<div style="height:1px;background:var(--cream-dk);margin:.5rem 0"></div>';
   h += '<div style="font-size:.81rem;color:var(--tm);margin-bottom:.55rem">' + esc(k.descricao || '') + '</div>';
@@ -3060,8 +3177,9 @@ function kpiCardHTML(k, idx) {
 
 function renderKPIs() {
   var kpis = _c.kpis || [];
-  if (!kpis.length) { sv('<p style="padding:2rem;color:var(--tl)">Nenhum KPI cadastrado.</p>' + footer()); return; }
-  var h = '';
+  var addBtn = ceAddBtnHTML('kpis', 'Adicionar indicador');
+  if (!kpis.length) { sv('<div style="text-align:right;margin-bottom:.7rem">' + addBtn + '</div><p style="padding:2rem;color:var(--tl)">Nenhum KPI cadastrado ainda. Use o botão "+ Adicionar indicador" acima para começar.</p>' + footer()); return; }
+  var h = '<div style="text-align:right;margin-bottom:.7rem">' + addBtn + '</div>';
   var temFase = kpis.some(function(k) { return k.fase; });
   if (temFase) {
     // Agrupa por fase do projeto, na mesma ordem cronológica das fases. Indicadores
@@ -3129,11 +3247,11 @@ function valorHistoricoHTML(filtro) {
   var items = valorHistoricoItens();
   var lista = _fTL === 'todos' ? items : items.filter(function(it){ return it.tipo === _fTL; });
 
-  var h = '<div class="sec-lbl" style="margin-top:1.4rem">Histórico consolidado</div><div class="cf-row">';
+  var h = '<div class="sec-lbl-row" style="margin-top:1.4rem"><div class="sec-lbl" style="margin:0;padding:0;border:none">Histórico consolidado</div>' + ceAddBtnHTML('decisoes', 'Adicionar decisão') + '</div><div class="cf-row">';
   var tlFilters = [{v:'todos',l:'Todos'},{v:'enc',l:'Encontros'},{v:'ent',l:'Entregas'},{v:'doc',l:'Documentos'},{v:'dec',l:'Decisões'}];
   for (var tf = 0; tf < tlFilters.length; tf++) h += '<button class="cf-btn'+(_fTL===tlFilters[tf].v?' on':'')+'" onclick="renderValor(\''+tlFilters[tf].v+'\')">'+tlFilters[tf].l+'</button>';
   h += '</div><div class="tl-list">';
-  if (!lista.length) h += '<p style="font-size:.83rem;color:var(--tl);padding:1rem 0">Nenhum item neste filtro.</p>';
+  if (!lista.length) h += '<p style="font-size:.83rem;color:var(--tl);padding:1rem 0">Nenhum item neste filtro. Tente selecionar outro tipo.</p>';
   var dotCls = {enc:'tl-d-enc',ent:'tl-d-ent',doc:'tl-d-doc',dec:'tl-d-dec'};
   var badgeCls = {enc:'b-presencial',ent:'b-ok',doc:'b-blue',dec:'b-warn',presencial:'b-presencial',online:'b-online',workshop:'b-workshop',entrega:'b-ok',diagnostico:'b-alta',plano:'b-baixa',relatorio:'b-media',material:'b-blue',decisão:'b-warn'};
   for (var ti = 0; ti < lista.length; ti++) {
@@ -3183,31 +3301,6 @@ function valorHistoricoHTML(filtro) {
 }
 
 // ═══════════════════════════════════════════
-// VIEW: DECISÕES
-// ═══════════════════════════════════════════
-function renderDecisoes() {
-  var decs = _c.decisoes || [];
-  if (!decs.length) { sv('<p style="padding:2rem;color:var(--tl)">Nenhuma decisão registrada.</p>' + footer()); return; }
-  var h = '<div class="sec-lbl">Decisões estratégicas</div><div class="dec-list">';
-  for (var i = 0; i < decs.length; i++) {
-    var d = decs[i];
-    var did = 'dec-' + i;
-    var av = ini2(d.responsavel);
-    h += '<div class="dec-card" id="' + did + '">';
-    h += '<button class="dec-toggle" onclick="toggleX(\'' + did + '\',\'dec\')">';
-    h += '<div class="dec-tl"><div class="dec-date">' + fd(d.data) + '</div><div class="dec-titulo">' + esc(d.titulo) + '</div></div>';
-    h += chevSVG() + '</button>';
-    h += '<div class="dec-xbody"><div class="dec-xinner"><div style="height:1px;background:var(--cream-dk);margin:.4rem 0 .65rem"></div>';
-    h += '<div class="xblock-lbl">Contexto e impacto</div><div style="font-size:.81rem;color:var(--tm);line-height:1.6;margin-bottom:.55rem">' + esc(d.contexto) + '</div>';
-    h += '<div class="xblock-lbl">Responsável</div><div style="display:flex;align-items:center;gap:.45rem;font-size:.81rem;color:var(--tm)"><div style="width:20px;height:20px;border-radius:50%;background:var(--cream-dk);display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;color:var(--bx)">' + av + '</div>' + esc(d.responsavel) + '</div>';
-    h += docsRelHTML(d.docs || []);
-    h += '</div></div></div>';
-  }
-  h += '</div>' + footer();
-  sv(h);
-}
-
-// ═══════════════════════════════════════════
 // VIEW: NPS
 // ═══════════════════════════════════════════
 function npsCardHTML() {
@@ -3227,41 +3320,40 @@ function npsCardHTML() {
   return h;
 }
 
-function renderNPS() {
+// Histórico de avaliações do cliente (nota média, gráfico por fase, comentários).
+// O cartão de "avaliar agora" (npsCardHTML) mora no Dashboard; isso aqui é só o retrospecto,
+// exibido dentro de Valor Entregue.
+function npsHistoricoHTML() {
   var hist = _c.nps || [];
-  var med = hist.length ? Math.round(hist.reduce(function(s,n){ return s+n.nota; },0)/hist.length*10)/10 : 0;
-  var h = npsCardHTML();
-
-  if (hist.length) {
-    h += '<div class="nps-score-box sec">';
-    h += '<div style="font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:.4rem">Média geral</div>';
-    h += '<div class="nps-score">' + med + '</div><div class="nps-score-sub">de 5.0</div>';
-    h += '<div class="nps-bars">';
-    for (var bi = 0; bi < hist.length; bi++) {
-      var bh = Math.round(hist[bi].nota / 5 * 45);
-      h += '<div class="nps-bar-col"><div class="nps-bar" style="height:' + bh + 'px"></div>';
-      h += '<div class="nps-bar-fase">' + esc(hist[bi].fase.split(' ')[0]) + '</div></div>';
-    }
-    h += '</div></div>';
-    h += '<div class="sec-lbl">Histórico de avaliações</div><div class="nps-hist">';
-    for (var hi = 0; hi < hist.length; hi++) {
-      var n = hist[hi];
-      var nhid = 'nps-h-' + hi;
-      h += '<div class="nps-hcard" id="' + nhid + '">';
-      h += '<button class="nps-htoggle" onclick="toggleX(\'' + nhid + '\',\'nps\')">';
-      h += '<div style="display:flex;align-items:center;gap:.65rem"><div>';
-      h += '<div class="nps-hstars">';
-      for (var si = 1; si <= 5; si++) h += '<span class="nps-hstar' + (si <= n.nota ? ' on' : '') + '">&#9733;</span>';
-      h += '</div><div class="nps-hfase">' + esc(n.fase) + '</div></div>';
-      h += '<div class="nps-hpreview">' + esc(n.comentario.substring(0,50)) + (n.comentario.length > 50 ? '…' : '') + '</div></div>';
-      h += chevSVG() + '</button>';
-      h += '<div class="nps-hbody"><div class="nps-hinner" style="font-size:.81rem;color:var(--tm);line-height:1.6">' + esc(n.comentario) + '</div></div></div>';
-    }
-    h += '</div>';
+  if (!hist.length) return '';
+  var med = Math.round(hist.reduce(function(s,n){ return s+n.nota; },0)/hist.length*10)/10;
+  var h = '<div class="sec-lbl-row" style="margin-top:1.4rem"><div class="sec-lbl" style="margin:0;padding:0;border:none">Avaliações do cliente (NPS)</div></div>';
+  h += '<div class="nps-score-box sec">';
+  h += '<div style="font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:.4rem">Média geral</div>';
+  h += '<div class="nps-score">' + med + '</div><div class="nps-score-sub">de 5.0</div>';
+  h += '<div class="nps-bars">';
+  for (var bi = 0; bi < hist.length; bi++) {
+    var bh = Math.round(hist[bi].nota / 5 * 45);
+    h += '<div class="nps-bar-col"><div class="nps-bar" style="height:' + bh + 'px"></div>';
+    h += '<div class="nps-bar-fase">' + esc(hist[bi].fase.split(' ')[0]) + '</div></div>';
   }
-  h += footer();
-  sv(h);
-  _npsVal = 0;
+  h += '</div></div>';
+  h += '<div class="nps-hist">';
+  for (var hi = 0; hi < hist.length; hi++) {
+    var n = hist[hi];
+    var nhid = 'nps-h-' + hi;
+    h += '<div class="nps-hcard" id="' + nhid + '">';
+    h += '<button class="nps-htoggle" onclick="toggleX(\'' + nhid + '\',\'nps\')">';
+    h += '<div style="display:flex;align-items:center;gap:.65rem"><div>';
+    h += '<div class="nps-hstars">';
+    for (var si = 1; si <= 5; si++) h += '<span class="nps-hstar' + (si <= n.nota ? ' on' : '') + '">&#9733;</span>';
+    h += '</div><div class="nps-hfase">' + esc(n.fase) + '</div></div>';
+    h += '<div class="nps-hpreview">' + esc(n.comentario.substring(0,50)) + (n.comentario.length > 50 ? '…' : '') + '</div></div>';
+    h += chevSVG() + '</button>';
+    h += '<div class="nps-hbody"><div class="nps-hinner" style="font-size:.81rem;color:var(--tm);line-height:1.6">' + esc(n.comentario) + '</div></div></div>';
+  }
+  h += '</div>';
+  return h;
 }
 function setNPS(v) {
   _npsVal = v;
@@ -3294,6 +3386,7 @@ function renderDadosEmpresa(tab) {
 
   h += '<div class="df-tabs">';
   var tabs = [{v:'empresa',l:'Empresa'},{v:'consultor',l:'Consultor'},{v:'colaboradores',l:'Colaboradores'}];
+  if (_isMaster) tabs.push({v:'acesso',l:'Acesso'});
   for (var ti = 0; ti < tabs.length; ti++) {
     h += '<button class="cf-btn' + (_dfTab === tabs[ti].v ? ' on' : '') + '" onclick="renderDadosEmpresa(\'' + tabs[ti].v + '\')">' + tabs[ti].l + '</button>';
   }
@@ -3301,6 +3394,7 @@ function renderDadosEmpresa(tab) {
 
   h += '<div class="df-body">';
   if (_dfTab === 'empresa') {
+    h += '<div style="text-align:right;margin-bottom:.7rem">' + ceEditSingleBtnHTML('dadosEmpresa', 'Editar dados da empresa') + '</div>';
     h += '<div class="df-grid">';
     h += dfFieldHTML('CNPJ', c.cnpj);
     h += dfFieldHTML('Setor / atividade', c.setor);
@@ -3309,16 +3403,24 @@ function renderDadosEmpresa(tab) {
     h += dfFieldHTML('E-mail', c.emailEmpresa);
     h += '</div>';
   } else if (_dfTab === 'consultor') {
+    h += '<div style="text-align:right;margin-bottom:.7rem">' + ceEditSingleBtnHTML('dadosConsultor', 'Editar consultor') + '</div>';
     h += '<div class="df-grid">';
     h += dfFieldHTML('Nome', c.consultor);
     h += dfFieldHTML('Cargo', c.consultorCargo);
     h += dfFieldHTML('E-mail', c.consultorEmail);
     h += dfFieldHTML('Telefone', c.consultorTelefone);
     h += '</div>';
+  } else if (_dfTab === 'acesso' && _isMaster) {
+    h += '<div style="text-align:right;margin-bottom:.7rem"><button class="ce-inline-add" onclick="ceQuickAcesso()">' + pencilSVG() + ' Gerenciar acesso</button></div>';
+    h += '<div class="df-grid">';
+    h += dfFieldHTML('E-mail de login', c._loginEmail);
+    h += '</div>';
+    h += '<p style="font-size:.76rem;color:var(--tl);margin-top:.7rem">Alterar e-mail ou redefinir a senha do cliente fica em "Gerenciar acesso".</p>';
   } else {
     var colabs = c.colaboradores || [];
+    h += '<div style="text-align:right;margin-bottom:.7rem">' + ceAddBtnHTML('colaboradores', 'Adicionar colaborador') + '</div>';
     if (!colabs.length) {
-      h += '<p style="color:var(--tl);font-size:.85rem">Nenhum colaborador cadastrado ainda.</p>';
+      h += '<p style="color:var(--tl);font-size:.85rem">Nenhum colaborador cadastrado ainda. Use o botão "+ Adicionar colaborador" acima para começar.</p>';
     } else {
       h += '<div class="equipe-grid">';
       for (var i = 0; i < colabs.length; i++) {
@@ -3330,7 +3432,7 @@ function renderDadosEmpresa(tab) {
         h += '<button class="eq-toggle" onclick="toggleX(\'' + cid + '\',\'colab\')">';
         h += '<div style="display:flex;align-items:center;gap:.75rem"><div class="eq-av"><span>' + av + '</span></div>';
         h += '<div><div class="eq-nome serif">' + esc(p.nome) + '</div><div class="eq-papel">' + esc(p.cargo || '') + (isResp ? ' · Responsável pelo projeto' : '') + '</div></div></div>';
-        h += chevSVG() + '</button>';
+        h += chevSVG() + '</button><div class="ce-edit-abs">' + ceEditIconHTML('colaboradores', i) + '</div>';
         h += '<div class="eq-xbody"><div class="eq-xinner"><div style="height:1px;background:var(--cream-dk);margin:.4rem 0 .65rem"></div>';
         h += p.email ? '<div style="font-size:.81rem;color:var(--tm);margin-bottom:.3rem">E-mail: ' + esc(p.email) + '</div>' : '';
         h += p.telefone ? '<div style="font-size:.81rem;color:var(--tm)">Telefone: ' + esc(p.telefone) + '</div>' : '';
@@ -3350,8 +3452,9 @@ function renderDadosEmpresa(tab) {
 // ═══════════════════════════════════════════
 function renderEquipe() {
   var equipe = _c.equipe || [];
-  if (!equipe.length) { sv('<p style="padding:2rem;color:var(--tl)">Equipe não cadastrada.</p>' + footer()); return; }
-  var h = '<div class="sec-lbl">Equipe responsável</div><div class="equipe-grid">';
+  var addBtn = ceAddBtnHTML('equipe', 'Adicionar membro');
+  if (!equipe.length) { sv('<div style="text-align:right;margin-bottom:.7rem">' + addBtn + '</div><p style="padding:2rem;color:var(--tl)">Equipe ainda não cadastrada. Use o botão "+ Adicionar membro" acima para começar.</p>' + footer()); return; }
+  var h = '<div class="sec-lbl-row"><div class="sec-lbl">Equipe responsável</div>' + addBtn + '</div><div class="equipe-grid">';
   for (var i = 0; i < equipe.length; i++) {
     var p = equipe[i];
     var eid = 'eq-' + i;
@@ -3360,7 +3463,7 @@ function renderEquipe() {
     h += '<button class="eq-toggle" onclick="toggleX(\'' + eid + '\',\'equipe\')">';
     h += '<div style="display:flex;align-items:center;gap:.75rem"><div class="eq-av">' + (p.foto ? '<img src="'+esc(p.foto)+'" alt="'+esc(p.nome)+'">' : '<span>'+av+'</span>') + '</div>';
     h += '<div><div class="eq-nome serif">' + esc(p.nome) + '</div><div class="eq-papel">' + esc(p.papel) + '</div></div></div>';
-    h += chevSVG() + '</button>';
+    h += chevSVG() + '</button><div class="ce-edit-abs">' + ceEditIconHTML('equipe', i) + '</div>';
     h += '<div class="eq-xbody"><div class="eq-xinner"><div style="height:1px;background:var(--cream-dk);margin:.4rem 0 .65rem"></div>';
     h += '<span class="eq-espec">' + esc(p.especialidade) + '</span>';
     h += '<div class="eq-bio" style="margin-top:.55rem">' + esc(p.bio) + '</div>';
@@ -3471,165 +3574,12 @@ function renderRadar() {
 }
 
 // ═══════════════════════════════════════════
-// VIEW: HEATMAP
-// ═══════════════════════════════════════════
-function renderHeatmap() {
-  var c = _c;
-  var events = {};
-  function addE(dateStr) {
-    if (!dateStr) return;
-    var d = new Date(dateStr);
-    var k = d.toISOString().slice(0,10);
-    events[k] = (events[k]||0) + 1;
-  }
-  var encs = c.encontros || [];
-  for (var i = 0; i < encs.length; i++) addE(encs[i].data);
-  for (var j = 0; j < c.entregas.length; j++) { if (c.entregas[j].status === 'concluido') addE(c.entregas[j].dataISO); }
-  for (var k = 0; k < c.documentos.length; k++) {
-    var dp = c.documentos[k].data.split('/');
-    addE(dp[2]+'-'+dp[1]+'-'+dp[0]);
-  }
-  var decs = c.decisoes || [];
-  for (var l = 0; l < decs.length; l++) addE(decs[l].data);
-
-  var hoje = new Date();
-  var semanas = [];
-  var iniSem = new Date(c.dataInicio);
-  iniSem.setDate(iniSem.getDate() - iniSem.getDay());
-  while (iniSem <= hoje) {
-    var dias = [];
-    for (var d2 = 0; d2 < 7; d2++) {
-      var dt = new Date(iniSem); dt.setDate(dt.getDate()+d2);
-      var key = dt.toISOString().slice(0,10);
-      dias.push({date:key, count:events[key]||0});
-    }
-    semanas.push({dias:dias, label:iniSem.toLocaleDateString('pt-BR',{month:'short'})});
-    iniSem.setDate(iniSem.getDate()+7);
-  }
-  var totalAct = 0; for (var ev in events) totalAct += events[ev];
-  var semanasAtivas = semanas.filter(function(s){ return s.dias.some(function(d){ return d.count>0; }); }).length;
-
-  var h = '<div class="metrics-row sec">';
-  h += '<div class="metric"><div class="metric-lbl">Total atividades</div><div class="metric-val">' + totalAct + '</div><div class="metric-sub">no projeto</div></div>';
-  h += '<div class="metric"><div class="metric-lbl">Semanas ativas</div><div class="metric-val">' + semanasAtivas + '</div><div class="metric-sub">de ' + semanas.length + ' semanas</div></div>';
-  h += '<div class="metric"><div class="metric-lbl">Encontros</div><div class="metric-val">' + encs.length + '</div><div class="metric-sub">realizados</div></div>';
-  h += '</div>';
-  h += '<div class="hm-wrap"><div class="sec-lbl" style="margin-bottom:.85rem">Calendário de atividades</div>';
-  h += '<div class="hm-grid">';
-  for (var si = 0; si < semanas.length; si++) {
-    h += '<div class="hm-col">';
-    for (var di = 0; di < semanas[si].dias.length; di++) {
-      var cnt = semanas[si].dias[di].count;
-      var lv = cnt === 0 ? '' : cnt === 1 ? 'l1' : cnt === 2 ? 'l2' : cnt === 3 ? 'l3' : 'l4';
-      h += '<div class="hm-cell ' + lv + '" title="' + esc(semanas[si].dias[di].date) + ': ' + cnt + '"></div>';
-    }
-    h += '<div class="hm-month">' + semanas[si].label + '</div></div>';
-  }
-  h += '</div>';
-  h += '<div class="hm-legend"><div class="hm-lc" style="background:var(--cream-dk)"></div>Nenhuma';
-  h += '<div class="hm-lc hm-cell l1"></div>1<div class="hm-lc hm-cell l2"></div>2<div class="hm-lc hm-cell l3"></div>3<div class="hm-lc hm-cell l4"></div>4+</div>';
-  h += '</div>' + footer();
-  sv(h);
-}
-
-// ═══════════════════════════════════════════
-// VIEW: BURNDOWN (pure canvas)
-// ═══════════════════════════════════════════
-function renderBurndown() {
-  var c = _c;
-  var total = c.entregas.length;
-  var concl = 0; for (var i = 0; i < c.entregas.length; i++) { if (c.entregas[i].status === 'concluido') concl++; }
-  var pend = total - concl;
-  var ini = new Date(c.dataInicio);
-  var fim = new Date(c.dataPrevisao);
-  var hoje = new Date();
-  var sorted = c.entregas.filter(function(e){ return e.status==='concluido'; }).slice().sort(function(a,b){ return new Date(a.dataISO)-new Date(b.dataISO); });
-  var steps = Math.min(sorted.length+2, 12);
-  var labels = [], planned = [], actual = [];
-  for (var i = 0; i <= steps; i++) {
-    var t = i/steps;
-    var dt = new Date(ini.getTime() + (fim.getTime()-ini.getTime())*t);
-    labels.push(dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}));
-    planned.push(total - Math.round(total*t));
-    if (dt <= hoje) {
-      var done = sorted.filter(function(e){ return new Date(e.dataISO)<=dt; }).length;
-      actual.push(total - done);
-    } else {
-      actual.push(null);
-    }
-  }
-
-  var h = '<div class="metrics-row sec">';
-  h += '<div class="metric"><div class="metric-lbl">Concluídas</div><div class="metric-val" style="color:var(--ok)">' + concl + '</div><div class="metric-sub">entregas</div></div>';
-  h += '<div class="metric"><div class="metric-lbl">Pendentes</div><div class="metric-val" style="color:var(--warn)">' + pend + '</div><div class="metric-sub">entregas</div></div>';
-  h += '<div class="metric"><div class="metric-lbl">Total</div><div class="metric-val">' + total + '</div><div class="metric-sub">entregas</div></div>';
-  h += '</div>';
-  h += '<div class="burndown-wrap"><div class="sec-lbl" style="margin-bottom:.85rem">Burndown de entregas</div>';
-  h += '<canvas id="bd-canvas" style="width:100%;max-height:240px"></canvas>';
-  h += '<div class="burndown-legend"><div class="bl-item"><div class="bl-line" style="background:#612B4A"></div>Planejado</div>';
-  h += '<div class="bl-item"><div class="bl-line" style="background:#C9A96E"></div>Realizado</div></div>';
-  h += '</div>' + footer();
-  sv(h);
-
-  setTimeout(function() {
-    var canvas = ge('bd-canvas');
-    if (!canvas || !canvas.getContext) return;
-    var ctx = canvas.getContext('2d');
-    var W = canvas.offsetWidth || 300; var H = 200;
-    canvas.width = W; canvas.height = H;
-    var PAD = {t:15, r:15, b:40, l:28};
-    var gW = W - PAD.l - PAD.r; var gH = H - PAD.t - PAD.b;
-    ctx.clearRect(0,0,W,H);
-    // grid
-    for (var ri = 0; ri <= 4; ri++) {
-      var y = PAD.t + gH*(1-ri/4);
-      ctx.beginPath(); ctx.moveTo(PAD.l,y); ctx.lineTo(PAD.l+gW,y);
-      ctx.strokeStyle='rgba(0,0,0,.06)'; ctx.lineWidth=1; ctx.stroke();
-    }
-    // planned line
-    ctx.beginPath(); ctx.setLineDash([6,3]);
-    ctx.strokeStyle='#612B4A'; ctx.lineWidth=2;
-    for (var i = 0; i < labels.length; i++) {
-      var x = PAD.l + gW*(i/(labels.length-1));
-      var y2 = PAD.t + gH*(1-planned[i]/total);
-      if (i===0) ctx.moveTo(x,y2); else ctx.lineTo(x,y2);
-    }
-    ctx.stroke(); ctx.setLineDash([]);
-    // actual line
-    ctx.beginPath(); ctx.strokeStyle='#C9A96E'; ctx.lineWidth=2.5;
-    var first = true;
-    for (var i = 0; i < labels.length; i++) {
-      if (actual[i] === null) break;
-      var x = PAD.l + gW*(i/(labels.length-1));
-      var y2 = PAD.t + gH*(1-actual[i]/total);
-      if (first) { ctx.moveTo(x,y2); first=false; } else ctx.lineTo(x,y2);
-    }
-    ctx.stroke();
-    // dots
-    for (var i = 0; i < labels.length; i++) {
-      if (actual[i] === null) break;
-      var x = PAD.l + gW*(i/(labels.length-1));
-      var y2 = PAD.t + gH*(1-actual[i]/total);
-      ctx.beginPath(); ctx.arc(x,y2,3,0,Math.PI*2);
-      ctx.fillStyle='#C9A96E'; ctx.fill();
-    }
-    // x labels
-    ctx.font='9px system-ui'; ctx.fillStyle='#9C8490'; ctx.textAlign='center'; ctx.textBaseline='top';
-    var step2 = Math.max(1, Math.floor(labels.length/5));
-    for (var i = 0; i < labels.length; i++) {
-      if (i%step2!==0) continue;
-      var x = PAD.l + gW*(i/(labels.length-1));
-      ctx.fillText(labels[i], x, PAD.t+gH+6);
-    }
-  }, 80);
-}
-
-// ═══════════════════════════════════════════
 // VIEW: RISCOS
 // ═══════════════════════════════════════════
 function renderRiscos() {
   var riscos = _c.riscos || [];
-  if (!riscos.length) { sv('<p style="padding:2rem;color:var(--tl)">Nenhum risco cadastrado.</p>' + footer()); return; }
+  var addBtn = ceAddBtnHTML('riscos', 'Adicionar risco');
+  if (!riscos.length) { sv('<div style="text-align:right;margin-bottom:.7rem">' + addBtn + '</div><p style="padding:2rem;color:var(--tl)">Nenhum risco cadastrado ainda. Use o botão "+ Adicionar risco" acima para começar.</p>' + footer()); return; }
   function getQ(r) { return r.probabilidade==='alta'&&r.impacto==='alto'?'hh':r.probabilidade==='alta'?'hl':r.impacto==='alto'?'lh':'ll'; }
   var quad = {hh:[],hl:[],lh:[],ll:[]};
   for (var i = 0; i < riscos.length; i++) { quad[getQ(riscos[i])].push({r:riscos[i],idx:i+1}); }
@@ -3646,13 +3596,13 @@ function renderRiscos() {
   h += '<div class="m-cell m-ll">' + quad.ll.map(function(x){ return '<div class="r-dot rd-ll" title="'+esc(x.r.titulo)+'">'+x.idx+'</div>'; }).join('') + '<span style="font-size:.6rem;color:var(--ok)">Baixa / Baixo</span></div>';
   h += '<div class="m-cell m-lh">' + quad.lh.map(function(x){ return '<div class="r-dot rd-lh" title="'+esc(x.r.titulo)+'">'+x.idx+'</div>'; }).join('') + '<span style="font-size:.6rem;color:var(--warn)">Baixa / Alto</span></div>';
   h += '<div></div><div class="m-axis">Baixo impacto</div><div class="m-axis">Alto impacto</div></div>';
-  h += '<div class="sec-lbl">Detalhamento dos riscos</div><div class="riscos-list">';
+  h += '<div class="sec-lbl-row"><div class="sec-lbl">Detalhamento dos riscos</div>' + addBtn + '</div><div class="riscos-list">';
   for (var j = 0; j < riscos.length; j++) {
     var r = riscos[j]; var q = getQ(r);
     h += '<div class="risco-item ri-' + q + '">';
     h += '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.65rem;margin-bottom:.28rem">';
     h += '<div style="display:flex;align-items:center;gap:.55rem"><div class="r-dot rd-'+q+'" style="width:26px;height:26px;font-size:.68rem;flex-shrink:0">'+(j+1)+'</div><div class="r-titulo">'+esc(r.titulo)+'</div></div>';
-    h += '<div style="display:flex;gap:.3rem;flex-shrink:0"><span class="badge b-'+(r.probabilidade==='alta'?'danger':'pend')+'">'+cap(r.probabilidade)+' prob.</span><span class="badge b-'+(r.impacto==='alto'?'danger':r.impacto==='medio'?'warn':'pend')+'">'+cap(r.impacto)+' impacto</span></div></div>';
+    h += '<div style="display:flex;align-items:center;gap:.3rem;flex-shrink:0"><span class="badge b-'+(r.probabilidade==='alta'?'danger':'pend')+'">'+cap(r.probabilidade)+' prob.</span><span class="badge b-'+(r.impacto==='alto'?'danger':r.impacto==='medio'?'warn':'pend')+'">'+cap(r.impacto)+' impacto</span>' + ceEditIconHTML('riscos', j) + '</div></div>';
     h += '<div class="r-mit"><strong style="color:var(--tm)">Mitigação:</strong> '+esc(r.mitigacao)+'</div></div>';
   }
   h += '</div>' + footer();
@@ -3667,39 +3617,12 @@ function renderRiscos() {
 // ═══════════════════════════════════════════
 // VIEW: AGENDA
 // ═══════════════════════════════════════════
-function proximosEncontrosHTML() {
-  var agenda = (_c.agenda || []).slice().sort(function(a,b){ return new Date(a.data)-new Date(b.data); });
-  var hoje = new Date(); hoje.setHours(0,0,0,0);
-  var futuros = agenda.filter(function(a){ return new Date(a.data) >= hoje; });
-  var tipoCls = {presencial:'b-presencial',online:'b-online',workshop:'b-workshop',entrega:'b-entrega'};
-  function renderItem(a) {
-    var dt = new Date(a.data + 'T12:00:00');
-    var dia = pad(dt.getDate());
-    var mes = dt.toLocaleDateString('pt-BR',{month:'short'}).toUpperCase();
-    var df = Math.ceil((new Date(a.data) - hoje) / 86400000);
-    var dfLbl = df === 0 ? '<span class="badge b-danger">Hoje</span>' : df === 1 ? '<span class="badge b-warn">Amanhã</span>' : '<span class="badge b-pend">Em '+df+'d</span>';
-    var h2 = '<div class="agenda-item"><div class="ag-date"><div class="ag-day">'+dia+'</div><div class="ag-month">'+mes+'</div></div>';
-    h2 += '<div style="flex:1"><div class="ag-meta"><div class="ag-title">'+esc(a.titulo)+'</div><span class="badge '+(tipoCls[a.tipo]||'b-pend')+'">'+cap(a.tipo)+'</span>'+dfLbl+'</div>';
-    if (a.pauta && a.pauta.length) {
-      h2 += '<div class="ag-pauta">';
-      for (var pi = 0; pi < a.pauta.length; pi++) h2 += '<div class="ag-pauta-item"><div class="ag-pauta-dot"></div>'+esc(a.pauta[pi])+'</div>';
-      h2 += '</div>';
-    }
-    h2 += docsRelHTML(a.docs || []);
-    h2 += '</div></div>';
-    return h2;
-  }
-  if (!futuros.length) return '';
-  var h = '<div class="sec-lbl" style="margin-top:1.5rem">Próximos encontros</div><div class="agenda-list">';
-  for (var i=0;i<futuros.length;i++) h+=renderItem(futuros[i]);
-  h += '</div>';
-  return h;
-}
-
 // Junta Agenda + Encontros num formato único, igual ao que o calendário do Cronograma já faz.
 // Assim, um encontro cadastrado em "Encontros" aparece aqui também, sem duplicar.
 function agendaTodosItens(c) {
-  var lista = (c.agenda || []).slice();
+  var lista = (c.agenda || []).slice().map(function(item, i) {
+    return Object.assign({ _cat: 'agenda', _idx: i }, item);
+  });
   var chaves = {};
   for (var i = 0; i < lista.length; i++) {
     chaves[lista[i].data + '|' + (lista[i].titulo || '').toLowerCase().trim()] = true;
@@ -3710,12 +3633,15 @@ function agendaTodosItens(c) {
     if (!e.data) continue;
     var chave = e.data + '|' + (e.titulo || '').toLowerCase().trim();
     if (chaves[chave]) continue;
-    lista.push({ data: e.data, titulo: e.titulo, tipo: e.tipo, pauta: e.pauta || [], docs: e.docs || [] });
+    lista.push({ _cat: 'encontros', _idx: j, data: e.data, titulo: e.titulo, tipo: e.tipo, pauta: e.pauta || [], docs: e.docs || [] });
   }
   return lista;
 }
 
-function renderAgenda() {
+// Seção "Compromissos" (próximos + realizados), embutida dentro do Cronograma —
+// antes era uma aba própria (Agenda), unificada aqui para não repetir a mesma
+// informação que o calendário já mostra em outro formato.
+function agendaSectionHTML() {
   var agenda = agendaTodosItens(_c).sort(function(a,b){ return new Date(a.data)-new Date(b.data); });
   var hoje = new Date(); hoje.setHours(0,0,0,0);
   var futuros = agenda.filter(function(a){ return new Date(a.data) >= hoje; });
@@ -3728,7 +3654,7 @@ function renderAgenda() {
     var df = Math.ceil((new Date(a.data) - hoje) / 86400000);
     var dfLbl = df === 0 ? '<span class="badge b-danger">Hoje</span>' : df === 1 ? '<span class="badge b-warn">Amanhã</span>' : df > 0 ? '<span class="badge b-pend">Em '+df+'d</span>' : '<span class="badge b-ok">Realizado</span>';
     var h2 = '<div class="agenda-item"><div class="ag-date"><div class="ag-day">'+dia+'</div><div class="ag-month">'+mes+'</div></div>';
-    h2 += '<div style="flex:1"><div class="ag-meta"><div class="ag-title">'+esc(a.titulo)+'</div><span class="badge '+(tipoCls[a.tipo]||'b-pend')+'">'+cap(a.tipo)+'</span>'+dfLbl+'</div>';
+    h2 += '<div style="flex:1"><div class="ag-meta"><div class="ag-title">'+esc(a.titulo)+'</div><span class="badge '+(tipoCls[a.tipo]||'b-pend')+'">'+cap(a.tipo)+'</span>'+dfLbl + ceEditIconHTML(a._cat, a._idx) + '</div>';
     if (a.pauta && a.pauta.length) {
       h2 += '<div class="ag-pauta">';
       for (var pi = 0; pi < a.pauta.length; pi++) h2 += '<div class="ag-pauta-item"><div class="ag-pauta-dot"></div>'+esc(a.pauta[pi])+'</div>';
@@ -3738,32 +3664,12 @@ function renderAgenda() {
     h2 += '</div></div>';
     return h2;
   }
-  var h = '';
-  if (futuros.length) { h += '<div class="sec-lbl">Próximos eventos</div><div class="agenda-list">'; for (var i=0;i<futuros.length;i++) h+=renderItem(futuros[i]); h += '</div>'; }
+  var addBtn = ceAddBtnHTML('encontros', 'Adicionar encontro');
+  var h = '<div class="sec-lbl-row" style="margin-top:1.4rem"><div class="sec-lbl" style="margin:0;padding:0;border:none">Compromissos</div>' + addBtn + '</div>';
+  if (futuros.length) { h += '<div class="sec-lbl" style="margin-top:.6rem">Próximos eventos</div><div class="agenda-list">'; for (var i=0;i<futuros.length;i++) h+=renderItem(futuros[i]); h += '</div>'; }
   if (passados.length) { h += '<div class="sec-lbl" style="margin-top:1.25rem">Eventos realizados</div><div class="agenda-list">'; for (var j=passados.length-1;j>=0;j--) h+=renderItem(passados[j]); h += '</div>'; }
-  if (!agenda.length) h = '<p style="padding:2rem;color:var(--tl)">Nenhum evento na agenda.</p>';
-  h += footer();
-  sv(h);
-}
-
-// ═══════════════════════════════════════════
-// VIEW: GLOSSÁRIO
-// ═══════════════════════════════════════════
-function renderGlossario() {
-  var glos = _c.glossario || [];
-  if (!glos.length) { sv('<p style="padding:2rem;color:var(--tl)">Glossário não cadastrado.</p>' + footer()); return; }
-  var h = '<div class="sec-lbl">Termos e conceitos do projeto</div><div class="gloss-grid">';
-  for (var i = 0; i < glos.length; i++) {
-    var g = glos[i]; var gid = 'gl-' + i;
-    h += '<div class="gloss-card" id="' + gid + '">';
-    h += '<button class="gloss-toggle" onclick="toggleX(\'' + gid + '\',\'gloss\')">';
-    h += '<div><div class="gloss-termo serif">' + esc(g.termo) + '</div>';
-    if (g.sigla) h += '<div class="gloss-sigla">' + esc(g.sigla) + '</div>';
-    h += '</div>' + chevSVG() + '</button>';
-    h += '<div class="gloss-body"><div class="gloss-def">' + esc(g.definicao) + '</div></div></div>';
-  }
-  h += '</div>' + footer();
-  sv(h);
+  if (!agenda.length) h += '<p style="padding:1rem 0;color:var(--tl)">Nenhum compromisso registrado ainda. Use o botão "+ Adicionar encontro" acima para começar.</p>';
+  return h;
 }
 
 // ═══════════════════════════════════════════
@@ -3783,55 +3689,8 @@ function renderValor(filtro) {
   h += '<div class="vg-card"><div class="vg-num">'+ndec+'</div><div class="vg-unit">decisões</div><div class="vg-lbl">estratégicas</div></div>';
   if (kpis.length) h += '<div class="vg-card"><div class="vg-num">'+metasAt+'/'+kpis.length+'</div><div class="vg-unit">KPIs</div><div class="vg-lbl">metas atingidas</div></div>';
   h += '</div>';
+  h += npsHistoricoHTML();
   h += valorHistoricoHTML(filtro);
-  h += footer();
-  sv(h);
-}
-
-// ═══════════════════════════════════════════
-// VIEW: APRENDIZADOS
-// ═══════════════════════════════════════════
-function renderAprendizados() {
-  var apren = _c.aprendizados || [];
-  if (!apren.length) { sv('<p style="padding:2rem;color:var(--tl)">Nenhum aprendizado registrado.</p>' + footer()); return; }
-  var cats = [];
-  for (var i=0;i<apren.length;i++) { if (cats.indexOf(apren[i].categoria) === -1) cats.push(apren[i].categoria); }
-  var catLabel = {pessoas:'Pessoas & Comportamento',processo:'Processos & Operação',lideranca:'Liderança',cultura:'Cultura Organizacional',resultado:'Resultados & Aprendizados'};
-  var intro = '<div style="font-size:.83rem;color:var(--tm);line-height:1.65;margin-bottom:1.25rem;padding:1rem 1.25rem;background:var(--white);border-radius:var(--rl);box-shadow:0 1px 6px rgba(97,43,74,.07);border-left:4px solid var(--gold)">Estes são os aprendizados acumulados pela equipe EXPLORE sobre a sua organização ao longo do projeto.</div>';
-  var h = intro;
-  for (var ci=0;ci<cats.length;ci++) {
-    var cat = cats[ci];
-    var items2 = apren.filter(function(a){ return a.categoria === cat; });
-    h += '<div class="acat-hdr">'+(catLabel[cat]||cap(cat))+' <span style="font-size:.73rem;color:var(--tl);font-family:system-ui">('+items2.length+')</span></div>';
-    for (var ai=0;ai<items2.length;ai++) {
-      var a = items2[ai];
-      h += '<div class="apren-card ac-'+cat+'">';
-      h += '<div class="apren-top"><div class="apren-texto">'+esc(a.texto)+'</div>';
-      h += '<div class="apren-meta"><span class="acat-chip acc-'+cat+'">'+(catLabel[cat]||cap(cat))+'</span><span class="apren-data">'+fdbr(a.data)+'</span></div></div></div>';
-    }
-  }
-  h += footer();
-  sv(h);
-}
-
-// ═══════════════════════════════════════════
-// VIEW: PRÓXIMA JORNADA
-// ═══════════════════════════════════════════
-function renderProximaJornada() {
-  var pj = _c.proximaJornada;
-  if (!pj) { sv('<p style="padding:2rem;color:var(--tl)">Próxima jornada não definida ainda.</p>' + footer()); return; }
-  var h = '<div class="pj-card">';
-  h += '<div class="pj-lbl">Recomendação da equipe EXPLORE</div>';
-  h += '<div class="pj-title serif">'+esc(pj.titulo)+'</div>';
-  h += '<div class="pj-text">'+esc(pj.descricao)+'</div>';
-  if (pj.itens && pj.itens.length) {
-    h += '<div class="pj-items">';
-    for (var i=0;i<pj.itens.length;i++) h += '<div class="pj-item"><div class="pj-dot"></div>'+esc(pj.itens[i])+'</div>';
-    h += '</div>';
-  }
-  h += '</div>';
-  h += '<div class="pj-cta"><div class="pj-cta-text">Prazo sugerido: <strong>'+esc(pj.prazoSugerido||'A definir')+'</strong> · Responsável: <strong>'+esc(pj.consultor||_c.consultor)+'</strong></div>';
-  h += '<a class="pj-cta-btn" href="'+ge('sb-wa').href+'" target="_blank" rel="noopener"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Falar com '+(pj.consultor||_c.consultor)+'</a></div>';
   h += footer();
   sv(h);
 }
