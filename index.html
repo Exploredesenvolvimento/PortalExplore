@@ -333,9 +333,9 @@ a{text-decoration:none;color:inherit}
 .ptb-end.fim{text-align:right}
 .ptb-st{display:inline-flex;align-items:center;gap:.35rem;padding:.28rem .7rem;border-radius:99px;font-size:.7rem;font-weight:700}
 .phase-list{display:flex;flex-direction:column;gap:.75rem}
-.phase-card{background:var(--white);border-radius:var(--rl);box-shadow:0 1px 6px rgba(97,43,74,.07);border-left:4px solid var(--cream-dk);overflow:hidden}
-.phase-card.pc-done{border-left-color:var(--gold)}
-.phase-card.pc-active{border-left-color:var(--bx)}
+.phase-card{background:var(--white);border-radius:var(--rl);border:1px solid var(--cream-dk);overflow:hidden}
+.phase-card.pc-done{background:linear-gradient(to right, rgba(201,169,110,.05), var(--white) 5%)}
+.phase-card.pc-active{background:linear-gradient(to right, rgba(97,43,74,.045), var(--white) 5%)}
 .phase-card.pc-future{opacity:.6}
 .pc-hdr{padding:1.1rem 1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:.85rem}
 .pc-name{font-family:Georgia,serif;font-size:1.1rem;font-weight:bold;color:var(--bx)}
@@ -402,8 +402,8 @@ a{text-decoration:none;color:inherit}
 .cc-lbl{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tl)}
 .cc-tot{color:var(--bx)}.cc-ok{color:var(--ok)}.cc-wa{color:var(--warn)}.cc-pe{color:var(--tl)}
 .ec-list{display:flex;flex-direction:column;gap:.65rem}
-.ec{background:var(--white);border-radius:var(--rl);box-shadow:0 1px 6px rgba(97,43,74,.07);border-left:4px solid var(--cream-dk);overflow:hidden}
-.ec.eco{border-left-color:var(--ok)}.ec.ecw{border-left-color:var(--warn)}.ec.ecp{border-left-color:var(--tl)}
+.ec{background:var(--white);border-radius:var(--rl);border:1px solid var(--cream-dk);overflow:hidden}
+.ec.eco{background:linear-gradient(to right, rgba(59,122,87,.05), var(--white) 5%)}.ec.ecw{background:linear-gradient(to right, rgba(176,125,42,.05), var(--white) 5%)}.ec.ecp{}
 .ec-main{display:grid;grid-template-columns:1fr auto;gap:.85rem;padding:1.1rem;align-items:start}
 .ec-nome{font-size:.88rem;font-weight:700;color:var(--td);margin-bottom:.2rem}
 .ec-desc{font-size:.78rem;color:var(--tm);margin-bottom:.55rem}
@@ -447,7 +447,7 @@ a{text-decoration:none;color:inherit}
 .prc-a .prc-num{color:var(--danger)}.prc-m .prc-num{color:var(--warn)}.prc-b .prc-num{color:var(--ok)}
 .prc-lbl{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tl)}
 .passo-list{display:flex;flex-direction:column;gap:.6rem}
-.passo{background:var(--white);border-radius:var(--rl);padding:1rem 1rem 1rem 1.35rem;box-shadow:0 1px 6px rgba(97,43,74,.07);border-left:4px solid var(--cream-dk)}
+.passo{background:var(--white);border-radius:var(--rl);padding:1rem 1.1rem;border:1px solid var(--cream-dk)}
 .passo.done{opacity:.65}
 .passo-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--cream-dk);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;margin-top:.1rem;color:var(--white);transition:background .15s,border-color .15s}
 .passo-check:hover{border-color:var(--bx)}
@@ -456,7 +456,7 @@ a{text-decoration:none;color:inherit}
 .passo-concluidos-toggle{display:flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.78rem;font-weight:700;color:var(--tm);padding:.7rem 0;background:none;border:none;width:100%;text-align:left}
 .passo-concluidos-body{display:none;margin-top:.2rem}
 .passo-concluidos-body.open{display:block}
-.pa-a{border-left-color:var(--danger)}.pa-m{border-left-color:var(--warn)}.pa-b{border-left-color:var(--ok)}
+.pa-a{background:linear-gradient(to right, rgba(155,35,53,.045), var(--white) 5%)}.pa-m{background:linear-gradient(to right, rgba(176,125,42,.045), var(--white) 5%)}.pa-b{}
 .passo-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.6rem;margin-bottom:.24rem}
 .passo-titulo{font-size:.88rem;font-weight:700;color:var(--td)}
 .passo-desc{font-size:.78rem;color:var(--tm);margin-bottom:.55rem;line-height:1.55}
@@ -625,8 +625,8 @@ a{text-decoration:none;color:inherit}
 .r-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:var(--white)}
 .rd-ll{background:var(--ok)}.rd-lh{background:var(--warn)}.rd-hl{background:var(--warn)}.rd-hh{background:var(--danger)}
 .riscos-list{display:flex;flex-direction:column;gap:.55rem}
-.risco-item{background:var(--white);border-radius:var(--r);padding:.85rem 1rem;box-shadow:0 1px 6px rgba(97,43,74,.07);border-left:3px solid var(--cream-dk)}
-.ri-hh{border-left-color:var(--danger)}.ri-hl{border-left-color:var(--warn)}.ri-lh{border-left-color:var(--warn)}.ri-ll{border-left-color:var(--ok)}
+.risco-item{background:var(--white);border-radius:var(--r);padding:.85rem 1rem;border:1px solid var(--cream-dk)}
+.ri-hh{background:linear-gradient(to right, rgba(155,35,53,.05), var(--white) 5%)}.ri-hl{background:linear-gradient(to right, rgba(176,125,42,.045), var(--white) 5%)}.ri-lh{background:linear-gradient(to right, rgba(176,125,42,.045), var(--white) 5%)}.ri-ll{background:linear-gradient(to right, rgba(59,122,87,.05), var(--white) 5%)}
 .r-titulo{font-size:.84rem;font-weight:700;color:var(--td);margin-bottom:.22rem}
 .r-mit{font-size:.77rem;color:var(--tm);line-height:1.5}
 
@@ -1430,6 +1430,12 @@ function proxEnt(entregas) {
 function lsGet(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
 function lsDel(k) { try { localStorage.removeItem(k); } catch(e) {} }
+// sessionStorage: como localStorage, mas some quando a aba/janela é fechada.
+// Usado só para a sessão de login — preferências como "já vi o tour" continuam
+// em localStorage de propósito, essas sim devem persistir entre visitas.
+function ssGet(k) { try { return sessionStorage.getItem(k); } catch(e) { return null; } }
+function ssSet(k, v) { try { sessionStorage.setItem(k, v); } catch(e) {} }
+function ssDel(k) { try { sessionStorage.removeItem(k); } catch(e) {} }
 
 function esc(s) {
   if (!s) return '';
@@ -1539,10 +1545,10 @@ function icoPNG(tipo) {
 // Sessão: guarda só e-mail/papel/origem no navegador (nunca a senha), para a pessoa
 // não precisar logar de novo a cada atualização de página.
 function salvarSessao(email, papel, origem) {
-  lsSet('explore_sessao', JSON.stringify({ email: email, papel: papel, origem: origem }));
+  ssSet('explore_sessao', JSON.stringify({ email: email, papel: papel, origem: origem }));
 }
 function limparSessao() {
-  lsDel('explore_sessao');
+  ssDel('explore_sessao');
 }
 
 function doLogin() {
@@ -1631,7 +1637,7 @@ function doLoginLocal(email, senha) {
 // Tenta restaurar a sessão salva no navegador (chamada uma vez, ao carregar a página).
 // Se der certo, pula a tela de login direto para onde a pessoa estava.
 function tentarRestaurarSessao() {
-  var raw = lsGet('explore_sessao');
+  var raw = ssGet('explore_sessao');
   if (!raw) return;
   var sess;
   try { sess = JSON.parse(raw); } catch(e) { limparSessao(); return; }
@@ -4033,10 +4039,10 @@ function renderRiscos() {
   function getQ(r) { return r.probabilidade==='alta'&&r.impacto==='alto'?'hh':r.probabilidade==='alta'?'hl':r.impacto==='alto'?'lh':'ll'; }
   var quad = {hh:[],hl:[],lh:[],ll:[]};
   for (var i = 0; i < riscos.length; i++) { quad[getQ(riscos[i])].push({r:riscos[i],idx:i+1}); }
-  var h = '<div class="metrics-row sec">';
-  h += '<div class="metric"><div class="metric-lbl">Riscos críticos</div><div class="metric-val" style="color:var(--danger)">' + quad.hh.length + '</div><div class="metric-sub">alta prob. + alto impacto</div></div>';
-  h += '<div class="metric"><div class="metric-lbl">Riscos moderados</div><div class="metric-val" style="color:var(--warn)">' + (quad.hl.length+quad.lh.length) + '</div><div class="metric-sub">atenção necessária</div></div>';
-  h += '<div class="metric"><div class="metric-lbl">Riscos baixos</div><div class="metric-val" style="color:var(--ok)">' + quad.ll.length + '</div><div class="metric-sub">monitoramento</div></div>';
+  var h = '<div class="dh-stats sec">';
+  h += '<div class="dh-stat"><div class="dh-stat-num" style="color:var(--danger)">' + quad.hh.length + '</div><div class="dh-stat-lbl">Riscos críticos</div><div class="dh-stat-sub">alta prob. + alto impacto</div></div>';
+  h += '<div class="dh-stat"><div class="dh-stat-num" style="color:var(--warn)">' + (quad.hl.length+quad.lh.length) + '</div><div class="dh-stat-lbl">Riscos moderados</div><div class="dh-stat-sub">atenção necessária</div></div>';
+  h += '<div class="dh-stat"><div class="dh-stat-num" style="color:var(--ok)">' + quad.ll.length + '</div><div class="dh-stat-lbl">Riscos baixos</div><div class="dh-stat-sub">monitoramento</div></div>';
   h += '</div>';
   h += '<div class="matrix" style="display:none">';
   h += '<div class="m-axis m-axis-y">Alta prob.</div>';
@@ -4253,7 +4259,12 @@ function renderSobre() {
     if (e.target === tourOverlay) closeTour();
   });
 
-  // Restaura sessão salva (evita deslogar ao atualizar a página)
+  // Limpa qualquer sessão antiga que tenha ficado salva permanentemente em
+  // localStorage de antes desta mudança (a sessão agora vive em sessionStorage,
+  // que some sozinha quando a aba fecha).
+  lsDel('explore_sessao');
+
+  // Restaura sessão salva (evita deslogar ao atualizar a página, mas não sobrevive ao fechar a aba)
   tentarRestaurarSessao();
 
 })();
