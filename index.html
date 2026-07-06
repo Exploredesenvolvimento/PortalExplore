@@ -69,8 +69,8 @@ a{text-decoration:none;color:inherit}
 .ms-cli{font-size:.73rem;color:var(--tl);margin-top:.1rem;margin-bottom:.75rem}
 .ms-fase-badge{display:inline-flex;align-items:center;padding:.18rem .55rem;border-radius:99px;font-size:.66rem;font-weight:700;background:#F0EAF5;color:var(--bx);white-space:nowrap;flex-shrink:0}
 .ms-card-actions{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
-.ms-del-btn{display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:none;background:transparent;color:var(--tl);cursor:pointer;flex-shrink:0;padding:0}
-.ms-del-btn:hover{background:var(--danger-bg);color:var(--danger)}
+.ms-del-btn{display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;border:1px solid var(--cream-dk);background:var(--white);color:var(--tl);cursor:pointer;flex-shrink:0;padding:0}
+.ms-del-btn:hover{background:var(--danger);color:var(--white);border-color:var(--danger)}
 .ms-fase-badge.done{background:var(--ok-bg);color:var(--ok)}
 .ms-proj{font-size:.78rem;color:var(--tm);margin-bottom:.85rem}
 .ms-bar-bg{height:5px;background:var(--cream-dk);border-radius:99px;overflow:hidden}
@@ -1391,8 +1391,6 @@ function sbCarregarProjeto(email) {
         if (tabela === 'entregas') return sb.from(tabela).select('*').eq('projeto_id', pid).order('data_prevista', { ascending: true, nullsFirst: false });
         return sb.from(tabela).select('*').eq('projeto_id', pid).order('id', { ascending: true });
       });
-      // Log de auditoria: mais recente primeiro, limitado a 200 para não pesar o carregamento.
-      promessas.push(sb.from('log_atividade').select('*').eq('projeto_id', pid).order('data_hora', { ascending: false }).limit(200));
 
       return Promise.all(promessas).then(function(resultados) {
         var dados = {
@@ -1407,18 +1405,28 @@ function sbCarregarProjeto(email) {
           ultimaAtualizacao: proj.ultima_atualizacao, atualizadoPor: proj.atualizado_por,
           horasProjeto: proj.horas_projeto, encerrado: proj.encerrado, dataEncerramento: proj.data_encerramento,
           corAcento: proj.cor_acento, logoUrl: proj.logo_url, mensagemConsultor: proj.mensagem_consultor,
-          nps: [], glossario: [], aprendizados: [], proximaJornada: {}
+          nps: [], glossario: [], aprendizados: [], proximaJornada: {}, logAtividade: []
         };
         Object.keys(SB_TABELAS).forEach(function(campoFront, i) {
           var tabela = SB_TABELAS[campoFront];
           var rows = resultados[i].data || [];
           dados[campoFront] = rows.map(function(r){ return sbRowToFront(tabela, r); });
         });
-        var logRows = resultados[nomesTabelas.length].data || [];
-        dados.logAtividade = logRows.map(function(r) {
-          return { dataHora: r.data_hora, consultor: r.consultor, categoria: r.categoria, acao: r.acao, itemTitulo: r.item_titulo };
-        });
         return dados;
+      });
+    });
+}
+
+// Carrega o log de auditoria só quando alguém realmente abre a tela dele (o log
+// raramente é consultado — baixar isso em toda abertura de projeto era trabalho
+// jogado fora na maioria das vezes). Guarda em cache pra não recarregar de novo
+// na mesma sessão se a pessoa abrir e fechar o log mais de uma vez.
+function sbCarregarLogAtividade(pid) {
+  return sb.from('log_atividade').select('*').eq('projeto_id', pid).order('data_hora', { ascending: false }).limit(200)
+    .then(function(res) {
+      if (res.error) throw res.error;
+      return (res.data || []).map(function(r) {
+        return { dataHora: r.data_hora, consultor: r.consultor, categoria: r.categoria, acao: r.acao, itemTitulo: r.item_titulo };
       });
     });
 }
@@ -2689,7 +2697,12 @@ function renderMaster() {
 }
 
 // Versão que busca os projetos reais do banco de dados (Supabase)
-var _msProjetosCache = {}; // email -> dados completos já carregados, evita recarregar ao reabrir
+// _msResumoCache: dados leves (só o que os cartões da grade precisam), usado pra
+// renderizar o Painel de Projetos sem precisar carregar tudo de cada cliente.
+// _msCacheCompleto: dados completos, preenchido só quando um cliente é de fato
+// aberto — daí sim guarda em cache pra não recarregar se abrir de novo na sessão.
+var _msResumoCache = {};
+var _msCacheCompleto = {};
 
 function renderMasterSupabase() {
   ge('login-screen').style.display = 'none';
@@ -2697,23 +2710,51 @@ function renderMasterSupabase() {
   var grid = ge('ms-grid');
   grid.innerHTML = '<p style="color:rgba(255,255,255,.6);padding:1rem">Carregando projetos...</p>';
 
-  sb.from('projetos').select('cliente_email').then(function(res) {
-    if (res.error) { grid.innerHTML = '<p style="color:#f88;padding:1rem">Erro ao carregar projetos.</p>'; console.error(res.error); return; }
-    var emails = (res.data || []).map(function(p){ return p.cliente_email; });
-    if (!emails.length) { grid.innerHTML = '<p style="color:rgba(255,255,255,.6);padding:1rem">Nenhum projeto cadastrado ainda. Cadastre um cliente no banco de dados para começar.</p>'; return; }
+  // Só 3 consultas ao todo, não importa quantos clientes existam: todos os
+  // projetos, mais peso/status de todas as fases e status de todas as entregas
+  // de todo mundo juntos. Antes disso, cada cliente disparava 14 consultas só
+  // pra aparecer um cartão de resumo — com poucos clientes não dava pra notar,
+  // mas cresce junto com a carteira. Os dados completos de cada um só são
+  // carregados quando o cartão é de fato aberto.
+  Promise.all([
+    sb.from('projetos').select('*'),
+    sb.from('fases').select('projeto_id, peso, status'),
+    sb.from('entregas').select('projeto_id, status')
+  ]).then(function(resultados) {
+    var resProj = resultados[0], resFases = resultados[1], resEntregas = resultados[2];
+    if (resProj.error) throw resProj.error;
+    var projetos = resProj.data || [];
+    if (!projetos.length) { grid.innerHTML = '<p style="color:rgba(255,255,255,.6);padding:1rem">Nenhum projeto cadastrado ainda. Cadastre um cliente no banco de dados para começar.</p>'; return; }
 
-    Promise.all(emails.map(function(email){ return sbCarregarProjeto(email); })).then(function(todos) {
-      var html = '';
-      for (var i = 0; i < todos.length; i++) {
-        if (!todos[i]) continue;
-        _msProjetosCache[emails[i]] = todos[i];
-        html += msCardHTML(emails[i], todos[i]);
-      }
-      grid.innerHTML = html || '<p style="color:rgba(255,255,255,.6);padding:1rem">Nenhum projeto encontrado.</p>';
-    }).catch(function(e) {
-      console.error(e);
-      grid.innerHTML = '<p style="color:#f88;padding:1rem">Erro ao carregar os projetos.</p>';
+    var fasesPorProjeto = {};
+    (resFases.data || []).forEach(function(f) {
+      if (!fasesPorProjeto[f.projeto_id]) fasesPorProjeto[f.projeto_id] = [];
+      fasesPorProjeto[f.projeto_id].push({ peso: f.peso, status: f.status });
     });
+    var entregasPorProjeto = {};
+    (resEntregas.data || []).forEach(function(e) {
+      if (!entregasPorProjeto[e.projeto_id]) entregasPorProjeto[e.projeto_id] = [];
+      entregasPorProjeto[e.projeto_id].push({ status: e.status });
+    });
+
+    var html = '';
+    _msResumoCache = {};
+    for (var i = 0; i < projetos.length; i++) {
+      var proj = projetos[i];
+      var email = proj.cliente_email;
+      var resumo = {
+        empresa: proj.empresa, nome: proj.nome_cliente, cargo: proj.cargo,
+        ultimaAtualizacao: proj.ultima_atualizacao, atualizadoPor: proj.atualizado_por,
+        fases: fasesPorProjeto[proj.id] || [],
+        entregas: entregasPorProjeto[proj.id] || []
+      };
+      _msResumoCache[email] = resumo;
+      html += msCardHTML(email, resumo);
+    }
+    grid.innerHTML = html;
+  }).catch(function(e) {
+    console.error(e);
+    grid.innerHTML = '<p style="color:#f88;padding:1rem">Erro ao carregar os projetos.</p>';
   });
 }
 
@@ -2847,7 +2888,7 @@ function npSalvar() {
 // encontros, documentos, etc.), o próprio projeto, e o login do cliente. Some
 // da tela na hora (otimista), a exclusão de verdade acontece em segundo plano.
 function msExcluirProjeto(email) {
-  var d = _msProjetosCache[email];
+  var d = _msResumoCache[email];
   var nomeExibicao = d ? d.empresa : email;
   showConfirm('Tem certeza que deseja excluir o projeto de "' + nomeExibicao + '"?\n\nIsso apaga TODOS os dados (fases, entregas, encontros, documentos, riscos, KPIs, mensagens, log de atividade) e o acesso de login do cliente. Não pode ser desfeito.', function() {
     msExcluirProjetoConfirmado(email);
@@ -2858,12 +2899,13 @@ function msExcluirProjetoConfirmado(email) {
   if (!sb) { showAlert('Sem conexão com o banco de dados.', {danger:true}); return; }
 
   // remove da tela imediatamente
-  delete _msProjetosCache[email];
+  delete _msResumoCache[email];
+  delete _msCacheCompleto[email];
   var grid = ge('ms-grid');
   if (grid) {
-    var todosEmails = Object.keys(_msProjetosCache);
+    var todosEmails = Object.keys(_msResumoCache);
     grid.innerHTML = todosEmails.length
-      ? todosEmails.map(function(e){ return msCardHTML(e, _msProjetosCache[e]); }).join('')
+      ? todosEmails.map(function(e){ return msCardHTML(e, _msResumoCache[e]); }).join('')
       : '<p style="color:rgba(255,255,255,.6);padding:1rem">Nenhum projeto cadastrado ainda. Cadastre um cliente para começar.</p>';
   }
 
@@ -2885,15 +2927,16 @@ function msExcluirProjetoConfirmado(email) {
 }
 
 function masterOpenClient(email) {
-  // Se já carregamos esse projeto do Supabase nesta sessão, usa o cache (mais rápido)
-  if (_msProjetosCache[email]) { openClient(_msProjetosCache[email]); return; }
+  // Se já abrimos esse projeto nesta sessão (dados completos, não o resumo da
+  // grade), usa o cache — mais rápido, não refaz as 14 consultas.
+  if (_msCacheCompleto[email]) { openClient(_msCacheCompleto[email]); return; }
   // Senão, tenta achar localmente (fallback)
   var reg = CLIENTES[email];
   if (reg) { reg.dados._loginEmail = email; openClient(reg.dados); return; }
-  // Por fim, busca no banco
+  // Por fim, busca no banco (dados completos desta vez, só deste cliente)
   if (sb) {
     sbCarregarProjeto(email).then(function(dados) {
-      if (dados) openClient(dados);
+      if (dados) { _msCacheCompleto[email] = dados; openClient(dados); }
     });
   }
 }
@@ -3173,7 +3216,21 @@ function renderLogAtividade(filtro) {
 }
 function ceOpenLog() {
   ge('ce-overlay').className = 'ce-overlay on';
-  renderLogAtividade('todos');
+  if (_c._logCarregado || !sb || !_c._projetoId) {
+    renderLogAtividade('todos');
+    return;
+  }
+  ge('ce-title').textContent = 'Log de Atividade';
+  ge('ce-body').innerHTML = '<p style="padding:2rem;text-align:center;color:var(--tl)">Carregando...</p>';
+  sbCarregarLogAtividade(_c._projetoId).then(function(log) {
+    _c.logAtividade = log;
+    _c._logCarregado = true;
+    renderLogAtividade('todos');
+  }).catch(function(e) {
+    console.error('Erro ao carregar log de atividade:', e);
+    showAlert('Não foi possível carregar o log de atividade agora.', {danger:true});
+    ceClose();
+  });
 }
 
 // ═══════════════════════════════════════════
@@ -3181,8 +3238,8 @@ function ceOpenLog() {
 // ═══════════════════════════════════════════
 var TOUR_STEPS = [
   { title:'Bem-vindo ao seu portal', text:'Este é o seu espaço exclusivo para acompanhar o projeto em tempo real. Aqui você encontra tudo: progresso, entregas, documentos, decisões e muito mais.' },
-  { title:'Dashboard: visão geral', text:'A tela inicial mostra o estado atual do projeto: progresso, radar de saúde, próximos encontros e itens urgentes.' },
-  { title:'Menu lateral', text:'Use o menu à esquerda para navegar entre as seções. Cada seção tem um foco específico: Progresso mostra encontros, Cronograma mostra entregas, Documentos dá acesso aos arquivos.' },
+  { title:'Dashboard: visão geral', text:'A tela inicial mostra o estado atual do projeto: um resumo do momento, o progresso das fases, e atalhos rápidos para cada área do portal.' },
+  { title:'Menu lateral', text:'Use o menu à esquerda para navegar entre as seções. Cada seção tem um foco específico: Progresso mostra os encontros dentro de cada fase, Cronograma reúne o calendário, as entregas e os próximos compromissos, Documentos dá acesso aos arquivos.' },
   { title:'Seu feedback importa', text:'Use o botão de mensagem no canto da tela para deixar uma dúvida, preocupação ou comentário. Seu consultor será notificado e retornará em breve.' }
 ];
 function startTour(empresa) {
