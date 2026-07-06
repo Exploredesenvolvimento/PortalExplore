@@ -68,6 +68,9 @@ a{text-decoration:none;color:inherit}
 .ms-emp{font-family:Georgia,serif;font-size:1.15rem;font-weight:bold;color:var(--bx)}
 .ms-cli{font-size:.73rem;color:var(--tl);margin-top:.1rem;margin-bottom:.75rem}
 .ms-fase-badge{display:inline-flex;align-items:center;padding:.18rem .55rem;border-radius:99px;font-size:.66rem;font-weight:700;background:#F0EAF5;color:var(--bx);white-space:nowrap;flex-shrink:0}
+.ms-card-actions{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.ms-del-btn{display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:none;background:transparent;color:var(--tl);cursor:pointer;flex-shrink:0;padding:0}
+.ms-del-btn:hover{background:var(--danger-bg);color:var(--danger)}
 .ms-fase-badge.done{background:var(--ok-bg);color:var(--ok)}
 .ms-proj{font-size:.78rem;color:var(--tm);margin-bottom:.85rem}
 .ms-bar-bg{height:5px;background:var(--cream-dk);border-radius:99px;overflow:hidden}
@@ -131,6 +134,17 @@ a{text-decoration:none;color:inherit}
 .ce-overlay{display:none;position:fixed;inset:0;background:rgba(44,26,36,.55);z-index:500;align-items:flex-start;justify-content:center;padding:2.5rem 1rem;overflow-y:auto}
 .ce-overlay.on{display:flex}
 .ce-panel{background:var(--white);border-radius:var(--rl);max-width:760px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);margin-bottom:2.5rem}
+.np-open-btn{padding:.55rem 1.1rem;border-radius:var(--r);border:1.5px solid var(--gold-lt);background:transparent;color:var(--gold-lt);font-size:.8rem;font-weight:700;cursor:pointer}
+.np-open-btn:hover{background:rgba(232,212,168,.12)}
+.np-overlay{display:none;position:fixed;inset:0;background:rgba(44,26,36,.55);z-index:520;align-items:flex-start;justify-content:center;padding:2.5rem 1rem;overflow-y:auto}
+.np-overlay.on{display:flex}
+.np-panel{background:var(--white);border-radius:var(--rl);max-width:640px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);margin-bottom:2.5rem}
+.np-body{padding:1.5rem}
+.np-sec-title{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bx);margin:1.3rem 0 .7rem;padding-top:1.1rem;border-top:1px solid var(--cream-dk)}
+.np-sec-title:first-child{margin-top:0;padding-top:0;border-top:none}
+.np-grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 .9rem}
+@media(max-width:520px){.np-grid2{grid-template-columns:1fr}}
+.np-err{display:none;background:var(--danger-bg);color:var(--danger);border-radius:var(--r);padding:.6rem .9rem;font-size:.82rem;margin-top:.9rem;text-align:center}
 .ce-head{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;border-bottom:1.5px solid var(--cream-dk)}
 .ce-title{font-family:Georgia,serif;font-size:1.15rem;font-weight:bold;color:var(--bx)}
 .ce-close{background:none;border:none;font-size:1.3rem;color:var(--tl);cursor:pointer;line-height:1;padding:.2rem .4rem}
@@ -1077,8 +1091,21 @@ a{text-decoration:none;color:inherit}
     <div class="ms-hdr-name">Painel de Projetos</div>
     <div class="ms-hdr-sub">Selecione um projeto para acessar o portal</div>
   </div>
+  <div style="max-width:900px;margin:0 auto 1rem;text-align:right;position:relative;z-index:1">
+    <button class="np-open-btn" id="np-open-btn" onclick="npAbrir()">+ Novo Projeto</button>
+  </div>
   <div class="ms-grid" id="ms-grid"></div>
   <button class="ms-logout" id="ms-logout-btn">Sair</button>
+</div>
+
+<div class="np-overlay" id="np-overlay">
+  <div class="np-panel">
+    <div class="ce-head">
+      <div class="ce-title">Novo Projeto</div>
+      <button class="ce-close" onclick="npFechar()">&#10005;</button>
+    </div>
+    <div class="np-body" id="np-body"></div>
+  </div>
 </div>
 
 <!-- APP -->
@@ -2639,7 +2666,8 @@ function msCardHTML(email, d) {
   html += '<div class="ms-card-top">';
   html += '<div><div class="ms-emp">' + esc(d.empresa) + '</div>';
   html += '<div class="ms-cli">' + esc(d.nome) + '</div></div>';
-  html += '<span class="ms-fase-badge' + (todasConcl ? ' done' : '') + '">' + esc(faseLabel) + '</span></div>';
+  html += '<div class="ms-card-actions"><span class="ms-fase-badge' + (todasConcl ? ' done' : '') + '">' + esc(faseLabel) + '</span>';
+  html += '<button class="ms-del-btn" title="Excluir projeto" onclick="event.stopPropagation();msExcluirProjeto(\'' + email + '\')"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2 0 0 1-2,2H7a2,2 0 0 1-2-2V6m3,0V4a2,2 0 0 1 2-2h4a2,2 0 0 1 2,2v2"/></svg></button></div></div>';
   html += '<div class="ms-att" style="color:' + dotColor + '"><div class="ms-att-dot" style="background:' + dotColor + '"></div>' + esc(attTxt) + '</div>';
   html += '<div class="ms-proj">' + esc(d.projeto) + '</div>';
   html += '<div class="ms-bar-bg"><div class="ms-bar-fill" style="width:' + pct + '%"></div></div>';
@@ -2686,6 +2714,173 @@ function renderMasterSupabase() {
       console.error(e);
       grid.innerHTML = '<p style="color:#f88;padding:1rem">Erro ao carregar os projetos.</p>';
     });
+  });
+}
+
+// ═══════════════════════════════════════════
+// NOVO PROJETO — cria um cliente real do zero (login + dados do projeto),
+// direto pelo Painel de Projetos, sem precisar de SQL manual.
+// ═══════════════════════════════════════════
+function npAbrir() {
+  ge('np-overlay').className = 'np-overlay on';
+  npRenderForm();
+}
+function npFechar() {
+  ge('np-overlay').className = 'np-overlay';
+}
+function npRenderForm() {
+  var h = '';
+  h += '<div class="np-sec-title">Acesso do cliente</div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">E-mail de login *</label><input class="ce-form-input" type="email" id="np-f-email" placeholder="cliente@empresa.com.br"></div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Senha inicial *</label><input class="ce-form-input" type="text" id="np-f-senha" placeholder="Combine com o cliente ou gere uma"></div>';
+
+  h += '<div class="np-sec-title">Cliente e empresa</div>';
+  h += '<div class="np-grid2">';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Nome do contato *</label><input class="ce-form-input" type="text" id="np-f-nome"></div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Cargo do contato</label><input class="ce-form-input" type="text" id="np-f-cargo"></div>';
+  h += '</div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Empresa *</label><input class="ce-form-input" type="text" id="np-f-empresa"></div>';
+  h += '<div class="np-grid2">';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Setor / atividade</label><input class="ce-form-input" type="text" id="np-f-setor"></div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">CNPJ</label><input class="ce-form-input" type="text" id="np-f-cnpj"></div>';
+  h += '</div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Endereço</label><input class="ce-form-input" type="text" id="np-f-endereco"></div>';
+  h += '<div class="np-grid2">';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Telefone da empresa</label><input class="ce-form-input" type="text" id="np-f-telefoneEmpresa"></div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">E-mail da empresa</label><input class="ce-form-input" type="text" id="np-f-emailEmpresa"></div>';
+  h += '</div>';
+
+  h += '<div class="np-sec-title">Projeto</div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Nome do projeto *</label><input class="ce-form-input" type="text" id="np-f-projeto" placeholder="Ex: Diagnóstico Organizacional & Plano de Ação"></div>';
+  h += '<div class="np-grid2">';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Data de início *</label><input class="ce-form-input" type="date" id="np-f-dataInicio"></div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Previsão de término *</label><input class="ce-form-input" type="date" id="np-f-dataPrevisao"></div>';
+  h += '</div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Horas de consultoria contratadas</label><input class="ce-form-input" type="number" id="np-f-horasProjeto" placeholder="Ex: 40"></div>';
+
+  h += '<div class="np-sec-title">Consultor responsável</div>';
+  h += '<div class="np-grid2">';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Nome *</label><select class="ce-form-select" id="np-f-consultor"><option value="Telmo Mendes">Telmo Mendes</option><option value="Aexane Alves">Aexane Alves</option></select></div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Cargo</label><input class="ce-form-input" type="text" id="np-f-consultorCargo" placeholder="Ex: Sócio-Consultor"></div>';
+  h += '</div>';
+  h += '<div class="np-grid2">';
+  h += '<div class="ce-form-row"><label class="ce-form-label">E-mail</label><input class="ce-form-input" type="text" id="np-f-consultorEmail"></div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">Telefone</label><input class="ce-form-input" type="text" id="np-f-consultorTelefone"></div>';
+  h += '</div>';
+  h += '<div class="ce-form-row"><label class="ce-form-label">WhatsApp (só números, com DDI, ex: 5521999990000)</label><input class="ce-form-input" type="text" id="np-f-consultorWa"></div>';
+
+  h += '<div class="np-err" id="np-err"></div>';
+  h += '<div class="ce-form-actions">';
+  h += '<button class="ce-btn-save" id="np-btn-save" onclick="npSalvar()">Criar projeto</button>';
+  h += '<button class="ce-btn-cancel" onclick="npFechar()">Cancelar</button>';
+  h += '</div>';
+  ge('np-body').innerHTML = h;
+}
+
+function npErro(msg) {
+  var el = ge('np-err');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function npSalvar() {
+  if (!sb) { npErro('Sem conexão com o banco de dados. Não é possível criar um projeto agora.'); return; }
+  var v = function(id) { var el = ge(id); return el ? (el.value || '').trim() : ''; };
+
+  var email = v('np-f-email').toLowerCase();
+  var senha = v('np-f-senha');
+  var nome = v('np-f-nome');
+  var empresa = v('np-f-empresa');
+  var projeto = v('np-f-projeto');
+  var dataInicio = v('np-f-dataInicio');
+  var dataPrevisao = v('np-f-dataPrevisao');
+  var consultor = v('np-f-consultor');
+
+  ge('np-err').style.display = 'none';
+  if (!email || email.indexOf('@') === -1) { npErro('Digite um e-mail de login válido.'); return; }
+  if (!senha || senha.length < 4) { npErro('A senha inicial precisa ter pelo menos 4 caracteres.'); return; }
+  if (!nome) { npErro('Preencha o nome do contato.'); return; }
+  if (!empresa) { npErro('Preencha o nome da empresa.'); return; }
+  if (!projeto) { npErro('Preencha o nome do projeto.'); return; }
+  if (!dataInicio || !dataPrevisao) { npErro('Preencha as datas de início e previsão de término.'); return; }
+
+  var btn = ge('np-btn-save');
+  btn.disabled = true;
+  btn.textContent = 'Criando...';
+
+  var salt = gerarSalt();
+  hashSenha(senha, salt).then(function(hash) {
+    return sb.from('usuarios').insert({ email: email, papel: 'cliente', senha_hash: hash, senha_salt: salt }).select().single();
+  }).then(function(res) {
+    if (res.error) throw res.error;
+    var colunas = {
+      cliente_email: email,
+      nome_cliente: nome, cargo: v('np-f-cargo'), empresa: empresa,
+      setor: v('np-f-setor'), cnpj: v('np-f-cnpj'), endereco: v('np-f-endereco'),
+      telefone_empresa: v('np-f-telefoneEmpresa'), email_empresa: v('np-f-emailEmpresa'),
+      nome_projeto: projeto, data_inicio: dataInicio, data_previsao: dataPrevisao,
+      horas_projeto: v('np-f-horasProjeto') ? Number(v('np-f-horasProjeto')) : 0,
+      consultor: consultor, consultor_cargo: v('np-f-consultorCargo'),
+      consultor_email: v('np-f-consultorEmail'), consultor_telefone: v('np-f-consultorTelefone'),
+      consultor_whatsapp: v('np-f-consultorWa'), encerrado: false
+    };
+    return sb.from('projetos').insert(colunas).select().single();
+  }).then(function(res2) {
+    if (res2.error) throw res2.error;
+    npFechar();
+    ceToast();
+    renderMasterSupabase();
+  }).catch(function(e) {
+    console.error('Erro ao criar projeto:', e);
+    btn.disabled = false;
+    btn.textContent = 'Criar projeto';
+    var motivo = (e && e.message) ? e.message : 'motivo não identificado';
+    if (motivo.indexOf('duplicate') !== -1 || motivo.indexOf('unique') !== -1) {
+      npErro('Já existe um usuário cadastrado com esse e-mail de login.');
+    } else {
+      npErro('Não foi possível criar o projeto. Motivo: ' + motivo + '. ' + diagnosticoErroSupabase(motivo, 'tabela'));
+    }
+  });
+}
+
+// Exclui um projeto por completo: todos os dados relacionados (fases, entregas,
+// encontros, documentos, etc.), o próprio projeto, e o login do cliente. Some
+// da tela na hora (otimista), a exclusão de verdade acontece em segundo plano.
+function msExcluirProjeto(email) {
+  var d = _msProjetosCache[email];
+  var nomeExibicao = d ? d.empresa : email;
+  showConfirm('Tem certeza que deseja excluir o projeto de "' + nomeExibicao + '"?\n\nIsso apaga TODOS os dados (fases, entregas, encontros, documentos, riscos, KPIs, mensagens, log de atividade) e o acesso de login do cliente. Não pode ser desfeito.', function() {
+    msExcluirProjetoConfirmado(email);
+  }, {confirmLabel:'Excluir definitivamente'});
+}
+
+function msExcluirProjetoConfirmado(email) {
+  if (!sb) { showAlert('Sem conexão com o banco de dados.', {danger:true}); return; }
+
+  // remove da tela imediatamente
+  delete _msProjetosCache[email];
+  var grid = ge('ms-grid');
+  if (grid) {
+    var todosEmails = Object.keys(_msProjetosCache);
+    grid.innerHTML = todosEmails.length
+      ? todosEmails.map(function(e){ return msCardHTML(e, _msProjetosCache[e]); }).join('')
+      : '<p style="color:rgba(255,255,255,.6);padding:1rem">Nenhum projeto cadastrado ainda. Cadastre um cliente para começar.</p>';
+  }
+
+  sb.from('projetos').select('id').eq('cliente_email', email).maybeSingle().then(function(res) {
+    if (res.error) throw res.error;
+    if (!res.data) { ceToast(); return null; }
+    var pid = res.data.id;
+    var tabelasFilhas = Object.keys(SB_TABELAS).map(function(k){ return SB_TABELAS[k]; }).concat(['log_atividade']);
+    var exclusoes = tabelasFilhas.map(function(tabela) { return sb.from(tabela).delete().eq('projeto_id', pid); });
+    return Promise.all(exclusoes)
+      .then(function() { return sb.from('projetos').delete().eq('id', pid); })
+      .then(function() { return sb.from('usuarios').delete().eq('email', email); });
+  }).then(function() {
+    ceToast();
+  }).catch(function(e) {
+    console.error('Erro ao excluir projeto:', e);
+    showAlert('O projeto sumiu da tela, mas houve um erro ao excluir no banco de dados. Recarregue a página para conferir.\n\nMotivo: ' + (e && e.message ? e.message : 'desconhecido'), {danger:true});
   });
 }
 
