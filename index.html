@@ -1389,6 +1389,7 @@ function sbCarregarProjeto(email) {
         // O sort definitivo ainda acontece no front via ordenarFases(), esta é só uma camada extra.
         if (tabela === 'fases') return sb.from(tabela).select('*').eq('projeto_id', pid).order('data_inicio', { ascending: true, nullsFirst: false });
         if (tabela === 'entregas') return sb.from(tabela).select('*').eq('projeto_id', pid).order('data_prevista', { ascending: true, nullsFirst: false });
+        if (tabela === 'encontros') return sb.from(tabela).select('*').eq('projeto_id', pid).order('data', { ascending: true, nullsFirst: false });
         return sb.from(tabela).select('*').eq('projeto_id', pid).order('id', { ascending: true });
       });
 
@@ -1636,6 +1637,22 @@ function ordenarEntregas(entregas) {
     return 0;
   });
   return entregas;
+}
+// Mesma lógica para encontros: ordena por data. Sem isso, a ordem vinha do banco
+// por "id" (um código aleatório), sem nenhuma relação com quando o encontro
+// acontece de fato — é o que causava a lista de encontros aparecer fora de ordem
+// em Progresso, Cronograma e no histórico de Valor Entregue.
+function ordenarEncontros(encontros) {
+  if (!encontros || !encontros.length) return encontros;
+  encontros.sort(function(a, b) {
+    var da = a.data ? new Date(a.data).getTime() : null;
+    var db = b.data ? new Date(b.data).getTime() : null;
+    if (da !== null && db !== null) return da - db;
+    if (da !== null) return -1;
+    if (db !== null) return 1;
+    return 0;
+  });
+  return encontros;
 }
 function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 function ini2(nome) {
@@ -2533,6 +2550,7 @@ function ceFinalizarSalvamento(cat, item) {
   else _c[cat.campo][_ceEditIdx] = item;
   if (cat.campo === 'fases') ordenarFases(_c.fases);
   if (cat.campo === 'entregas') ordenarEntregas(_c.entregas);
+  if (cat.campo === 'encontros') ordenarEncontros(_c.encontros);
   registrarLog(cat.label, isNovo ? 'criado' : 'editado', cat.titulo ? cat.titulo(item) : '');
   ceRenderLista();
   setView(_currentView);
@@ -2598,6 +2616,7 @@ function openClient(dados) {
   _c = dados;
   if (_c.fases) ordenarFases(_c.fases);
   if (_c.entregas) ordenarEntregas(_c.entregas);
+  if (_c.encontros) ordenarEncontros(_c.encontros);
   ge('master-screen').style.display = 'none';
   var app = ge('app');
   app.className = 'on';
