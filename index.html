@@ -400,6 +400,10 @@ a{text-decoration:none;color:inherit}
 .enc-block{margin-bottom:.6rem}
 .enc-block-lbl{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);margin-bottom:.28rem}
 .enc-item{display:flex;align-items:flex-start;gap:.4rem;font-size:.79rem;color:var(--tm);padding:.12rem 0}
+.enc-item-txt{flex:1}
+.enc-transformar-btn{flex-shrink:0;font-size:.66rem;font-weight:700;color:var(--bx);background:var(--cream);border:1px solid var(--cream-dk);border-radius:99px;padding:.15rem .55rem;cursor:pointer;white-space:nowrap}
+.enc-transformar-btn:hover{background:var(--bx);color:var(--white);border-color:var(--bx)}
+.enc-transformar-btn:disabled{color:var(--ok);border-color:var(--ok);background:var(--ok-bg);cursor:default}
 .enc-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:.43rem}
 .enc-parts{display:flex;flex-wrap:wrap;gap:.28rem}
 .enc-chip{font-size:.68rem;padding:.1rem .45rem;border-radius:99px;background:var(--cream-dk);color:var(--tm)}
@@ -1732,6 +1736,42 @@ function docIco(cat) {
   return '<div class="dc-icon ' + cls + '"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="'+col+'" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>';
 }
 
+// Um item de "combinados da reunião" é só texto solto, sem prioridade nem prazo —
+// não é a mesma coisa que um Próximo Passo de verdade (rastreado). Este botão
+// existe pra fazer a ponte entre os dois sem precisar digitar tudo de novo.
+function proximoReuniaoItemHTML(encIdx, itemIdx, texto, corDot) {
+  var btn = _isMaster ? '<button class="enc-transformar-btn" title="Transformar em Próximo Passo rastreado" onclick="event.stopPropagation();transformarEmProximoPasso(' + encIdx + ',' + itemIdx + ',this)">+ Próximo Passo</button>' : '';
+  return '<div class="enc-item"><div class="enc-dot" style="background:' + corDot + '"></div>' +
+    '<span class="enc-item-txt">' + esc(texto) + '</span>' + btn + '</div>';
+}
+
+function transformarEmProximoPasso(encIdx, itemIdx, btnEl) {
+  var enc = _c.encontros[encIdx];
+  if (!enc || !enc.proximosPassosReuniao || !enc.proximosPassosReuniao[itemIdx]) return;
+  var texto = enc.proximosPassosReuniao[itemIdx];
+  var prazoSugerido = new Date(); prazoSugerido.setDate(prazoSugerido.getDate() + 7);
+  var novo = {
+    titulo: texto,
+    descricao: 'Combinado na reunião "' + (enc.titulo || '') + '" (' + fdbr(enc.data) + ').',
+    prioridade: 'media',
+    dataLimite: prazoSugerido.toISOString().slice(0, 10),
+    responsavel: '', concluido: false
+  };
+  if (!_c.proximosPassos) _c.proximosPassos = [];
+  _c.proximosPassos.push(novo);
+  registrarLog('Próximos Passos', 'criado', texto);
+  if (btnEl) { btnEl.textContent = '✓ Adicionado'; btnEl.disabled = true; }
+  if (!sb || !_c._projetoId) { ceToast(); return; }
+  sbSalvarItem('proximosPassos', novo, _c._projetoId).then(function(salvo) {
+    var idx = _c.proximosPassos.indexOf(novo);
+    if (idx !== -1) _c.proximosPassos[idx] = salvo;
+    ceToast();
+  }).catch(function(e) {
+    console.error('Erro ao transformar em Próximo Passo:', e);
+    showAlert('Não foi possível salvar no banco agora, mas o item já foi adicionado na tela. Tente novamente em instantes.', {danger:true});
+  });
+}
+
 function docsRelHTML(docNomes) {
   if (!docNomes || !docNomes.length || !_c) return '';
   var found = [];
@@ -1799,8 +1839,8 @@ function icoPNG(tipo) {
 // ═══════════════════════════════════════════
 // Sessão: guarda só e-mail/papel/origem no navegador (nunca a senha), para a pessoa
 // não precisar logar de novo a cada atualização de página.
-function salvarSessao(email, papel, origem) {
-  ssSet('explore_sessao', JSON.stringify({ email: email, papel: papel, origem: origem }));
+function salvarSessao(email, papel, origem, clienteAberto) {
+  ssSet('explore_sessao', JSON.stringify({ email: email, papel: papel, origem: origem, clienteAberto: clienteAberto || null }));
 }
 function limparSessao() {
   ssDel('explore_sessao');
@@ -1902,8 +1942,12 @@ function tentarRestaurarSessao() {
     _isMaster = true;
     _masterEmail = sess.email;
     ge('login-screen').style.display = 'none';
-    if (sb && sess.origem === 'sb') renderMasterSupabase();
-    else renderMaster();
+    if (sb && sess.origem === 'sb') {
+      renderMasterSupabase();
+    } else {
+      renderMaster();
+    }
+    if (sess.clienteAberto) masterOpenClient(sess.clienteAberto);
     return;
   }
 
@@ -2053,7 +2097,7 @@ var CE_CATEGORIAS = [
       { k:'pauta', label:'Pauta (um item por linha)', tipo:'list' },
       { k:'resumo', label:'Resumo da sessão', tipo:'textarea' },
       { k:'destaques', label:'Destaques (um item por linha)', tipo:'list' },
-      { k:'proximosPassosReuniao', label:'Próximos passos da reunião (um item por linha)', tipo:'list' },
+      { k:'proximosPassosReuniao', label:'Combinados desta reunião (um item por linha, é só anotação — não cria tarefa rastreada)', tipo:'list' },
       { k:'docs', label:'Documentos vinculados (códigos, separe por vírgula, ex: CNTRPS2026.7)', tipo:'taglist' }
     ]
   },
@@ -2115,7 +2159,15 @@ function badgeStLabel(s) {
   return m[s] || s;
 }
 
+// Token da "versão atual" do que está aberto no modal compartilhado (Central de
+// Edição, Acesso, Mensagens, Log). Qualquer carregamento assíncrono que escreva
+// nesse modal (hoje, só o Log de Atividade) precisa conferir se esse token ainda
+// é o mesmo de quando a consulta começou — senão, a pessoa já saiu daquela tela
+// e o resultado não pode aparecer por cima de outra coisa.
+var _ceRequestToken = 0;
+
 function ceClose() {
+  _ceRequestToken++;
   ge('ce-overlay').className = 'ce-overlay';
 }
 
@@ -2140,6 +2192,7 @@ function ceEditIconHTML(catId, idx) {
 }
 
 function ceQuickAdd(catId) {
+  _ceRequestToken++;
   ge('ce-overlay').className = 'ce-overlay on';
   _ceCat = ceFindCat(catId);
   _ceEditIdx = -1;
@@ -2147,6 +2200,7 @@ function ceQuickAdd(catId) {
 }
 
 function ceQuickEdit(catId, idx) {
+  _ceRequestToken++;
   ge('ce-overlay').className = 'ce-overlay on';
   _ceCat = ceFindCat(catId);
   _ceEditIdx = idx;
@@ -2156,6 +2210,7 @@ function ceQuickEdit(catId, idx) {
 // Mesma lógica, mas para categorias de campo único (tipo 'single'), como os blocos
 // de Empresa e Consultor dentro de Dados da Empresa.
 function ceQuickEditSingle(catId) {
+  _ceRequestToken++;
   ge('ce-overlay').className = 'ce-overlay on';
   _ceCat = ceFindCat(catId);
   ceRenderFormSingle();
@@ -2163,6 +2218,7 @@ function ceQuickEditSingle(catId) {
 
 // Atalho para a categoria de acesso (login do cliente)
 function ceQuickAcesso() {
+  _ceRequestToken++;
   ge('ce-overlay').className = 'ce-overlay on';
   _ceCat = ceFindCat('acessoCliente');
   ceRenderFormAcesso();
@@ -2468,6 +2524,7 @@ function diagnosticoErroSupabase(motivo, contexto) {
 function ceSaveItem() {
   var cat = _ceCat;
   var item = _ceEditIdx === -1 ? {} : Object.assign({}, _c[cat.campo][_ceEditIdx]);
+  var projetoAlvo = _c; // referência ao projeto sendo editado agora — conferida de novo após o upload, que pode demorar o suficiente pro consultor trocar de cliente nesse meio tempo
 
   // Validação e coleta dos campos comuns (tudo exceto o campo de arquivo, tratado à parte)
   for (var i = 0; i < cat.campos.length; i++) {
@@ -2501,7 +2558,14 @@ function ceSaveItem() {
       }
       var btnSave = ge('ce-btn-save');
       if (btnSave) { btnSave.disabled = true; btnSave.textContent = 'Enviando arquivo...'; }
-      sbUploadArquivo(file, _c._projetoId).then(function(url) {
+      sbUploadArquivo(file, projetoAlvo._projetoId).then(function(url) {
+        if (_c !== projetoAlvo) {
+          // O consultor já saiu desse cliente enquanto o arquivo subia. O arquivo
+          // já está no Storage (não se perde), mas não podemos mais gravar a
+          // referência dele aqui — senão o documento apareceria no projeto errado.
+          showAlert('O arquivo "' + file.name + '" terminou de subir, mas você já saiu do projeto de "' + (projetoAlvo.empresa || '') + '" enquanto isso acontecia. Volte para aquele projeto e adicione o documento de novo (o arquivo já está salvo, só falta vincular).', {danger:true});
+          return;
+        }
         item.url = url;
         item.tamanho = (file.size / 1024 / 1024).toFixed(1) + ' MB';
         ceFinalizarSalvamento(cat, item);
@@ -2646,6 +2710,16 @@ function openClient(dados) {
   var backBtn = ge('sb-back-btn');
   if (_isMaster) backBtn.className = 'sb-back-btn on';
   else backBtn.className = 'sb-back-btn';
+
+  // Lembra qual cliente o consultor tinha aberto, pra restaurar direto nele se
+  // a página for atualizada (sem isso, um F5 sempre voltava pro Painel de
+  // Projetos, mesmo com um cliente aberto).
+  if (_isMaster && _c._loginEmail) {
+    try {
+      var sessAtual = JSON.parse(ssGet('explore_sessao') || '{}');
+      salvarSessao(sessAtual.email || _masterEmail, 'consultor', sessAtual.origem || (sb ? 'sb' : 'local'), _c._loginEmail);
+    } catch(e) {}
+  }
 
   var fbBtn = ge('sb-fb-btn');
   if (_isMaster) fbBtn.className = 'sb-fb-btn on';
@@ -3211,6 +3285,7 @@ function updateFbBadge() {
 // Atalho só para o consultor: abre a Central de Edição direto na lista de mensagens
 // recebidas dos clientes, para responder.
 function ceOpenFeedback() {
+  _ceRequestToken++;
   ge('ce-overlay').className = 'ce-overlay on';
   _ceCat = ceFindCat('feedback');
   ceRenderLista();
@@ -3250,6 +3325,8 @@ function renderLogAtividade(filtro) {
   ge('ce-body').innerHTML = h;
 }
 function ceOpenLog() {
+  _ceRequestToken++;
+  var meuToken = _ceRequestToken;
   ge('ce-overlay').className = 'ce-overlay on';
   if (_c._logCarregado || !sb || !_c._projetoId) {
     renderLogAtividade('todos');
@@ -3258,10 +3335,12 @@ function ceOpenLog() {
   ge('ce-title').textContent = 'Log de Atividade';
   ge('ce-body').innerHTML = '<p style="padding:2rem;text-align:center;color:var(--tl)">Carregando...</p>';
   sbCarregarLogAtividade(_c._projetoId).then(function(log) {
+    if (meuToken !== _ceRequestToken) return; // a pessoa já saiu dessa tela — descarta
     _c.logAtividade = log;
     _c._logCarregado = true;
     renderLogAtividade('todos');
   }).catch(function(e) {
+    if (meuToken !== _ceRequestToken) return;
     console.error('Erro ao carregar log de atividade:', e);
     showAlert('Não foi possível carregar o log de atividade agora.', {danger:true});
     ceClose();
@@ -3312,59 +3391,143 @@ function closeTour() {
 // ═══════════════════════════════════════════
 // EXPORT
 // ═══════════════════════════════════════════
+// Calcula o status geral do projeto (RAG: Red/Amber/Green), a mesma lógica
+// que qualquer relatório de status de consultoria de verdade abre com.
+function calcularStatusGeral(c) {
+  var atrasadas = c.entregas.filter(function(e) { return e.status === 'atrasado'; });
+  if (atrasadas.length) return { cor: '#9B2335', bg: '#FBEAEA', label: 'Atrasado', texto: atrasadas.length + ' entrega' + (atrasadas.length > 1 ? 's' : '') + ' em atraso.' };
+
+  var riscosCriticos = (c.riscos || []).filter(function(r) { return r.probabilidade === 'alta' && r.impacto === 'alto'; });
+  if (riscosCriticos.length) return { cor: '#B07D2A', bg: '#FBF4E6', label: 'Atenção', texto: riscosCriticos.length + ' risco' + (riscosCriticos.length > 1 ? 's críticos' : ' crítico') + ' em monitoramento.' };
+
+  var pend = c.entregas.filter(function(e) { return e.status !== 'concluido'; }).sort(function(a,b){ return new Date(a.dataISO) - new Date(b.dataISO); });
+  if (pend.length) {
+    var dias = drest(pend[0].dataISO);
+    if (dias !== null && dias >= 0 && dias <= 5) return { cor: '#B07D2A', bg: '#FBF4E6', label: 'Atenção', texto: 'Próxima entrega em ' + dias + ' dia' + (dias === 1 ? '' : 's') + '.' };
+  }
+  return { cor: '#3B7A57', bg: '#EAF4EE', label: 'No prazo', texto: 'Projeto avançando dentro do cronograma previsto.' };
+}
+
 function doExport() {
   if (!_c) return;
-  var pct = cprog(_c.fases);
-  var concl = 0; for (var i = 0; i < _c.entregas.length; i++) { if (_c.entregas[i].status === 'concluido') concl++; }
-  var faseAtiva = null; for (var j = 0; j < _c.fases.length; j++) { if (_c.fases[j].status === 'ativa') { faseAtiva = _c.fases[j]; break; } }
+  var c = _c;
+  var pct = cprog(c.fases);
+  var concl = 0; for (var i = 0; i < c.entregas.length; i++) { if (c.entregas[i].status === 'concluido') concl++; }
+  var faseAtiva = null; for (var j = 0; j < c.fases.length; j++) { if (c.fases[j].status === 'ativa') { faseAtiva = c.fases[j]; break; } }
   var hoje = fdhoje();
-  var proxPassos = _c.proximosPassos.filter(function(p) { return p.prioridade === 'alta' && !p.concluido; }).slice(0, 5);
-  var decs = (_c.decisoes || []).slice(0, 4);
+  var proxPassos = c.proximosPassos.filter(function(p) { return p.prioridade === 'alta' && !p.concluido; }).slice(0, 5);
+  var decs = (c.decisoes || []).slice(0, 4);
+  var status = calcularStatusGeral(c);
+  var mom = getMomento(c);
+
+  // Sumário executivo: 2-3 frases, não só números soltos
+  var sumario = 'O projeto "' + esc(c.projeto) + '" está ' + pct + '% concluído, com ' + concl + ' de ' + c.entregas.length + ' entregas realizadas. ';
+  sumario += faseAtiva ? 'Encontra-se atualmente na fase de ' + esc(faseAtiva.nome) + '. ' : '';
+  sumario += mom.texto;
+
   var win = window.open('', '_blank');
   if (!win) { showAlert('Permita popups para exportar o relatório.'); return; }
-  var body = '<html><head><meta charset="UTF-8"><title>Relatório '+esc(_c.empresa)+' '+hoje+'</title>';
-  body += '<style>body{font-family:system-ui,sans-serif;color:#2C1A24;padding:2rem;max-width:760px;margin:0 auto;line-height:1.6}';
-  body += 'h1{font-family:Georgia,serif;font-size:1.5rem;font-weight:bold;color:#612B4A;margin-bottom:.4rem}';
-  body += 'h2{font-family:Georgia,serif;font-size:1.1rem;font-weight:bold;color:#612B4A;margin:1.4rem 0 .6rem;padding-bottom:.3rem;border-bottom:1px solid #EDE8DB}';
-  body += '.logo{font-family:Georgia,serif;font-size:1.5rem;font-weight:bold;letter-spacing:.15em;color:#612B4A}';
-  body += '.sub{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#9C8490;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:2px solid #612B4A}';
+  var body = '<html><head><meta charset="UTF-8"><title>Relatório '+esc(c.empresa)+' '+hoje+'</title>';
+  body += '<style>';
+  body += '@page{margin:1.6cm}';
+  body += 'body{font-family:system-ui,sans-serif;color:#2C1A24;padding:2rem;max-width:800px;margin:0 auto;line-height:1.6;font-size:.86rem}';
+  body += 'h1{font-family:Georgia,serif;font-size:1.4rem;font-weight:bold;color:#612B4A;margin-bottom:.3rem}';
+  body += 'h2{font-family:Georgia,serif;font-size:1.02rem;font-weight:bold;color:#612B4A;margin:1.5rem 0 .7rem;padding-bottom:.35rem;border-bottom:1px solid #EDE8DB;page-break-after:avoid}';
+  body += '.logo{font-family:Georgia,serif;font-size:1.4rem;font-weight:bold;letter-spacing:.15em;color:#612B4A}';
+  body += '.sub{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#9C8490;margin-bottom:.3rem}';
+  body += '.confid{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:#B07D2A;font-weight:700;margin-bottom:1.4rem;padding-bottom:1.4rem;border-bottom:2px solid #612B4A}';
   body += '.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem 2rem;margin:.65rem 0 1.25rem}';
-  body += '.k{font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9C8490}';
-  body += '.v{font-size:.86rem;color:#2C1A24;font-weight:600;margin-top:.06rem}';
-  body += '.kgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-bottom:.85rem}';
-  body += '.kb{background:#F5F1E8;border-radius:8px;padding:.85rem;text-align:center;border-top:2px solid #C9A96E}';
-  body += '.kv{font-family:Georgia,serif;font-size:1.65rem;font-weight:bold;color:#612B4A;line-height:1}';
-  body += '.kl{font-size:.63rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9C8490;margin-top:.18rem}';
+  body += '.k{font-size:.63rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#9C8490}';
+  body += '.v{font-size:.84rem;color:#2C1A24;font-weight:600;margin-top:.06rem}';
+  body += '.status-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .8rem;border-radius:99px;font-weight:700;font-size:.78rem;margin-bottom:.5rem}';
+  body += '.status-dot{width:8px;height:8px;border-radius:50%}';
+  body += '.exec-sum{font-size:.88rem;color:#3A2A32;line-height:1.7;background:#F5F1E8;border-radius:8px;padding:1rem 1.2rem;margin-bottom:.5rem}';
+  body += '.kgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:.85rem}';
+  body += '.kb{background:#F5F1E8;border-radius:8px;padding:.75rem;text-align:center;border-top:2px solid #C9A96E}';
+  body += '.kv{font-family:Georgia,serif;font-size:1.4rem;font-weight:bold;color:#612B4A;line-height:1}';
+  body += '.kl{font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9C8490;margin-top:.18rem}';
   body += '.bar{height:7px;background:#EDE8DB;border-radius:99px;overflow:hidden;margin:.45rem 0}';
   body += '.bf{height:100%;background:#C9A96E;border-radius:99px}';
-  body += '.it{padding:.55rem 0;border-bottom:1px solid #EDE8DB;font-size:.84rem}';
+  body += '.fase-bloco{margin-bottom:1.1rem;page-break-inside:avoid}';
+  body += '.fase-hdr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.4rem}';
+  body += '.fase-nome{font-weight:700;font-size:.88rem;color:#2C1A24}';
+  body += '.fase-meta{font-size:.72rem;color:#9C8490}';
+  body += '.it{padding:.5rem 0;border-bottom:1px solid #EDE8DB;font-size:.82rem;page-break-inside:avoid}';
   body += '.it:last-child{border-bottom:none}';
   body += '.in{font-weight:700;color:#2C1A24;margin-bottom:.12rem}';
-  body += '.im{font-size:.73rem;color:#9C8490}';
-  body += '.ft{margin-top:2rem;padding-top:.85rem;border-top:1px solid #EDE8DB;text-align:center;font-size:.7rem;color:#9C8490}';
+  body += '.im{font-size:.71rem;color:#9C8490}';
+  body += '.risco-linha{display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem;padding:.5rem 0;border-bottom:1px solid #EDE8DB;font-size:.82rem;page-break-inside:avoid}';
+  body += '.risco-tags{flex-shrink:0;display:flex;gap:.3rem}';
+  body += '.tag{font-size:.62rem;font-weight:700;padding:.1rem .45rem;border-radius:99px;white-space:nowrap}';
+  body += '.ft{margin-top:2rem;padding-top:.85rem;border-top:1px solid #EDE8DB;text-align:center;font-size:.68rem;color:#9C8490}';
   body += '@media print{body{padding:1rem}}</style></head><body>';
+
   body += '<div class="logo">EXPLORE</div>';
-  body += '<div class="sub">Desenvolvimento de Gente &amp; Gestão · Relatório gerado em ' + hoje + '</div>';
-  body += '<h1>' + esc(_c.projeto) + '</h1>';
+  body += '<div class="sub">Desenvolvimento de Gente &amp; Gestão · Relatório de Status gerado em ' + hoje + '</div>';
+  body += '<div class="confid">Documento confidencial · Uso exclusivo do cliente e da equipe EXPLORE</div>';
+  body += '<h1>' + esc(c.projeto) + '</h1>';
   body += '<div class="grid">';
-  body += '<div><div class="k">Cliente</div><div class="v">' + esc(_c.nome) + ' · ' + esc(_c.cargo) + '</div></div>';
-  body += '<div><div class="k">Empresa</div><div class="v">' + esc(_c.empresa) + '</div></div>';
-  body += '<div><div class="k">Consultor</div><div class="v">' + esc(_c.consultor) + '</div></div>';
-  body += '<div><div class="k">Início</div><div class="v">' + fd(_c.dataInicio) + '</div></div>';
-  body += '<div><div class="k">Previsão</div><div class="v">' + fd(_c.dataPrevisao) + '</div></div>';
-  body += '<div><div class="k">Fase atual</div><div class="v">' + (faseAtiva ? esc(faseAtiva.nome) : '—') + '</div></div>';
+  body += '<div><div class="k">Cliente</div><div class="v">' + esc(c.nome) + ' · ' + esc(c.cargo) + '</div></div>';
+  body += '<div><div class="k">Empresa</div><div class="v">' + esc(c.empresa) + '</div></div>';
+  body += '<div><div class="k">Consultor responsável</div><div class="v">' + esc(c.consultor) + '</div></div>';
+  body += '<div><div class="k">Início · Previsão</div><div class="v">' + fd(c.dataInicio) + ' → ' + fd(c.dataPrevisao) + '</div></div>';
   body += '</div>';
-  body += '<h2>Progresso</h2>';
-  body += '<div class="kgrid"><div class="kb"><div class="kv">' + pct + '%</div><div class="kl">Concluído</div></div>';
-  body += '<div class="kb"><div class="kv">' + concl + '/' + _c.entregas.length + '</div><div class="kl">Entregas</div></div>';
-  body += '<div class="kb"><div class="kv">' + cdias(_c.dataInicio) + '</div><div class="kl">Dias</div></div></div>';
+
+  body += '<h2>Sumário Executivo</h2>';
+  body += '<div class="status-badge" style="background:' + status.bg + ';color:' + status.cor + '"><span class="status-dot" style="background:' + status.cor + '"></span>' + status.label + '</div>';
+  body += '<div class="exec-sum">' + esc(sumario) + ' ' + esc(status.texto) + '</div>';
+
+  body += '<h2>Indicadores-Chave</h2>';
+  body += '<div class="kgrid">';
+  body += '<div class="kb"><div class="kv">' + pct + '%</div><div class="kl">Progresso</div></div>';
+  body += '<div class="kb"><div class="kv">' + concl + '/' + c.entregas.length + '</div><div class="kl">Entregas</div></div>';
+  body += '<div class="kb"><div class="kv">' + (c.riscos || []).length + '</div><div class="kl">Riscos ativos</div></div>';
+  body += '<div class="kb"><div class="kv">' + cdias(c.dataInicio) + '</div><div class="kl">Dias corridos</div></div>';
+  body += '</div>';
   body += '<div class="bar"><div class="bf" style="width:' + pct + '%"></div></div>';
-  body += '<h2>Entregas</h2>';
-  for (var i = 0; i < _c.entregas.length; i++) {
-    var e = _c.entregas[i];
-    body += '<div class="it"><div class="in">' + esc(e.nome) + '</div>';
-    body += '<div class="im">' + esc(e.data) + ' · ' + esc(e.responsavel) + ' · ' + (e.status === 'concluido' ? 'Concluído' : e.status === 'em_andamento' ? 'Em andamento' : 'Pendente') + '</div></div>';
+
+  body += '<h2>Cronograma por Fase</h2>';
+  for (var fi = 0; fi < c.fases.length; fi++) {
+    var f = c.fases[fi];
+    var entFase = c.entregas.filter(function(e) {
+      if (!f.dataInicio) return false;
+      var ini = f.dataInicio, fim = f.dataConclusao || '9999-12-31';
+      var d = e.dataISO || '';
+      return d >= ini && d <= fim;
+    });
+    var stLabel = f.status === 'concluida' ? 'Concluída' : f.status === 'ativa' ? 'Em andamento' : 'Aguardando';
+    body += '<div class="fase-bloco"><div class="fase-hdr"><span class="fase-nome">' + esc(f.nome) + '</span><span class="fase-meta">Peso ' + f.peso + '% · ' + stLabel + '</span></div>';
+    if (entFase.length) {
+      for (var ei = 0; ei < entFase.length; ei++) {
+        var e = entFase[ei];
+        body += '<div class="it"><div class="in">' + esc(e.nome) + '</div>';
+        body += '<div class="im">' + esc(e.data) + ' · ' + esc(e.responsavel) + ' · ' + (e.status === 'concluido' ? 'Concluído' : e.status === 'em_andamento' ? 'Em andamento' : e.status === 'atrasado' ? 'Atrasado' : 'Pendente') + '</div></div>';
+      }
+    } else {
+      body += '<div class="im" style="padding:.3rem 0">Nenhuma entrega vinculada a esta fase ainda.</div>';
+    }
+    body += '</div>';
   }
+
+  if ((c.riscos || []).length) {
+    body += '<h2>Riscos Monitorados</h2>';
+    var riscosOrdenados = c.riscos.slice().sort(function(a, b) {
+      var peso = { alta: 2, media: 1, baixa: 0 };
+      var pa = (peso[a.probabilidade]||0) + (a.impacto === 'alto' ? 2 : a.impacto === 'medio' ? 1 : 0);
+      var pb = (peso[b.probabilidade]||0) + (b.impacto === 'alto' ? 2 : b.impacto === 'medio' ? 1 : 0);
+      return pb - pa;
+    });
+    for (var ri = 0; ri < riscosOrdenados.length; ri++) {
+      var r = riscosOrdenados[ri];
+      var corProb = r.probabilidade === 'alta' ? '#9B2335' : r.probabilidade === 'media' ? '#B07D2A' : '#3B7A57';
+      var bgProb = r.probabilidade === 'alta' ? '#FBEAEA' : r.probabilidade === 'media' ? '#FBF4E6' : '#EAF4EE';
+      var corImp = r.impacto === 'alto' ? '#9B2335' : r.impacto === 'medio' ? '#B07D2A' : '#3B7A57';
+      var bgImp = r.impacto === 'alto' ? '#FBEAEA' : r.impacto === 'medio' ? '#FBF4E6' : '#EAF4EE';
+      body += '<div class="risco-linha"><div><div class="in">' + esc(r.titulo) + '</div><div class="im">Mitigação: ' + esc(r.mitigacao) + '</div></div>';
+      body += '<div class="risco-tags"><span class="tag" style="background:' + bgProb + ';color:' + corProb + '">' + cap(r.probabilidade) + ' prob.</span><span class="tag" style="background:' + bgImp + ';color:' + corImp + '">' + cap(r.impacto) + ' impacto</span></div></div>';
+    }
+  }
+
   if (proxPassos.length) {
     body += '<h2>Próximos Passos de Alta Prioridade</h2>';
     for (var p = 0; p < proxPassos.length; p++) {
@@ -3379,7 +3542,7 @@ function doExport() {
       body += '<div class="im">' + fd(decs[dc].data) + ' · ' + esc(decs[dc].responsavel) + '</div></div>';
     }
   }
-  body += '<div class="ft"><strong>EXPLORE</strong> Desenvolvimento de Gente &amp; Gestão · © 2026</div>';
+  body += '<div class="ft"><strong>EXPLORE</strong> Desenvolvimento de Gente &amp; Gestão · Documento confidencial · © 2026</div>';
   body += '<script>setTimeout(function(){window.print();},600);<\/script></body></html>';
   win.document.write(body);
   win.document.close();
@@ -3560,8 +3723,9 @@ function renderProgresso() {
           h += '</div>';
         }
         if (enc.proximosPassosReuniao && enc.proximosPassosReuniao.length) {
-          h += '<div class="enc-block"><div class="enc-block-lbl">Próximos passos definidos</div>';
-          for (var ppi = 0; ppi < enc.proximosPassosReuniao.length; ppi++) h += '<div class="enc-item"><div class="enc-dot" style="background:var(--bx)"></div>' + esc(enc.proximosPassosReuniao[ppi]) + '</div>';
+          h += '<div class="enc-block"><div class="enc-block-lbl">Combinados desta reunião</div>';
+          var encIdxAtual = c.encontros.indexOf(enc);
+          for (var ppi = 0; ppi < enc.proximosPassosReuniao.length; ppi++) h += proximoReuniaoItemHTML(encIdxAtual, ppi, enc.proximosPassosReuniao[ppi], 'var(--bx)');
           h += '</div>';
         }
         if (enc.participantes && enc.participantes.length) {
@@ -3809,8 +3973,9 @@ function cronAtividadeDetHTML(item) {
       for (var di = 0; di < e.destaques.length; di++) h += '<div class="xitem"><div class="xdot" style="background:var(--gold)"></div>' + esc(e.destaques[di]) + '</div>';
     }
     if (e.proximosPassosReuniao && e.proximosPassosReuniao.length) {
-      h += '<div class="xblock-lbl" style="margin-top:.45rem">Próximos passos</div>';
-      for (var ppi = 0; ppi < e.proximosPassosReuniao.length; ppi++) h += '<div class="xitem"><div class="xdot" style="background:var(--ok)"></div>' + esc(e.proximosPassosReuniao[ppi]) + '</div>';
+      h += '<div class="xblock-lbl" style="margin-top:.45rem">Combinados desta reunião</div>';
+      var encIdxCron = _c.encontros.indexOf(e);
+      for (var ppi = 0; ppi < e.proximosPassosReuniao.length; ppi++) h += proximoReuniaoItemHTML(encIdxCron, ppi, e.proximosPassosReuniao[ppi], 'var(--ok)');
     }
     if (e.participantes && e.participantes.length) {
       h += '<div class="enc-parts" style="margin-top:.45rem">';
@@ -4273,11 +4438,9 @@ function npsCardHTML() {
 function npsHistoricoHTML() {
   var hist = _c.nps || [];
   if (!hist.length) return '';
-  var med = Math.round(hist.reduce(function(s,n){ return s+n.nota; },0)/hist.length*10)/10;
   var h = '<div class="sec-lbl-row" style="margin-top:1.4rem"><div class="sec-lbl" style="margin:0;padding:0;border:none">Avaliações do cliente (NPS)</div></div>';
   h += '<div class="nps-score-box sec">';
-  h += '<div style="font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:.4rem">Média geral</div>';
-  h += '<div class="nps-score">' + med + '</div><div class="nps-score-sub">de 5.0</div>';
+  h += '<div style="font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:.4rem">Evolução por fase</div>';
   h += '<div class="nps-bars">';
   for (var bi = 0; bi < hist.length; bi++) {
     var bh = Math.round(hist[bi].nota / 5 * 45);
@@ -4624,19 +4787,17 @@ function agendaSectionHTML() {
 // ═══════════════════════════════════════════
 function renderValor(filtro) {
   var c = _c;
-  var concl = 0; for (var i=0;i<c.entregas.length;i++) { if(c.entregas[i].status==='concluido') concl++; }
-  var nenc=(c.encontros||[]).length, ndoc=c.documentos.length, ndec=(c.decisoes||[]).length;
-  var ntarefas = (c.proximosPassos||[]).filter(function(p){ return p.concluido; }).length;
+  var nenc=(c.encontros||[]).length, ndec=(c.decisoes||[]).length;
   var kpis=c.kpis||[]; var metasAt=kpis.filter(function(k){ return k.atual>=k.meta; }).length;
+  var npsHist = c.nps || [];
+  var npsMed = npsHist.length ? Math.round(npsHist.reduce(function(s,n){ return s+n.nota; },0)/npsHist.length*10)/10 : null;
   var h = '<div class="valor-hero"><div class="vh-title">Valor entregue até hoje</div><div class="vh-sub">'+fdhoje()+' · '+cdias(c.dataInicio)+' dias de projeto</div></div>';
   h += '<div class="valor-grid sec">';
-  h += '<div class="vg-card"><div class="vg-num">'+c.horasProjeto+'</div><div class="vg-unit">horas</div><div class="vg-lbl">de consultoria</div></div>';
-  h += '<div class="vg-card"><div class="vg-num">'+nenc+'</div><div class="vg-unit">encontros</div><div class="vg-lbl">realizados</div></div>';
-  h += '<div class="vg-card"><div class="vg-num">'+concl+'</div><div class="vg-unit">entregas</div><div class="vg-lbl">concluídas</div></div>';
-  h += '<div class="vg-card"><div class="vg-num">'+ntarefas+'</div><div class="vg-unit">tarefas</div><div class="vg-lbl">concluídas</div></div>';
-  h += '<div class="vg-card"><div class="vg-num">'+ndoc+'</div><div class="vg-unit">documentos</div><div class="vg-lbl">produzidos</div></div>';
-  h += '<div class="vg-card"><div class="vg-num">'+ndec+'</div><div class="vg-unit">decisões</div><div class="vg-lbl">estratégicas</div></div>';
+  h += '<div class="vg-card"><div class="vg-num">'+(c.horasProjeto != null ? c.horasProjeto : '—')+'</div><div class="vg-unit">horas</div><div class="vg-lbl">de consultoria</div></div>';
+  h += '<div class="vg-card"><div class="vg-num">'+(npsMed != null ? npsMed : '—')+'</div><div class="vg-unit">de 5.0</div><div class="vg-lbl">avaliação do cliente</div></div>';
   if (kpis.length) h += '<div class="vg-card"><div class="vg-num">'+metasAt+'/'+kpis.length+'</div><div class="vg-unit">KPIs</div><div class="vg-lbl">metas atingidas</div></div>';
+  h += '<div class="vg-card"><div class="vg-num">'+ndec+'</div><div class="vg-unit">decisões</div><div class="vg-lbl">estratégicas</div></div>';
+  h += '<div class="vg-card"><div class="vg-num">'+nenc+'</div><div class="vg-unit">encontros</div><div class="vg-lbl">realizados</div></div>';
   h += '</div>';
   h += npsHistoricoHTML();
   h += valorHistoricoHTML(filtro);
