@@ -409,6 +409,7 @@ a{text-decoration:none;color:inherit}
 /* docs relacionados */
 .docs-rel{margin-top:.65rem;padding-top:.6rem;border-top:1px solid var(--cream-dk)}
 .docs-rel-lbl{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);margin-bottom:.4rem}
+.docs-rel-erro{font-size:.72rem;color:var(--warn);background:var(--warn-bg);border-radius:var(--r);padding:.5rem .7rem;margin-top:.5rem;line-height:1.5}
 .doc-rel{display:flex;align-items:center;padding:.38rem .55rem;border-radius:var(--r);border:1px solid var(--cream-dk);margin-bottom:.28rem;background:var(--cream);text-decoration:none;color:inherit;transition:all .15s}
 .doc-rel:hover{border-color:var(--gold);background:#fdfcf8}
 .doc-rel-left{display:flex;align-items:center;gap:.4rem;min-width:0;flex:1}
@@ -444,6 +445,11 @@ a{text-decoration:none;color:inherit}
 
 /* documentos */
 .doc-banner{background:var(--warn-bg);border:1px solid var(--warn);border-radius:var(--r);padding:.5rem .85rem;margin-bottom:.75rem;font-size:.77rem;color:var(--warn);display:flex;align-items:center;gap:.4rem;font-weight:700}
+.orfaos-aviso{background:var(--warn-bg);border:1px solid var(--warn);border-radius:var(--rl);padding:1rem 1.1rem;margin-top:1.2rem}
+.orfaos-titulo{font-size:.82rem;font-weight:700;color:var(--warn)}
+.orfaos-sub{font-size:.76rem;color:var(--tm);margin-top:.35rem;line-height:1.5}
+.orfaos-item{font-size:.78rem;color:var(--td);margin-top:.6rem;padding-top:.6rem;border-top:1px solid rgba(176,125,42,.25);display:flex;align-items:center;gap:.4rem}
+.orfaos-fase-errada{color:var(--tl);font-style:italic}
 .doc-stats{display:flex;gap:.55rem;margin-bottom:.75rem;flex-wrap:wrap}
 .ds{background:var(--white);border-radius:var(--r);padding:.42rem .8rem;border:1px solid var(--cream-dk);display:flex;align-items:center;gap:.32rem;font-size:.77rem;color:var(--tm)}
 .ds-num{font-family:Georgia,serif;font-size:.98rem;font-weight:bold;color:var(--bx)}
@@ -1732,22 +1738,32 @@ function docsRelHTML(docNomes) {
   for (var i = 0; i < _c.documentos.length; i++) {
     if (docNomes.indexOf(_c.documentos[i].nome) !== -1) found.push(_c.documentos[i]);
   }
-  if (!found.length) return '';
-  var h = '<div class="docs-rel"><div class="docs-rel-lbl">Documentos relacionados</div>';
-  for (var j = 0; j < found.length; j++) {
-    var d = found[j];
-    var proprio = arquivoProprio(d.url);
-    var bg = {diagnostico:'#F0EAF5',plano:'#EAF4EE',relatorio:'#FBF4E6',material:'#EFF6FF'}[d.categoria] || '#EFF6FF';
-    var col = {diagnostico:'#612B4A',plano:'#3B7A57',relatorio:'#B07D2A',material:'#2563EB'}[d.categoria] || '#2563EB';
-    h += '<a class="doc-rel" href="'+esc(d.url)+'" target="_blank" rel="noopener"' + (proprio ? ' download="' + esc(d.titulo || d.nome) + '"' : '') + '>';
-    h += '<div class="doc-rel-left">';
-    h += '<div style="width:24px;height:24px;border-radius:5px;background:'+bg+';display:flex;align-items:center;justify-content:center;flex-shrink:0">';
-    h += '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="'+col+'" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>';
-    h += '<div><div class="doc-rel-nome">'+esc(d.titulo||d.nome)+'</div>';
-    h += '<div class="doc-rel-meta">'+cap(d.categoria)+' · '+esc(d.data)+'</div></div></div>';
-    h += '<span class="doc-rel-btn">' + (proprio ? 'Baixar &#8595;' : 'Acessar &#8599;') + '</span></a>';
+  // Rede de segurança: se algum código vinculado não bate com nenhum documento
+  // real (documento excluído depois de vinculado, ou código digitado errado),
+  // isso ficaria invisível sem nenhum aviso. Só o consultor vê esse alerta.
+  var faltando = _isMaster ? docNomes.filter(function(cod) { return !_c.documentos.some(function(d) { return d.nome === cod; }); }) : [];
+  if (!found.length && !faltando.length) return '';
+  var h = '';
+  if (found.length) {
+    h += '<div class="docs-rel"><div class="docs-rel-lbl">Documentos relacionados</div>';
+    for (var j = 0; j < found.length; j++) {
+      var d = found[j];
+      var proprio = arquivoProprio(d.url);
+      var bg = {diagnostico:'#F0EAF5',plano:'#EAF4EE',relatorio:'#FBF4E6',material:'#EFF6FF'}[d.categoria] || '#EFF6FF';
+      var col = {diagnostico:'#612B4A',plano:'#3B7A57',relatorio:'#B07D2A',material:'#2563EB'}[d.categoria] || '#2563EB';
+      h += '<a class="doc-rel" href="'+esc(d.url)+'" target="_blank" rel="noopener"' + (proprio ? ' download="' + esc(d.titulo || d.nome) + '"' : '') + '>';
+      h += '<div class="doc-rel-left">';
+      h += '<div style="width:24px;height:24px;border-radius:5px;background:'+bg+';display:flex;align-items:center;justify-content:center;flex-shrink:0">';
+      h += '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="'+col+'" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>';
+      h += '<div><div class="doc-rel-nome">'+esc(d.titulo||d.nome)+'</div>';
+      h += '<div class="doc-rel-meta">'+cap(d.categoria)+' · '+esc(d.data)+'</div></div></div>';
+      h += '<span class="doc-rel-btn">' + (proprio ? 'Baixar &#8595;' : 'Acessar &#8599;') + '</span></a>';
+    }
+    h += '</div>';
   }
-  h += '</div>';
+  if (faltando.length) {
+    h += '<div class="docs-rel-erro">&#9888; ' + faltando.length + ' documento' + (faltando.length > 1 ? 's vinculados não foram encontrados' : ' vinculado não foi encontrado') + ' (código' + (faltando.length > 1 ? 's' : '') + ': ' + faltando.map(function(c){ return esc(c); }).join(', ') + '). Provavelmente foi excluído depois de vinculado, ou o código está digitado diferente.</div>';
+  }
   return h;
 }
 
@@ -3562,7 +3578,27 @@ function renderProgresso() {
     }
     h += '</div>';
   }
-  h += '</div>' + footer();
+  h += '</div>';
+
+  // Rede de segurança: encontros cuja fase não bate com nenhuma fase existente
+  // ficariam invisíveis aqui sem nenhum aviso (já aconteceu de verdade: um ajuste
+  // de datas mudou a janela de uma fase e alguns encontros ficaram "órfãos").
+  // Só o consultor vê isso, e só quando existir pelo menos um caso.
+  if (_isMaster) {
+    var nomesFases = c.fases.map(function(f) { return f.nome; });
+    var orfaos = (c.encontros || []).filter(function(e) { return nomesFases.indexOf(e.fase) === -1; });
+    if (orfaos.length) {
+      h += '<div class="orfaos-aviso">';
+      h += '<div class="orfaos-titulo">&#9888; ' + orfaos.length + ' encontro' + (orfaos.length > 1 ? 's não aparece' : ' não aparece') + ' em nenhuma fase acima</div>';
+      h += '<div class="orfaos-sub">O campo "fase" desses encontros não bate com o nome de nenhuma fase cadastrada — provavelmente um nome de fase foi digitado diferente, ou a fase foi renomeada depois. Corrija pela Central de Edição em Encontros, escolhendo a fase certa.</div>';
+      for (var oi = 0; oi < orfaos.length; oi++) {
+        h += '<div class="orfaos-item">' + fdbr(orfaos[oi].data) + ' · ' + esc(orfaos[oi].titulo) + ' <span class="orfaos-fase-errada">(fase gravada: "' + esc(orfaos[oi].fase || '—') + '")</span> ' + ceEditIconHTML('encontros', c.encontros.indexOf(orfaos[oi])) + '</div>';
+      }
+      h += '</div>';
+    }
+  }
+
+  h += footer();
   sv(h);
   setTimeout(initCheckins, 100);
 }
