@@ -93,6 +93,12 @@ a{text-decoration:none;color:inherit}
 .tb-emp{font-family:Georgia,serif;font-size:1rem;font-weight:bold;color:var(--gold-lt)}
 .tb-r{display:flex;align-items:center;gap:.6rem}
 .tb-tag{font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+@media(max-width:480px){
+  .tb-tag{display:none}
+  .tb-btn-label{display:none}
+  .tb-export-btn,.tb-logout-btn{padding:.3rem .45rem}
+  .tb-r{gap:.35rem}
+}
 .tb-export-btn{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border:1px solid rgba(255,255,255,.22);border-radius:5px;background:transparent;color:rgba(255,255,255,.65);font-size:.72rem;font-weight:600;cursor:pointer}
 .tb-export-btn:hover{background:rgba(255,255,255,.1);color:var(--white)}
 .tb-logout-btn{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .5rem;border:none;background:transparent;color:rgba(255,255,255,.4);font-size:.72rem;font-weight:600;cursor:pointer}
@@ -1134,11 +1140,11 @@ a{text-decoration:none;color:inherit}
     <div class="tb-r">
       <button class="tb-export-btn" id="btn-export">
         <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Exportar
+        <span class="tb-btn-label">Exportar</span>
       </button>
       <button class="tb-logout-btn" id="tb-logout-btn" title="Sair do portal">
         <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Sair
+        <span class="tb-btn-label">Sair</span>
       </button>
       <span class="tb-tag">Portal do Cliente</span>
     </div>
