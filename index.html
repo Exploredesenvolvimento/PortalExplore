@@ -1681,6 +1681,21 @@ function proxEnt(entregas) {
   }
   return '—';
 }
+// Acha o próximo encontro a partir de hoje (não depende de um campo "status" no
+// encontro, que nem sempre está preenchido — usa a data, que é sempre confiável).
+// A lista já vem ordenada cronologicamente (ordenarEncontros), então basta achar
+// o primeiro cuja data seja hoje ou no futuro.
+function proxEncontro(encontros) {
+  if (!encontros || !encontros.length) return null;
+  var hoje = new Date(); hoje.setHours(0,0,0,0);
+  for (var i = 0; i < encontros.length; i++) {
+    var partes = (encontros[i].data || '').split('-');
+    if (partes.length !== 3) continue;
+    var d = new Date(partes[0], partes[1]-1, partes[2]);
+    if (d >= hoje) return encontros[i];
+  }
+  return null;
+}
 
 function lsGet(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
@@ -3566,7 +3581,7 @@ function renderDashboard() {
   var saud = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite';
   var concl = 0; for (var i = 0; i < c.entregas.length; i++) { if (c.entregas[i].status === 'concluido') concl++; }
   var total = c.entregas.length;
-  var proxE = proxEnt(c.entregas);
+  var proxEc = proxEncontro(c.encontros);
   var faseAtiva = null; for (var j = 0; j < c.fases.length; j++) { if (c.fases[j].status === 'ativa') { faseAtiva = c.fases[j]; break; } }
   var alta = 0; for (var k = 0; k < c.proximosPassos.length; k++) { if (c.proximosPassos[k].prioridade === 'alta' && !c.proximosPassos[k].concluido) alta++; }
 
@@ -3610,7 +3625,7 @@ function renderDashboard() {
   // estatísticas em faixa única, divisores finos
   h += '<div class="dh-stats">';
   h += '<div class="dh-stat"><div class="dh-stat-num">' + dias + '</div><div class="dh-stat-lbl">Dias de projeto</div><div class="dh-stat-sub">desde ' + fd(c.dataInicio) + '</div></div>';
-  h += '<div class="dh-stat"><div class="dh-stat-num" style="font-size:1.15rem">' + esc(proxE) + '</div><div class="dh-stat-lbl">Próxima entrega</div><div class="dh-stat-sub">data prevista</div></div>';
+  h += '<div class="dh-stat"><div class="dh-stat-num" style="font-size:1.15rem">' + (proxEc ? fd(proxEc.data) : '—') + '</div><div class="dh-stat-lbl">Próximo encontro</div><div class="dh-stat-sub">' + (proxEc ? esc(proxEc.titulo) : 'nenhum agendado') + '</div></div>';
   h += '<div class="dh-stat"><div class="dh-stat-num">' + concl + '<span class="dh-stat-num-of">/' + total + '</span></div><div class="dh-stat-lbl">Entregas</div><div class="dh-stat-sub">concluídas</div></div>';
   h += '</div>';
 
