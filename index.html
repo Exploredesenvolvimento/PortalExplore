@@ -214,6 +214,8 @@ a{text-decoration:none;color:inherit}
 .sb-item-lbl{flex:1;font-size:.82rem}
 .sb-bdg{font-size:.62rem;font-weight:700;padding:.08rem .38rem;border-radius:99px;background:var(--danger-bg);color:var(--danger)}
 .sb-consultant{padding:.9rem 1.1rem;border-top:1px solid var(--cream-dk)}
+.sb-c-block{margin-bottom:.8rem}
+.sb-c-block:last-child{margin-bottom:0}
 .sb-c-lbl{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);margin-bottom:.35rem}
 .sb-c-name{font-family:Georgia,serif;font-size:.95rem;font-weight:bold;color:var(--bx)}
 .sb-c-role{font-size:.7rem;color:var(--tl);margin-bottom:.55rem}
@@ -1238,14 +1240,9 @@ a{text-decoration:none;color:inherit}
         <div class="sb-emp-lbl" id="sb-emp-lbl">—</div>
       </div>
       <nav class="sb-nav" id="sb-nav"></nav>
-      <div class="sb-consultant">
-        <div class="sb-c-lbl">Seu consultor</div>
-        <div class="sb-c-name serif" id="sb-c-name">—</div>
-        <div class="sb-c-role">Consultor · EXPLORE</div>
-        <a class="sb-wa" id="sb-wa" href="#" target="_blank" rel="noopener">
-          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-          WhatsApp
-        </a>
+      <div class="sb-consultant" id="sb-consultant">
+        <!-- Preenchido dinamicamente por atualizarSidebarPerfil(). Suporta 1 ou vários consultores,
+             conforme quem estiver marcado como "Aparece como contato no portal" em Equipe EXPLORE. -->
       </div>
       <button class="sb-back-btn" id="sb-back-btn">&#8592; Todos os projetos</button>
       <button class="sb-fb-btn" id="sb-fb-btn" onclick="ceOpenFeedback()">&#128172; Mensagens do cliente<span class="fb-badge" id="sb-fb-badge"></span></button>
@@ -1384,7 +1381,7 @@ function sbRowToFront(tabela, row) {
     return { _id: row.id, data: row.data, titulo: row.titulo, tipo: row.tipo, fase: row.fase, participantes: row.participantes || [], pauta: row.pauta || [], resumo: row.resumo, destaques: row.destaques || [], proximosPassosReuniao: row.proximos_passos_reuniao || [], docs: row.docs || [] };
   }
   if (tabela === 'equipe') {
-    return { _id: row.id, nome: row.nome, papel: row.papel, especialidade: row.especialidade, bio: row.bio, foto: row.foto_url };
+    return { _id: row.id, nome: row.nome, papel: row.papel, especialidade: row.especialidade, bio: row.bio, foto: row.foto_url, email: row.email, telefone: row.telefone, whatsapp: row.whatsapp, contatoPortal: !!row.contato_portal };
   }
   if (tabela === 'colaboradores') {
     return { _id: row.id, nome: row.nome, cargo: row.cargo, email: row.email, telefone: row.telefone, responsavel: !!row.responsavel };
@@ -1425,7 +1422,7 @@ function sbItemToRow(tabela, item, projetoId) {
     return { projeto_id: projetoId, data: item.data || null, titulo: item.titulo, tipo: item.tipo || null, fase: item.fase || null, participantes: item.participantes || [], pauta: item.pauta || [], resumo: item.resumo || null, destaques: item.destaques || [], proximos_passos_reuniao: item.proximosPassosReuniao || [], docs: item.docs || [] };
   }
   if (tabela === 'equipe') {
-    return { projeto_id: projetoId, nome: item.nome, papel: item.papel || null, especialidade: item.especialidade || null, bio: item.bio || null, foto_url: item.foto || null };
+    return { projeto_id: projetoId, nome: item.nome, papel: item.papel || null, especialidade: item.especialidade || null, bio: item.bio || null, foto_url: item.foto || null, email: item.email || null, telefone: item.telefone || null, whatsapp: item.whatsapp || null, contato_portal: item.contatoPortal === true || item.contatoPortal === 'sim' };
   }
   if (tabela === 'colaboradores') {
     return { projeto_id: projetoId, nome: item.nome, cargo: item.cargo || null, email: item.email || null, telefone: item.telefone || null, responsavel: !!item.responsavel };
@@ -2208,12 +2205,16 @@ var CE_CATEGORIAS = [
   },
   { id:'equipe', label:'Equipe EXPLORE', campo:'equipe',
     titulo: function(i){ return i.nome; },
-    sub: function(i){ return i.papel||''; },
+    sub: function(i){ return (i.papel||'') + (i.contatoPortal ? ' · Contato no portal' : ''); },
     campos: [
       { k:'nome', label:'Nome', tipo:'text', req:true },
       { k:'papel', label:'Papel', tipo:'text' },
       { k:'especialidade', label:'Especialidade', tipo:'text' },
-      { k:'bio', label:'Bio', tipo:'textarea' }
+      { k:'bio', label:'Bio', tipo:'textarea' },
+      { k:'email', label:'E-mail', tipo:'text' },
+      { k:'telefone', label:'Telefone', tipo:'text' },
+      { k:'whatsapp', label:'WhatsApp (só números, com DDI, ex: 5521999990000)', tipo:'text' },
+      { k:'contatoPortal', label:'Aparece como contato no portal (com botão de WhatsApp)?', tipo:'select', opcoes:[['','Não'],['sim','Sim']] }
     ]
   },
   { id:'colaboradores', label:'Colaboradores da Empresa', campo:'colaboradores',
@@ -2793,8 +2794,38 @@ function atualizarSidebarPerfil() {
   ge('sb-av').textContent = ini2(_c.nome);
   ge('sb-name').textContent = _c.nome;
   ge('sb-emp-lbl').textContent = _c.empresa + ' · ' + _c.cargo;
-  ge('sb-c-name').textContent = _c.consultor;
-  ge('sb-wa').href = 'https://wa.me/' + _c.consultorWa + '?text=' + encodeURIComponent('Olá, sou ' + _c.nome + ' da ' + _c.empresa + '.');
+
+  // Lista de consultores acionáveis (WhatsApp) para este projeto: qualquer membro da Equipe EXPLORE
+  // marcado com contatoPortal=true. Sem limite de quantidade — cada projeto define quantos contatos
+  // diretos quer expor à Dra./ao cliente.
+  var contatos = (_c.equipe || []).filter(function(m) { return m.contatoPortal && m.whatsapp; });
+
+  // Fallback: projetos antigos que ainda não migraram ninguém da equipe para contato_portal
+  // continuam mostrando o consultor único legado, para não quebrar o portal deles.
+  if (!contatos.length && _c.consultor) {
+    contatos = [{ nome: _c.consultor, papel: 'Consultor · EXPLORE', whatsapp: _c.consultorWa }];
+  }
+
+  var msg = 'Olá, sou ' + _c.nome + ' da ' + _c.empresa + '.';
+  var h = '';
+  if (!contatos.length) {
+    h = '<div class="sb-c-lbl">Seu consultor</div><div class="sb-c-name serif">—</div>';
+  } else {
+    h += '<div class="sb-c-lbl">' + (contatos.length > 1 ? 'Seus consultores' : 'Seu consultor') + '</div>';
+    for (var i = 0; i < contatos.length; i++) {
+      var m = contatos[i];
+      h += '<div class="sb-c-block">';
+      h += '<div class="sb-c-name serif">' + esc(m.nome) + '</div>';
+      h += '<div class="sb-c-role">' + esc(m.papel || 'Consultor · EXPLORE') + '</div>';
+      if (m.whatsapp) {
+        h += '<a class="sb-wa" href="https://wa.me/' + esc(m.whatsapp) + '?text=' + encodeURIComponent(msg) + '" target="_blank" rel="noopener">';
+        h += '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>';
+        h += 'WhatsApp</a>';
+      }
+      h += '</div>';
+    }
+  }
+  ge('sb-consultant').innerHTML = h;
 }
 
 function openClient(dados) {
@@ -3286,6 +3317,18 @@ function npSalvar() {
       consultor_whatsapp: v('np-f-consultorWa'), encerrado: false
     };
     return sb.from('projetos').insert(colunas).select().single();
+  }).then(function(res2) {
+    if (res2.error) throw res2.error;
+    var novoProjetoId = res2.data.id;
+    var wa = v('np-f-consultorWa');
+    if (consultor) {
+      sb.from('equipe').insert({
+        projeto_id: novoProjetoId, nome: consultor, papel: v('np-f-consultorCargo') || 'Consultor · EXPLORE',
+        email: v('np-f-consultorEmail') || null, telefone: v('np-f-consultorTelefone') || null,
+        whatsapp: wa || null, contato_portal: true
+      }).then(function(){});
+    }
+    return res2;
   }).then(function(res2) {
     if (res2.error) throw res2.error;
     npFechar();
