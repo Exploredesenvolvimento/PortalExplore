@@ -100,6 +100,9 @@ a{text-decoration:none;color:inherit}
 .ms-tab.on{color:var(--bx);border-color:var(--bx)}
 .ms-grid{max-width:1180px;margin:0 auto;padding:1.8rem 2.2rem 3rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.4rem}
 .ms-card{background:var(--white);border-radius:var(--rl);border:1px solid var(--cream-dk);box-shadow:var(--sh-md);padding:1.4rem 1.4rem 1.3rem;cursor:pointer;transition:box-shadow .2s ease,transform .2s ease,border-color .2s ease}
+.ms-card.ms-card-loading{opacity:.5;pointer-events:none;position:relative}
+.ms-card.ms-card-loading::after{content:'';position:absolute;top:50%;left:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border:2.5px solid var(--cream-dk);border-top-color:var(--bx);border-radius:50%;animation:ms-card-spin .7s linear infinite}
+@keyframes ms-card-spin{to{transform:rotate(360deg)}}
 .ms-card:hover{box-shadow:var(--sh-lg);transform:translateY(-2px);border-color:var(--tl)}
 .ms-card-head{display:flex;align-items:flex-start;gap:.7rem;margin-bottom:1.05rem}
 .ms-logo{position:relative;width:42px;height:42px;border-radius:var(--r);flex-shrink:0;background:var(--cream);border:1px solid var(--cream-dk);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:bold;font-size:.9rem;color:var(--bx);overflow:hidden}
@@ -206,6 +209,8 @@ a{text-decoration:none;color:inherit}
 .sb-nav{padding:.4rem 0;flex:1}
 .sb-sec-lbl{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);padding:.45rem 1.1rem .28rem;margin-top:.2rem}
 .sb-item{display:flex;align-items:center;gap:.65rem;padding:.52rem 1.1rem;font-size:.83rem;color:var(--tm);cursor:pointer;transition:all .15s}
+.sb-item-badge{display:none;margin-left:auto;background:var(--bx);color:var(--white);font-size:.66rem;font-weight:700;line-height:1;padding:.22rem .4rem;border-radius:99px;min-width:1.1rem;text-align:center}
+.sb-item-badge.on{display:inline-block}
 .sb-item svg{flex-shrink:0;opacity:.6;transition:opacity .15s}
 .sb-item:hover{background:var(--cream);color:var(--bx)}
 .sb-item:hover svg{opacity:1}
@@ -1360,10 +1365,10 @@ function sbRowToFront(tabela, row) {
     return { _id: row.id, nome: row.nome, status: row.status, data: row.data_prevista ? fd(row.data_prevista) : '', dataISO: row.data_prevista, responsavel: row.responsavel, inicioISO: row.data_inicio, descricao: row.descricao, docs: row.docs || [] };
   }
   if (tabela === 'documentos') {
-    return { _id: row.id, nome: row.codigo, titulo: row.titulo, categoria: row.categoria, status: row.status, data: row.data ? fd(row.data) : '', tamanho: row.tamanho, url: row.url };
+    return { _id: row.id, nome: row.codigo, titulo: row.titulo, categoria: row.categoria, status: row.status, data: row.data ? fd(row.data) : '', tamanho: row.tamanho, url: row.url, criadoEm: row.criado_em };
   }
   if (tabela === 'proximos_passos') {
-    return { _id: row.id, titulo: row.titulo, descricao: row.descricao, prioridade: row.prioridade, dataLimite: row.data_limite, responsavel: row.responsavel, concluido: !!row.concluido, concluidoEm: row.concluido_em };
+    return { _id: row.id, titulo: row.titulo, descricao: row.descricao, prioridade: row.prioridade, dataLimite: row.data_limite, responsavel: row.responsavel, concluido: !!row.concluido, concluidoEm: row.concluido_em, criadoEm: row.criado_em };
   }
   if (tabela === 'riscos') {
     return { _id: row.id, titulo: row.titulo, probabilidade: row.probabilidade, impacto: row.impacto, mitigacao: row.mitigacao };
@@ -1378,7 +1383,7 @@ function sbRowToFront(tabela, row) {
     return { _id: row.id, data: row.data, titulo: row.titulo, tipo: row.tipo, pauta: row.pauta || [], docs: row.docs || [] };
   }
   if (tabela === 'encontros') {
-    return { _id: row.id, data: row.data, titulo: row.titulo, tipo: row.tipo, fase: row.fase, participantes: row.participantes || [], pauta: row.pauta || [], resumo: row.resumo, destaques: row.destaques || [], proximosPassosReuniao: row.proximos_passos_reuniao || [], docs: row.docs || [] };
+    return { _id: row.id, data: row.data, titulo: row.titulo, tipo: row.tipo, fase: row.fase, participantes: row.participantes || [], pauta: row.pauta || [], resumo: row.resumo, destaques: row.destaques || [], proximosPassosReuniao: row.proximos_passos_reuniao || [], docs: row.docs || [], criadoEm: row.criado_em };
   }
   if (tabela === 'equipe') {
     return { _id: row.id, nome: row.nome, papel: row.papel, especialidade: row.especialidade, bio: row.bio, foto: row.foto_url, email: row.email, telefone: row.telefone, whatsapp: row.whatsapp, contatoPortal: !!row.contato_portal };
@@ -1387,7 +1392,7 @@ function sbRowToFront(tabela, row) {
     return { _id: row.id, nome: row.nome, cargo: row.cargo, email: row.email, telefone: row.telefone, responsavel: !!row.responsavel };
   }
   if (tabela === 'feedback') {
-    return { _id: row.id, data: row.data, view: row.view_pagina, tipo: row.tipo, texto: row.texto, resposta: row.resposta };
+    return { _id: row.id, data: row.data, view: row.view_pagina, tipo: row.tipo, texto: row.texto, resposta: row.resposta, vistoPeloCliente: !!row.visto_pelo_cliente };
   }
   return row;
 }
@@ -1428,7 +1433,7 @@ function sbItemToRow(tabela, item, projetoId) {
     return { projeto_id: projetoId, nome: item.nome, cargo: item.cargo || null, email: item.email || null, telefone: item.telefone || null, responsavel: !!item.responsavel };
   }
   if (tabela === 'feedback') {
-    return { projeto_id: projetoId, data: item.data || null, view_pagina: item.view || null, tipo: item.tipo || null, texto: item.texto || null, resposta: item.resposta || null };
+    return { projeto_id: projetoId, data: item.data || null, view_pagina: item.view || null, tipo: item.tipo || null, texto: item.texto || null, resposta: item.resposta || null, visto_pelo_cliente: item.vistoPeloCliente === true };
   }
   return item;
 }
@@ -2836,6 +2841,9 @@ function openClient(dados) {
   ge('master-screen').style.display = 'none';
   var app = ge('app');
   app.className = 'on';
+  // O Painel de Projetos usa o scroll da própria janela (não tem contêiner próprio),
+  // então sem isso a página do cliente podia abrir "descida" se a lista estivesse rolada.
+  window.scrollTo(0, 0);
 
   // init sidebar
   atualizarSidebarPerfil();
@@ -2871,6 +2879,18 @@ function openClient(dados) {
   var fab = ge('fb-fab');
   fab.className = 'fb-fab on';
   updateFbBadge();
+
+  // Avisa o cliente logo ao entrar se há resposta do consultor que ele ainda não viu —
+  // sem isso, a única forma de perceber era abrir o balão de mensagens por acaso.
+  if (!_isMaster) {
+    var naoLidas = (_c.feedback || []).filter(function(f) { return f.resposta && !f.vistoPeloCliente; });
+    if (naoLidas.length) {
+      setTimeout(function() {
+        var msg = naoLidas.length === 1 ? 'Você tem uma resposta nova do seu consultor.' : 'Você tem ' + naoLidas.length + ' respostas novas do seu consultor.';
+        showAlert(msg + ' Toque no balão de mensagem no canto da tela para ver.');
+      }, 600);
+    }
+  }
 
   var tourKey = 'tour_' + (_c.empresa || '');
   if (!lsGet(tourKey)) {
@@ -3397,10 +3417,25 @@ function masterOpenClient(email) {
   // Senão, tenta achar localmente (fallback)
   var reg = CLIENTES[email];
   if (reg) { reg.dados._loginEmail = email; openClient(reg.dados); return; }
-  // Por fim, busca no banco (dados completos desta vez, só deste cliente)
+  // Por fim, busca no banco (dados completos desta vez, só deste cliente).
+  // Isso são ~14 consultas em paralelo — sem feedback visual, o clique parecia
+  // não ter feito nada numa conexão mais lenta. O card entra em estado de
+  // carregamento (spinner + trava contra duplo clique) até a resposta chegar.
   if (sb) {
+    var card = document.querySelector('.ms-card[data-ms-email="' + email + '"]');
+    if (card) card.classList.add('ms-card-loading');
     sbCarregarProjeto(email).then(function(dados) {
-      if (dados) { _msCacheCompleto[email] = dados; openClient(dados); }
+      if (dados) {
+        _msCacheCompleto[email] = dados;
+        openClient(dados);
+      } else {
+        if (card) card.classList.remove('ms-card-loading');
+        showAlert('Não foi possível carregar este projeto agora. Tente novamente.', {danger:true});
+      }
+    }).catch(function(e) {
+      console.error('Erro ao abrir projeto:', e);
+      if (card) card.classList.remove('ms-card-loading');
+      showAlert('Não foi possível carregar este projeto agora. Verifique sua conexão e tente novamente.', {danger:true});
     });
   }
 }
@@ -3438,10 +3473,56 @@ function buildNav() {
       var item = NAV_SECTIONS[s].items[i];
       html += '<div class="sb-item" id="nav-' + item.id + '" onclick="setView(\'' + item.id + '\')">';
       html += icoPNG(item.id);
-      html += '<span class="sb-item-lbl">' + item.label + '</span></div>';
+      html += '<span class="sb-item-lbl">' + item.label + '</span>';
+      html += '<span class="sb-item-badge" id="navb-' + item.id + '"></span>';
+      html += '</div>';
     }
   }
   nav.innerHTML = html;
+  atualizarBadgesNav();
+}
+
+// ═══════════════════════════════════════════
+// NOVIDADES — sinaliza no menu lateral quando uma seção tem conteúdo criado
+// depois da última vez que a pessoa (cliente ou consultor) esteve nela.
+// Guardado em localStorage, por projeto e por seção — não sincroniza entre
+// aparelhos, mas resolve o caso comum (mesmo navegador, sessões seguidas).
+// ═══════════════════════════════════════════
+var SECOES_COM_NOVIDADE = { documentos: 'documentos', proximos: 'proximosPassos', cronograma: 'encontros' };
+
+function chaveUltimoVisto(secao) {
+  return 'ultimoVisto_' + (_c && (_c._projetoId || _c._loginEmail) || 'x') + '_' + secao;
+}
+function marcarSecaoVista(secao) {
+  if (!SECOES_COM_NOVIDADE[secao]) return;
+  lsSet(chaveUltimoVisto(secao), new Date().toISOString());
+}
+// Conta itens criados depois da última visita à seção. Sem visita registrada ainda
+// (projeto recém-migrado ou primeiro acesso), não mostra nada — evita uma "avalanche"
+// de badges em itens que já existiam antes dessa função existir.
+function contarNovidades(secao) {
+  var campo = SECOES_COM_NOVIDADE[secao];
+  if (!campo || !_c) return 0;
+  var visto = lsGet(chaveUltimoVisto(secao));
+  if (!visto) return 0;
+  var vistoTs = new Date(visto).getTime();
+  var lista = _c[campo] || [];
+  var count = 0;
+  for (var i = 0; i < lista.length; i++) {
+    var criado = lista[i].criadoEm;
+    if (criado && new Date(criado).getTime() > vistoTs) count++;
+  }
+  return count;
+}
+function atualizarBadgesNav() {
+  var secoes = Object.keys(SECOES_COM_NOVIDADE);
+  for (var i = 0; i < secoes.length; i++) {
+    var el = ge('navb-' + secoes[i]);
+    if (!el) continue;
+    var n = contarNovidades(secoes[i]);
+    if (n > 0) { el.className = 'sb-item-badge on'; el.textContent = n > 9 ? '9+' : n; }
+    else { el.className = 'sb-item-badge'; el.textContent = ''; }
+  }
 }
 
 function setView(view) {
@@ -3456,9 +3537,13 @@ function setView(view) {
   }
   // close sidebar on mobile
   closeSidebar();
+  // marca a seção como vista (some o badge de novidade dela) e recalcula os badges
+  marcarSecaoVista(view);
+  atualizarBadgesNav();
   // scroll to top
   var vc = ge('vc');
   if (vc) vc.scrollTop = 0;
+  window.scrollTo(0, 0);
   // render view
   var renders = {
     dashboard:   renderDashboard,
@@ -3558,7 +3643,25 @@ function toggleFeedback() {
     var hist = ge('fb-history');
     if (hist) hist.innerHTML = fbHistoryHTML();
     m.className = 'fb-modal on';
+    if (!_isMaster) marcarRespostasComoVistas();
   }
+}
+// Ao abrir o modal, o cliente está lendo as respostas — marca as respondidas e ainda
+// não vistas como vistas, uma a uma, e some com o badge de "resposta nova".
+function marcarRespostasComoVistas() {
+  if (!_c || !_c.feedback) return;
+  var pendentesDeMarcar = _c.feedback.filter(function(f) { return f.resposta && !f.vistoPeloCliente; });
+  if (!pendentesDeMarcar.length) return;
+  for (var i = 0; i < pendentesDeMarcar.length; i++) {
+    var item = pendentesDeMarcar[i];
+    item.vistoPeloCliente = true;
+    if (sb && item._id) {
+      sbSalvarItem('feedback', item, _c._projetoId).catch(function(e) {
+        console.error('Erro ao marcar resposta como vista:', e);
+      });
+    }
+  }
+  updateFbBadge();
 }
 function selFeedback(el, val) {
   _fbSel = val;
@@ -3622,16 +3725,26 @@ function sendFeedback() {
 
 // Conta mensagens ainda sem resposta do consultor, direto dos dados sincronizados
 // (antes contava entradas soltas no localStorage, que nunca saíam do navegador).
+// O badge tem sentidos diferentes para cada lado: o consultor precisa saber quantas
+// mensagens do cliente ainda não foram respondidas; o cliente precisa saber quantas
+// respostas já chegaram e ele ainda não abriu para ler (senão a resposta podia ficar
+// "escondida" indefinidamente até ele entrar na tela por acaso).
 function updateFbBadge() {
   try {
     var list = (_c && _c.feedback) ? _c.feedback : [];
-    var count = list.filter(function(f) { return !f.resposta; }).length;
+    var pendentes = list.filter(function(f) { return !f.resposta; }).length;
+    var naoLidas = list.filter(function(f) { return f.resposta && !f.vistoPeloCliente; }).length;
+    var count = _isMaster ? pendentes : naoLidas;
     var badge = ge('fb-badge');
-    if (count > 0) { badge.className = 'fb-badge on'; badge.textContent = count > 9 ? '9+' : count; }
-    else badge.className = 'fb-badge';
+    if (badge) {
+      if (count > 0) { badge.className = 'fb-badge on'; badge.textContent = count > 9 ? '9+' : count; }
+      else badge.className = 'fb-badge';
+    }
+    // O contador da barra lateral é exclusivo do consultor (o botão nem aparece pro
+    // cliente), então mantém sempre o sentido de "pendente de resposta".
     var sbBadge = ge('sb-fb-badge');
     if (sbBadge) {
-      if (count > 0) { sbBadge.className = 'fb-badge on'; sbBadge.textContent = count > 9 ? '9+' : count; }
+      if (pendentes > 0) { sbBadge.className = 'fb-badge on'; sbBadge.textContent = pendentes > 9 ? '9+' : pendentes; }
       else sbBadge.className = 'fb-badge';
     }
   } catch(e) {}
@@ -5255,6 +5368,7 @@ function renderSobre() {
     _isMaster = true;
     document.getElementById('login-screen').style.display = 'none';
     renderMaster();
+    window.scrollTo(0, 0);
   });
 
   // Sidebar logout
