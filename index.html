@@ -999,12 +999,15 @@ a{text-decoration:none;color:inherit}
 /* cronograma visual: gantt + calendário */
 .cron-gantt-title{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tl);margin-bottom:1.6rem}
 .cron-gantt-wrap{background:var(--white);border-radius:var(--rl);padding:1.1rem 1.2rem;border:1px solid var(--cream-dk);}
-.cron-gantt{position:relative;height:46px;background:var(--cream);border-radius:8px;overflow:visible;margin-bottom:.7rem}
-.cron-gantt-seg{position:absolute;top:0;bottom:0;border-radius:6px;display:flex;align-items:center;overflow:hidden;transition:filter .15s}
-.cron-gantt-seg:hover{filter:brightness(1.08)}
-.cron-gantt-seg-lbl{font-size:.66rem;font-weight:700;padding:0 .5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cron-gantt-hoje{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--danger);z-index:2}
-.cron-gantt-hoje::after{content:'Hoje';position:absolute;top:-1.15rem;left:50%;transform:translateX(-50%);font-size:.6rem;font-weight:700;color:var(--danger);white-space:nowrap}
+.cron-gantt{display:flex;align-items:flex-start;padding:.4rem 0 0}
+.wiz-step{flex:1;text-align:center;position:relative}
+.wiz-circle{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;margin:0 auto 8px;border:1.5px solid var(--cream-dk)}
+.wiz-circle.ativa{box-shadow:0 0 0 4px var(--cream)}
+.wiz-nome{font-size:.72rem;font-weight:700;line-height:1.3;padding:0 .3rem}
+.wiz-datas{font-size:.65rem;color:var(--tl);margin-top:2px}
+.wiz-line{position:absolute;top:17px;left:-50%;width:100%;height:1.5px;background:var(--cream-dk);z-index:-1}
+.wiz-line.feita{background:var(--bx)}
+@media(max-width:480px){.wiz-nome{font-size:.62rem}.wiz-datas{display:none}.wiz-circle{width:26px;height:26px;font-size:.7rem}.wiz-line{top:13px}}
 .cron-gantt-legend{display:flex;flex-wrap:wrap;gap:.5rem 1rem}
 .cgl-item{font-size:.74rem;color:var(--tm);display:flex;align-items:center;gap:.32rem}
 .cgl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
@@ -1290,6 +1293,43 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
+<div class="np-overlay" id="reagendar-overlay" onclick="if(event.target===this) fecharReagendarEncontro()">
+  <div class="np-panel" style="max-width:420px">
+    <div class="ce-head">
+      <div class="ce-title">Remarcar encontro</div>
+      <button class="ce-close" onclick="fecharReagendarEncontro()">&#10005;</button>
+    </div>
+    <div class="np-body">
+      <div class="ce-form-row" id="reagendar-base-info" style="font-size:.82rem;color:var(--tl)"></div>
+      <div class="ce-form-row"><label class="ce-form-label">Nova data</label>
+        <input class="ce-form-input" type="date" id="reagendar-data">
+      </div>
+      <div class="ce-form-row"><label class="ce-form-label">Motivo (opcional, fica só no log interno)</label>
+        <input class="ce-form-input" type="text" id="reagendar-motivo" placeholder="Ex: cliente pediu para remarcar">
+      </div>
+      <div class="ce-form-row" style="font-size:.78rem;color:var(--tl)">Pauta, participantes e tudo mais desse encontro continuam exatamente como estão — só a data muda. O cliente vê que foi remarcado, não que é um encontro novo.</div>
+      <button class="ce-btn-save" id="reagendar-btn-save" onclick="salvarReagendarEncontro()" style="width:100%;margin-top:.5rem">Remarcar encontro</button>
+    </div>
+  </div>
+</div>
+
+<div class="np-overlay" id="cancelar-overlay" onclick="if(event.target===this) fecharCancelarEncontro()">
+  <div class="np-panel" style="max-width:420px">
+    <div class="ce-head">
+      <div class="ce-title">Cancelar encontro</div>
+      <button class="ce-close" onclick="fecharCancelarEncontro()">&#10005;</button>
+    </div>
+    <div class="np-body">
+      <div class="ce-form-row" id="cancelar-base-info" style="font-size:.82rem;color:var(--tl)"></div>
+      <div class="ce-form-row"><label class="ce-form-label">Motivo do cancelamento (obrigatório)</label>
+        <textarea class="ce-form-textarea" id="cancelar-motivo" rows="3" placeholder="Ex: cliente não poderá comparecer e não haverá reposição"></textarea>
+      </div>
+      <div class="ce-form-row" style="font-size:.78rem;color:var(--tl)">O encontro fica marcado como cancelado, com o motivo visível no histórico — nada é apagado. Se depois vocês remarcarem, use "Remarcar" em vez de criar um encontro novo.</div>
+      <button class="ce-btn-save" id="cancelar-btn-save" onclick="salvarCancelarEncontro()" style="width:100%;margin-top:.5rem;background:var(--danger)">Confirmar cancelamento</button>
+    </div>
+  </div>
+</div>
+
 <div class="np-overlay" id="serie-overlay" onclick="if(event.target===this) fecharGerenciarSerie()">
   <div class="np-panel" style="max-width:480px">
     <div class="ce-head">
@@ -1299,6 +1339,9 @@ a{text-decoration:none;color:inherit}
     <div class="np-body">
       <div class="ce-form-row" style="font-size:.78rem;color:var(--tl)">Encontros passados ficam de fora — só dá para cancelar os que ainda vão acontecer.</div>
       <div id="serie-lista"></div>
+      <div class="ce-form-row"><label class="ce-form-label">Motivo do cancelamento (obrigatório)</label>
+        <input class="ce-form-input" type="text" id="serie-motivo" placeholder="Ex: cliente pausou o acompanhamento neste período">
+      </div>
       <button class="ce-btn-save" id="serie-btn-cancelar" onclick="cancelarSelecionadosSerie()" style="width:100%;margin-top:.9rem;background:var(--danger)">Cancelar selecionados</button>
     </div>
   </div>
@@ -1535,7 +1578,7 @@ function sbRowToFront(tabela, row) {
     return { _id: row.id, data: row.data, titulo: row.titulo, tipo: row.tipo, pauta: row.pauta || [], docs: row.docs || [] };
   }
   if (tabela === 'encontros') {
-    return { _id: row.id, data: row.data, titulo: row.titulo, tipo: row.tipo, status: row.status || 'agendado', fase: row.fase, participantes: row.participantes || [], pauta: row.pauta || [], resumo: row.resumo, destaques: row.destaques || [], proximosPassosReuniao: row.proximos_passos_reuniao || [], docs: row.docs || [], criadoEm: row.criado_em, serieId: row.serie_id };
+    return { _id: row.id, data: row.data, titulo: row.titulo, tipo: row.tipo, status: row.status || 'agendado', fase: row.fase, participantes: row.participantes || [], pauta: row.pauta || [], resumo: row.resumo, destaques: row.destaques || [], proximosPassosReuniao: row.proximos_passos_reuniao || [], docs: row.docs || [], criadoEm: row.criado_em, serieId: row.serie_id, dataOriginal: row.data_original, motivoCancelamento: row.motivo_cancelamento };
   }
   if (tabela === 'equipe') {
     return { _id: row.id, nome: row.nome, papel: row.papel, especialidade: row.especialidade, bio: row.bio, foto: row.foto_url, email: row.email, telefone: row.telefone, whatsapp: row.whatsapp, contatoPortal: !!row.contato_portal };
@@ -1579,7 +1622,7 @@ function sbItemToRow(tabela, item, projetoId) {
     return { projeto_id: projetoId, data: item.data || null, titulo: item.titulo, tipo: item.tipo || null, pauta: item.pauta || [], docs: item.docs || [] };
   }
   if (tabela === 'encontros') {
-    return { projeto_id: projetoId, data: item.data || null, titulo: item.titulo, tipo: item.tipo || null, status: item.status || 'agendado', fase: item.fase || null, participantes: item.participantes || [], pauta: item.pauta || [], resumo: item.resumo || null, destaques: item.destaques || [], proximos_passos_reuniao: item.proximosPassosReuniao || [], docs: item.docs || [], serie_id: item.serieId || null };
+    return { projeto_id: projetoId, data: item.data || null, titulo: item.titulo, tipo: item.tipo || null, status: item.status || 'agendado', fase: item.fase || null, participantes: item.participantes || [], pauta: item.pauta || [], resumo: item.resumo || null, destaques: item.destaques || [], proximos_passos_reuniao: item.proximosPassosReuniao || [], docs: item.docs || [], serie_id: item.serieId || null, data_original: item.dataOriginal || null, motivo_cancelamento: item.motivoCancelamento || null };
   }
   if (tabela === 'equipe') {
     return { projeto_id: projetoId, nome: item.nome, papel: item.papel || null, especialidade: item.especialidade || null, bio: item.bio || null, foto_url: item.foto || null, email: item.email || null, telefone: item.telefone || null, whatsapp: item.whatsapp || null, contato_portal: item.contatoPortal === true || item.contatoPortal === 'sim' };
@@ -3595,6 +3638,102 @@ function fecharRepetirEncontro() {
   ge('repetir-overlay').className = 'np-overlay';
   _repetirBaseIdx = null;
 }
+
+var _reagendarIdx = null;
+function abrirReagendarEncontro(idx) {
+  var base = _c && _c.encontros && _c.encontros[idx];
+  if (!base) return;
+  _reagendarIdx = idx;
+  ge('reagendar-base-info').textContent = '"' + base.titulo + '" — hoje em ' + fd(base.data) + '.';
+  ge('reagendar-data').value = '';
+  ge('reagendar-motivo').value = '';
+  var btn = ge('reagendar-btn-save');
+  btn.disabled = false; btn.textContent = 'Remarcar encontro';
+  ge('reagendar-overlay').className = 'np-overlay on';
+}
+function fecharReagendarEncontro() {
+  ge('reagendar-overlay').className = 'np-overlay';
+  _reagendarIdx = null;
+}
+function salvarReagendarEncontro() {
+  var item = _c && _c.encontros && _c.encontros[_reagendarIdx];
+  var novaData = ge('reagendar-data').value;
+  if (!item || !novaData) { showAlert('Escolha a nova data do encontro.', {danger:true}); return; }
+  var dataAntiga = item.data;
+  var motivo = (ge('reagendar-motivo').value || '').trim();
+  var btn = ge('reagendar-btn-save');
+  btn.disabled = true; btn.textContent = 'Remarcando...';
+
+  function concluirLocal() {
+    item.dataOriginal = item.dataOriginal || dataAntiga;
+    item.data = novaData;
+    item.status = 'agendado';
+    ordenarEncontros(_c.encontros);
+    registrarLog('Encontros', 'editado', item.titulo + ' (remarcado de ' + fd(dataAntiga) + ' para ' + fd(novaData) + (motivo ? ' — ' + motivo : '') + ')');
+    fecharReagendarEncontro();
+    if (_currentView === 'cronograma') renderCronograma();
+    else if (_currentView === 'progresso') renderProgresso();
+    atualizarBadgesNav();
+    showAlert('Encontro remarcado para ' + fd(novaData) + '.');
+  }
+
+  if (!sb || !item._id) { concluirLocal(); return; }
+  sb.from('encontros').update({ data: novaData, data_original: item.dataOriginal || dataAntiga, status: 'agendado' }).eq('id', item._id).then(function(res) {
+    if (res.error) throw res.error;
+    concluirLocal();
+  }).catch(function(e) {
+    console.error('Erro ao remarcar encontro:', e);
+    btn.disabled = false; btn.textContent = 'Remarcar encontro';
+    var motivoErro = (e && e.message) ? e.message : 'motivo não identificado';
+    showAlert('Não foi possível remarcar este encontro agora.\n\nMotivo retornado: ' + motivoErro, {danger:true});
+  });
+}
+
+var _cancelarIdx = null;
+function abrirCancelarEncontro(idx) {
+  var base = _c && _c.encontros && _c.encontros[idx];
+  if (!base) return;
+  _cancelarIdx = idx;
+  ge('cancelar-base-info').textContent = '"' + base.titulo + '" — ' + fd(base.data) + '.';
+  ge('cancelar-motivo').value = '';
+  var btn = ge('cancelar-btn-save');
+  btn.disabled = false; btn.textContent = 'Confirmar cancelamento';
+  ge('cancelar-overlay').className = 'np-overlay on';
+}
+function fecharCancelarEncontro() {
+  ge('cancelar-overlay').className = 'np-overlay';
+  _cancelarIdx = null;
+}
+function salvarCancelarEncontro() {
+  var item = _c && _c.encontros && _c.encontros[_cancelarIdx];
+  var motivo = (ge('cancelar-motivo').value || '').trim();
+  if (!item) return;
+  if (!motivo) { showAlert('Escreva o motivo do cancelamento.', {danger:true}); return; }
+  var btn = ge('cancelar-btn-save');
+  btn.disabled = true; btn.textContent = 'Cancelando...';
+
+  function concluirLocal() {
+    item.status = 'cancelado';
+    item.motivoCancelamento = motivo;
+    registrarLog('Encontros', 'editado', item.titulo + ' (cancelado — ' + motivo + ')');
+    fecharCancelarEncontro();
+    if (_currentView === 'cronograma') renderCronograma();
+    else if (_currentView === 'progresso') renderProgresso();
+    atualizarBadgesNav();
+    showAlert('Encontro cancelado. Nada foi apagado — se remarcar depois, use "Remarcar".');
+  }
+
+  if (!sb || !item._id) { concluirLocal(); return; }
+  sb.from('encontros').update({ status: 'cancelado', motivo_cancelamento: motivo }).eq('id', item._id).then(function(res) {
+    if (res.error) throw res.error;
+    concluirLocal();
+  }).catch(function(e) {
+    console.error('Erro ao cancelar encontro:', e);
+    btn.disabled = false; btn.textContent = 'Confirmar cancelamento';
+    var motivoErro = (e && e.message) ? e.message : 'motivo não identificado';
+    showAlert('Não foi possível cancelar este encontro agora.\n\nMotivo retornado: ' + motivoErro, {danger:true});
+  });
+}
 function gerarSerieId() {
   return 'serie_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
 }
@@ -3667,13 +3806,16 @@ function abrirGerenciarSerie(serieId) {
   for (var i = 0; i < itens.length; i++) {
     var e = itens[i];
     var passado = new Date(e.data) < hoje;
-    h += '<label class="serie-item' + (passado ? ' passado' : '') + '">';
-    h += passado
+    var jaCancelado = e.status === 'cancelado';
+    var bloqueado = passado || jaCancelado;
+    h += '<label class="serie-item' + (bloqueado ? ' passado' : '') + '">';
+    h += bloqueado
       ? '<span class="serie-check-vazio"></span>'
       : '<input type="checkbox" class="serie-check" value="' + e._idx + '" checked>';
-    h += '<span>' + fd(e.data) + ' — ' + esc(e.titulo) + (passado ? ' <em>(já ocorreu)</em>' : '') + '</span></label>';
+    h += '<span>' + fd(e.data) + ' — ' + esc(e.titulo) + (jaCancelado ? ' <em>(já cancelado)</em>' : passado ? ' <em>(já ocorreu)</em>' : '') + '</span></label>';
   }
   ge('serie-lista').innerHTML = h || '<p style="color:var(--tl);font-size:.85rem">Nenhum encontro encontrado nessa série.</p>';
+  ge('serie-motivo').value = '';
   var btn = ge('serie-btn-cancelar');
   btn.disabled = false; btn.textContent = 'Cancelar selecionados';
   ge('serie-overlay').className = 'np-overlay on';
@@ -3685,26 +3827,30 @@ function fecharGerenciarSerie() {
 function cancelarSelecionadosSerie() {
   var checks = document.querySelectorAll('.serie-check:checked');
   if (!checks.length) { fecharGerenciarSerie(); return; }
+  var motivo = (ge('serie-motivo').value || '').trim();
+  if (!motivo) { showAlert('Escreva o motivo do cancelamento.', {danger:true}); return; }
   var idxs = Array.prototype.map.call(checks, function(c) { return parseInt(c.value, 10); });
   var ids = idxs.map(function(i) { return _c.encontros[i]._id; }).filter(Boolean);
   if (!ids.length || !sb) { showAlert('Não foi possível cancelar esses encontros agora.', {danger:true}); return; }
   var btn = ge('serie-btn-cancelar');
   btn.disabled = true; btn.textContent = 'Cancelando...';
-  sb.from('encontros').delete().in('id', ids).then(function(res) {
+  sb.from('encontros').update({ status: 'cancelado', motivo_cancelamento: motivo }).in('id', ids).then(function(res) {
     if (res.error) throw res.error;
-    // remove localmente, do índice mais alto pro mais baixo, pra não bagunçar os
-    // outros índices durante a remoção
-    idxs.sort(function(a, b) { return b - a; });
-    for (var i = 0; i < idxs.length; i++) _c.encontros.splice(idxs[i], 1);
+    for (var i = 0; i < idxs.length; i++) {
+      var item = _c.encontros[idxs[i]];
+      item.status = 'cancelado';
+      item.motivoCancelamento = motivo;
+    }
+    registrarLog('Encontros', 'editado', idxs.length + ' encontros da série cancelados — ' + motivo);
     fecharGerenciarSerie();
     if (_currentView === 'cronograma') renderCronograma();
     atualizarBadgesNav();
-    showAlert(ids.length + ' encontro' + (ids.length > 1 ? 's cancelados' : ' cancelado') + '.');
+    showAlert(ids.length + ' encontro' + (ids.length > 1 ? 's cancelados' : ' cancelado') + '. Nada foi apagado.');
   }).catch(function(e) {
     console.error('Erro ao cancelar encontros da série:', e);
     btn.disabled = false; btn.textContent = 'Cancelar selecionados';
-    var motivo = (e && e.message) ? e.message : 'motivo não identificado';
-    showAlert('Não foi possível cancelar esses encontros agora.\n\nMotivo retornado: ' + motivo, {danger:true});
+    var motivoErro = (e && e.message) ? e.message : 'motivo não identificado';
+    showAlert('Não foi possível cancelar esses encontros agora.\n\nMotivo retornado: ' + motivoErro, {danger:true});
   });
 }
 
@@ -5019,38 +5165,23 @@ function cronFaseCor(status) {
 
 function cronGanttHTML(c, semWrapper) {
   var fases = c.fases || [];
-  if (!fases.length || !c.dataInicio || !c.dataPrevisao) return '';
-  var t0 = new Date(c.dataInicio).getTime(), t1 = new Date(c.dataPrevisao).getTime();
-  var total = Math.max(1, t1 - t0);
-  var cumMs = 0;
-  var ranges = [];
-  for (var i = 0; i < fases.length; i++) {
-    var f = fases[i];
-    var span = total * (f.peso / 100);
-    var fStart = f.dataInicio ? new Date(f.dataInicio).getTime() : t0 + cumMs;
-    var fEnd = f.dataConclusao ? new Date(f.dataConclusao).getTime() : fStart + span;
-    ranges.push({ fase: f, start: fStart, end: fEnd });
-    cumMs = (fEnd - t0);
-  }
-  var hoje = Date.now();
-  var hojePct = Math.min(100, Math.max(0, (hoje - t0) / total * 100));
+  if (!fases.length) return '';
   var h = semWrapper ? '' : '<div class="cron-gantt-wrap sec">';
   if (!semWrapper) h += '<div class="cron-gantt-title">Linha do tempo das fases</div>';
   h += '<div class="cron-gantt">';
-  for (var j = 0; j < ranges.length; j++) {
-    var r = ranges[j];
-    var leftPct = Math.max(0, (r.start - t0) / total * 100);
-    var widthPct = Math.max(2, (r.end - r.start) / total * 100);
-    var cor = cronFaseCor(r.fase.status);
-    h += '<div class="cron-gantt-seg" style="left:' + leftPct + '%;width:' + widthPct + '%;background:' + cor.bg + '" title="' + esc(r.fase.nome) + ' · ' + r.fase.peso + '%">';
-    h += '<span class="cron-gantt-seg-lbl" style="color:' + cor.txt + '">' + esc(r.fase.nome) + '</span></div>';
-  }
-  h += '<div class="cron-gantt-hoje" style="left:' + hojePct + '%" title="Hoje"></div>';
-  h += '</div><div class="cron-gantt-legend">';
-  for (var k = 0; k < ranges.length; k++) {
-    var lc = cronFaseCor(ranges[k].fase.status).bg;
-    h += '<div class="cgl-item"><span class="cgl-dot" style="background:' + lc + '"></span>' + esc(ranges[k].fase.nome);
-    h += ' <span class="cgl-date">' + fdTS(ranges[k].start) + '–' + fdTS(ranges[k].end) + '</span></div>';
+  for (var i = 0; i < fases.length; i++) {
+    var f = fases[i];
+    var cor = cronFaseCor(f.status);
+    var isAtiva = f.status === 'ativa';
+    var isDone = f.status === 'concluida';
+    var conteudo = isDone ? '&#10003;' : String(i + 1);
+    var dts = f.dataInicio ? fd(f.dataInicio) + '–' + (f.dataConclusao ? fd(f.dataConclusao) : '?') : 'A definir';
+    h += '<div class="wiz-step" title="' + esc(f.nome) + ' · ' + f.peso + '%">';
+    if (i > 0) h += '<div class="wiz-line' + (isDone || isAtiva ? ' feita' : '') + '"></div>';
+    h += '<div class="wiz-circle' + (isAtiva ? ' ativa' : '') + '" style="background:' + cor.bg + ';color:' + cor.txt + (isDone || isAtiva ? ';border-color:transparent' : '') + '">' + conteudo + '</div>';
+    h += '<div class="wiz-nome" style="color:' + (isAtiva ? 'var(--bx)' : isDone ? 'var(--td)' : 'var(--tm)') + '">' + esc(f.nome) + '</div>';
+    h += '<div class="wiz-datas">' + dts + '</div>';
+    h += '</div>';
   }
   h += '</div>';
   if (!semWrapper) h += '</div>';
@@ -6085,7 +6216,7 @@ function agendaTodosItens(c) {
     if (!e.data) continue;
     var chave = e.data + '|' + (e.titulo || '').toLowerCase().trim();
     if (chaves[chave]) continue;
-    lista.push({ _cat: 'encontros', _idx: j, data: e.data, titulo: e.titulo, tipo: e.tipo, pauta: e.pauta || [], docs: e.docs || [] });
+    lista.push({ _cat: 'encontros', _idx: j, data: e.data, titulo: e.titulo, tipo: e.tipo, pauta: e.pauta || [], docs: e.docs || [], status: e.status, serieId: e.serieId, dataOriginal: e.dataOriginal, motivoCancelamento: e.motivoCancelamento });
   }
   return lista;
 }
@@ -6113,7 +6244,9 @@ function agendaSectionHTML() {
   function renderItem(a) {
     var df = Math.ceil((new Date(a.data) - hoje) / 86400000);
     var dfLbl;
-    if (df >= 0) {
+    if (a.status === 'cancelado') {
+      dfLbl = '<span class="badge b-danger" title="' + esc(a.motivoCancelamento || '') + '">Cancelado</span>';
+    } else if (df >= 0) {
       dfLbl = df === 0 ? '<span class="badge b-danger">Hoje</span>' : df === 1 ? '<span class="badge b-warn">Amanhã</span>' : '<span class="badge b-pend">Em '+df+'d</span>';
     } else {
       // Data já passou — agora reflete o status real do encontro (antes disso ser
@@ -6122,10 +6255,18 @@ function agendaSectionHTML() {
       dfLbl = a.status === 'agendado' ? '<span class="badge b-warn">Não confirmado</span>' : '<span class="badge b-ok">Realizado</span>';
     }
     var repetirBtn = '';
+    var reagendarBtn = '';
+    var cancelarBtn = '';
     if (a._cat === 'encontros') {
       repetirBtn = a.serieId
         ? '<button class="ag-repetir-btn" title="Gerenciar série de encontros" onclick="abrirGerenciarSerie(\'' + a.serieId + '\')"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>'
         : '<button class="ag-repetir-btn" title="Repetir este encontro nas próximas semanas" onclick="abrirRepetirEncontro(' + a._idx + ')">&#128257;</button>';
+      if (_isMaster && a.status !== 'realizado') {
+        reagendarBtn = '<button class="ag-repetir-btn" title="Remarcar para outra data" onclick="abrirReagendarEncontro(' + a._idx + ')">&#128198;</button>';
+      }
+      if (_isMaster && a.status !== 'realizado' && a.status !== 'cancelado') {
+        cancelarBtn = '<button class="ag-repetir-btn" title="Cancelar este encontro" onclick="abrirCancelarEncontro(' + a._idx + ')">&#10005;</button>';
+      }
     }
     // Acordeão completo — mesmo template que já existia (e já funcionava bem) em
     // Progresso. Antes, esse nível de detalhe (resumo, destaques, combinados) só
@@ -6133,12 +6274,16 @@ function agendaSectionHTML() {
     // "o que ficou combinado" numa reunião, mas mostrava só a pauta. Agora é a
     // fonte completa de verdade — o mesmo conteúdo não existe mais em dois lugares.
     var eid = 'crenc-' + a._cat + '-' + a._idx;
+    var remarcadoBdg = a.dataOriginal ? '<span class="badge b-tag" title="Data original: ' + fd(a.dataOriginal) + '">Remarcado</span>' : '';
     var h2 = '<div class="enc-card" id="' + eid + '">';
-    h2 += '<button class="enc-toggle" onclick="toggleEnc(\'' + eid + '\')">';
+    h2 += '<button class="enc-toggle" style="' + (_isMaster ? 'padding-right:8.5rem' : '') + '" onclick="toggleEnc(\'' + eid + '\')">';
     h2 += '<div class="enc-tl"><span class="enc-date">' + fdbr(a.data) + '</span><span class="enc-title">' + esc(a.titulo) + '</span></div>';
-    h2 += '<div class="enc-tr"><span class="badge b-tag">' + cap(a.tipo) + '</span>' + dfLbl + chevSVG().replace('xchev','enc-chev') + '</div></button>';
-    h2 += '<div class="ce-edit-abs" style="right:2.15rem;top:.4rem">' + repetirBtn + ceEditIconHTML(a._cat, a._idx) + '</div>';
+    h2 += '<div class="enc-tr">' + remarcadoBdg + '<span class="badge b-tag">' + cap(a.tipo) + '</span>' + dfLbl + chevSVG().replace('xchev','enc-chev') + '</div></button>';
+    h2 += '<div class="ce-edit-abs" style="right:2.15rem;top:.4rem">' + cancelarBtn + reagendarBtn + repetirBtn + ceEditIconHTML(a._cat, a._idx) + '</div>';
     h2 += '<div class="enc-body"><div class="enc-inner">';
+    if (a.status === 'cancelado' && a.motivoCancelamento) {
+      h2 += '<div class="enc-resumo" style="border-color:var(--danger)"><strong>Cancelado:</strong> ' + esc(a.motivoCancelamento) + '</div>';
+    }
     if (a.pauta && a.pauta.length) {
       h2 += '<div class="enc-block"><div class="enc-block-lbl">Pauta</div>';
       for (var pi = 0; pi < a.pauta.length; pi++) h2 += '<div class="enc-pauta-item"><div class="enc-pauta-dot"></div>'+esc(a.pauta[pi])+'</div>';
