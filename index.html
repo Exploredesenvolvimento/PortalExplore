@@ -415,7 +415,8 @@ a{text-decoration:none;color:inherit}
 .dh-hero-eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-lt)}
 .dh-hero-updated{font-size:.68rem;color:rgba(255,255,255,.5)}
 .dh-hero-encerrado{font-size:.68rem;color:var(--gold-lt);background:rgba(255,255,255,.1);display:inline-block;padding:.25rem .6rem;border-radius:99px;margin-bottom:.7rem}
-.dh-hero-title{font-family:Georgia,serif;font-size:1.6rem;font-weight:bold;color:var(--white);line-height:1.3;margin-bottom:1.4rem;max-width:36rem}
+.dh-hero-title-row{display:flex;align-items:center;justify-content:space-between;gap:1.4rem;flex-wrap:wrap;margin-bottom:1.4rem}
+.dh-hero-title{font-family:Georgia,serif;font-size:1.6rem;font-weight:bold;color:var(--white);line-height:1.3;max-width:34rem;flex:1;min-width:200px}
 .dh-hero-meta{display:flex;flex-wrap:wrap;gap:1.7rem;padding-top:1.15rem;border-top:1px solid rgba(255,255,255,.15)}
 .dh-hm{display:flex;flex-direction:column;gap:.22rem}
 .dh-hm-k{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.45)}
@@ -423,29 +424,46 @@ a{text-decoration:none;color:inherit}
 .hero-ts{display:inline-flex;align-items:center;gap:.32rem;font-size:.7rem;color:var(--tl)}
 .ts-dot{width:6px;height:6px;border-radius:50%;background:var(--ok);flex-shrink:0}
 
-/* dashboard — citação do consultor e insight do momento, linhas finas, sem bloco colorido */
-.dh-resumo{background:var(--white);border-radius:var(--rl);padding:1.3rem 1.4rem;border:1px solid var(--cream-dk);margin-bottom:1.6rem}
-.dh-resumo-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
-.dh-resumo-lbl{font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tl)}
-.dh-resumo-status{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-.dh-resumo-list{list-style:none;display:flex;flex-direction:column;gap:.55rem}
-.dh-resumo-list li{font-size:.86rem;color:var(--tm);line-height:1.5;padding-left:.9rem;position:relative}
-.dh-resumo-list li::before{content:'';position:absolute;left:0;top:.5em;width:5px;height:5px;border-radius:50%;background:var(--gold)}
-.dh-resumo-list strong{color:var(--td);font-weight:700}
-.dh-resumo-vazio{font-size:.85rem;color:var(--tl);font-style:italic}
-.dh-resumo-nota{margin-top:1rem;padding-top:.85rem;border-top:1px solid var(--cream-dk);font-family:Georgia,serif;font-size:.83rem;font-style:italic;color:var(--tl);line-height:1.5}
+/* dashboard — anel de progresso geral, ancorado no hero */
+.dh-ring-wrap{display:flex;flex-direction:column;align-items:center;gap:.3rem;flex-shrink:0}
+.dh-ring{position:relative;width:78px;height:78px}
+.dh-ring svg{transform:rotate(0deg)}
+.dh-ring-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:bold;font-size:1.2rem;color:var(--white)}
+.dh-ring-lbl{font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.65);white-space:nowrap}
 
-/* dashboard — estatísticas em faixa única com divisor fino, não 3 cartões */
+/* dashboard — faixa de status (substitui o texto solto por um chip colorido + 1 frase) */
+.dh-status-band{display:flex;align-items:flex-start;gap:.75rem;background:var(--white);border:1px solid var(--cream-dk);border-radius:var(--rl);border-left:4px solid var(--sc,var(--bx));border-top-left-radius:0;border-bottom-left-radius:0;padding:.85rem 1.1rem;margin-bottom:1.1rem}
+.dh-status-dot{width:10px;height:10px;border-radius:50%;background:var(--sc,var(--bx));flex-shrink:0;margin-top:.3rem}
+.dh-status-lbl{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sc,var(--bx))}
+.dh-status-txt{font-size:.83rem;color:var(--tm);flex:1;min-width:0}
+
+/* dashboard — cartões de relance com ícone, no lugar da lista de texto */
+.dh-glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.85rem;margin-bottom:1.6rem}
+.dh-glance-card{background:var(--white);border:1px solid var(--cream-dk);border-radius:var(--rl);padding:1.05rem 1.1rem;display:flex;gap:.75rem;align-items:flex-start}
+.dh-glance-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--gc-bg,var(--cream));color:var(--gc-fg,var(--bx))}
+.dh-glance-body{min-width:0;flex:1}
+.dh-glance-lbl{font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tl);margin-bottom:.28rem}
+.dh-glance-val{font-family:Georgia,serif;font-weight:bold;font-size:.98rem;color:var(--td);line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.dh-glance-sub{font-size:.75rem;color:var(--tm);margin-top:.2rem;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.dh-resumo-vazio{font-size:.85rem;color:var(--tl);font-style:italic;background:var(--white);border:1px solid var(--cream-dk);border-radius:var(--rl);padding:1.1rem 1.3rem;margin-bottom:1.6rem}
+.dh-resumo-nota{display:flex;gap:.7rem;align-items:flex-start;background:var(--white);border:1px solid var(--cream-dk);border-radius:var(--rl);padding:1rem 1.2rem;margin-bottom:1.6rem}
+.dh-resumo-nota-ico{flex-shrink:0;color:var(--gold-dk);opacity:.8}
+.dh-resumo-nota-txt{font-family:Georgia,serif;font-size:.85rem;font-style:italic;color:var(--tm);line-height:1.55}
+.dh-resumo-nota-txt b{font-style:normal;color:var(--tl);font-family:var(--font-sans);font-size:.72rem;display:block;margin-top:.35rem;font-weight:700;letter-spacing:.02em}
+
+/* dashboard — estatísticas em faixa única com divisor fino, agora com ícone */
 .dh-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-bottom:1.6rem}
-.dh-stat{padding:0 1.5rem}
+.dh-stat{padding:0 1.5rem;display:flex;gap:.7rem;align-items:flex-start}
 .dh-stat:first-child{padding-left:0}
+.dh-stat-ico{width:30px;height:30px;border-radius:8px;background:var(--cream);color:var(--bx);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.15rem}
 .dh-stat-num{font-family:Georgia,serif;font-size:1.85rem;font-weight:bold;color:var(--bx);line-height:1.1}
 .dh-stat-num-of{font-size:1.05rem;color:var(--tl);font-weight:normal}
 .dh-stat-lbl{font-size:.72rem;font-weight:700;color:var(--tm);margin-top:.4rem}
-.dh-stat-sub{font-size:.68rem;color:var(--tl);margin-top:.1rem}
+.dh-stat-sub{font-size:.68rem;color:var(--tl);margin-top:.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* dashboard — progresso, sem cartão/sombra ao redor */
 .dh-progress{padding-bottom:1.6rem;margin-bottom:1.6rem;border-bottom:1px solid var(--cream-dk)}
+.dh-track-meta{text-align:center;font-size:.72rem;color:var(--tl);margin-top:.9rem}
 
 /* mini progress */
 .mini-track{display:flex;align-items:flex-start}
@@ -480,7 +498,63 @@ a{text-decoration:none;color:inherit}
   .dh-stats{grid-template-columns:1fr;gap:1rem}
   .dh-stat{padding:0 0 0 1rem;border-left:2px solid var(--cream-dk)}
   .dh-stat:first-child{padding-left:1rem}
+  .dh-hero-title-row{gap:1rem}
+  .dh-ring{width:64px;height:64px}
+  .dh-ring-val{font-size:1rem}
+  .dh-glance{grid-template-columns:1fr}
+  .dh-status-band{flex-wrap:wrap}
 }
+
+/* ===== MOCKUP: layout em 2 colunas + cartões laterais visuais ===== */
+.dh-grid{display:grid;grid-template-columns:1fr 300px;gap:1.6rem;align-items:start}
+.dh-main{min-width:0}
+.dh-side{display:flex;flex-direction:column;gap:.85rem;position:sticky;top:1.5rem}
+@media(max-width:980px){
+  .dh-grid{grid-template-columns:1fr}
+  .dh-side{position:static}
+}
+
+.dh-side-card{background:var(--white);border:1px solid var(--cream-dk);border-radius:var(--rl);padding:1rem 1.1rem}
+.dh-side-lbl{font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tl);margin-bottom:.6rem}
+
+/* entregas — mini anel em vez de fração solta */
+.dh-side-ring-row{display:flex;align-items:center;gap:.9rem}
+.dh-side-ring{position:relative;width:50px;height:50px;flex-shrink:0}
+.dh-side-ring-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:bold;font-size:.78rem;color:var(--bx)}
+.dh-side-ring-txt{min-width:0}
+.dh-side-ring-num{font-family:Georgia,serif;font-weight:bold;font-size:1.05rem;color:var(--td)}
+.dh-side-ring-sub{font-size:.72rem;color:var(--tl)}
+
+/* dias de projeto — linha do tempo com marcador, em vez de número solto */
+.dh-timeline{margin-top:.15rem}
+.dh-timeline-nums{display:flex;align-items:baseline;gap:.3rem;margin-bottom:.5rem}
+.dh-timeline-num{font-family:Georgia,serif;font-weight:bold;font-size:1.35rem;color:var(--bx)}
+.dh-timeline-of{font-size:.85rem;color:var(--tl)}
+.dh-timeline-bar{position:relative;height:6px;background:var(--cream-dk);border-radius:99px;overflow:visible}
+.dh-timeline-fill{height:100%;background:var(--gold);border-radius:99px}
+.dh-timeline-marker{position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:var(--bx);border:2px solid var(--white);transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--gold)}
+.dh-timeline-lbls{display:flex;justify-content:space-between;margin-top:.4rem;font-size:.66rem;color:var(--tl)}
+
+/* próximo encontro — mantém simples, mas com badge de contagem */
+.dh-side-meet-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem}
+.dh-side-meet-badge{font-size:.64rem;font-weight:700;color:var(--bx);background:var(--cream);padding:.2rem .5rem;border-radius:99px;white-space:nowrap;flex-shrink:0}
+
+/* navegação lateral — agora com ícone (fecha a consistência com os cartões) */
+.dh-nav-list-v2{display:flex;flex-direction:column;gap:.15rem}
+.dh-nav-row-v2{display:flex;align-items:center;gap:.7rem;padding:.65rem .5rem;margin:0 -.5rem;border-radius:var(--r);cursor:pointer;transition:background-color .15s}
+.dh-nav-row-v2:hover{background:var(--cream)}
+.dh-nav-ico{width:32px;height:32px;border-radius:8px;background:var(--cream);color:var(--bx);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dh-nav-row-v2:hover .dh-nav-ico{background:var(--bx);color:var(--white)}
+.dh-nav-v2-body{min-width:0;flex:1}
+.dh-nav-v2-title{font-size:.83rem;font-weight:700;color:var(--td)}
+.dh-nav-v2-kpi{font-size:.71rem;color:var(--tl);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* matriz probabilidade × impacto — no lugar da frase solta no card de risco */
+.dh-rm-wrap{display:flex;align-items:center;gap:.5rem;margin-top:.4rem}
+.dh-rm{display:grid;grid-template-columns:repeat(3,8px);grid-template-rows:repeat(3,8px);gap:2px;flex-shrink:0}
+.dh-rm-cell{background:var(--cream-dk);border-radius:2px}
+.dh-rm-cell.active{background:var(--rmc,var(--danger))}
+.dh-rm-lbl{font-size:.68rem;color:var(--tl);line-height:1.35}
 
 /* expandable */
 .xcard{background:var(--white);border-radius:var(--rl);border:1px solid var(--cream-dk);overflow:hidden;margin-bottom:.65rem}
@@ -551,12 +625,12 @@ a{text-decoration:none;color:inherit}
 .enc-card.menu-aberto{z-index:30}
 .enc-toggle{border-radius:var(--r)}
 .enc-card.open .enc-toggle{border-radius:var(--r) var(--r) 0 0}
-.enc-toggle{width:100%;background:var(--cream);border:none;padding:.58rem .85rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;cursor:pointer;text-align:left}
+.enc-toggle{width:100%;background:var(--cream);border:none;padding:.58rem .85rem;display:flex;flex-direction:column;align-items:stretch;gap:.32rem;cursor:pointer;text-align:left}
 .enc-toggle:hover{background:var(--cream-dk)}
-.enc-tl{display:flex;align-items:center;gap:.6rem;min-width:0}
+.enc-tl{display:flex;align-items:center;gap:.6rem;min-width:0;width:100%}
 .enc-date{font-size:.68rem;font-weight:700;color:var(--bx);min-width:34px;flex-shrink:0}
-.enc-title{font-size:.81rem;font-weight:700;color:var(--td);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.enc-tr{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.enc-title{font-size:.81rem;font-weight:700;color:var(--td);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1 1 auto;min-width:0}
+.enc-tr{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;justify-content:flex-end;width:100%}
 .enc-chev{transition:transform .25s;opacity:.5}
 .enc-card.open .enc-chev{transform:rotate(180deg)}
 .enc-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
@@ -1316,13 +1390,18 @@ a{text-decoration:none;color:inherit}
     </div>
     <div class="np-body">
       <div class="ce-form-row" id="reagendar-base-info" style="font-size:.82rem;color:var(--tl)"></div>
-      <div class="ce-form-row"><label class="ce-form-label">Nova data</label>
-        <input class="ce-form-input" type="date" id="reagendar-data">
+      <div class="ce-form-row" style="display:flex;gap:.6rem">
+        <div style="flex:1"><label class="ce-form-label">Nova data</label>
+          <input class="ce-form-input" type="date" id="reagendar-data">
+        </div>
+        <div style="flex:1"><label class="ce-form-label">Novo horário (opcional)</label>
+          <input class="ce-form-input" type="time" id="reagendar-hora">
+        </div>
       </div>
       <div class="ce-form-row"><label class="ce-form-label">Motivo (opcional, fica só no log interno)</label>
         <input class="ce-form-input" type="text" id="reagendar-motivo" placeholder="Ex: cliente pediu para remarcar">
       </div>
-      <div class="ce-form-row" style="font-size:.78rem;color:var(--tl)">Pauta, participantes e tudo mais desse encontro continuam exatamente como estão — só a data muda. O cliente vê que foi remarcado, não que é um encontro novo.</div>
+      <div class="ce-form-row" style="font-size:.78rem;color:var(--tl)">Pauta, participantes e tudo mais desse encontro continuam exatamente como estão — só a data e o horário mudam. O cliente vê que foi remarcado, não que é um encontro novo.</div>
       <button class="ce-btn-save" id="reagendar-btn-save" onclick="salvarReagendarEncontro()" style="width:100%;margin-top:.5rem">Remarcar encontro</button>
     </div>
   </div>
@@ -2145,7 +2224,7 @@ function docsRelHTML(docNomes) {
       h += '<div class="doc-rel-left">';
       h += '<div style="width:24px;height:24px;border-radius:5px;background:'+bg+';display:flex;align-items:center;justify-content:center;flex-shrink:0">';
       h += '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="'+col+'" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>';
-      h += '<div><div class="doc-rel-nome">'+esc(d.titulo||d.nome)+'</div>';
+      h += '<div style="min-width:0;flex:1"><div class="doc-rel-nome">'+esc(d.titulo||d.nome)+'</div>';
       h += '<div class="doc-rel-meta">'+cap(d.categoria)+' · '+esc(d.data)+'</div></div></div>';
       h += '<span class="doc-rel-btn">' + (proprio ? 'Baixar &#8595;' : 'Acessar &#8599;') + '</span></a>';
     }
@@ -3718,8 +3797,9 @@ function abrirReagendarEncontro(idx) {
   var base = _c && _c.encontros && _c.encontros[idx];
   if (!base) return;
   _reagendarIdx = idx;
-  ge('reagendar-base-info').textContent = '"' + base.titulo + '" — hoje em ' + fd(base.data) + '.';
+  ge('reagendar-base-info').textContent = '"' + base.titulo + '" — hoje em ' + fd(base.data) + (base.hora ? ' às ' + base.hora : '') + '.';
   ge('reagendar-data').value = '';
+  ge('reagendar-hora').value = base.hora || '';
   ge('reagendar-motivo').value = '';
   var btn = ge('reagendar-btn-save');
   btn.disabled = false; btn.textContent = 'Remarcar encontro';
@@ -3734,6 +3814,7 @@ function salvarReagendarEncontro() {
   var novaData = ge('reagendar-data').value;
   if (!item || !novaData) { showAlert('Escolha a nova data do encontro.', {danger:true}); return; }
   var dataAntiga = item.data;
+  var novaHora = (ge('reagendar-hora').value || '').trim() || null;
   var motivo = (ge('reagendar-motivo').value || '').trim();
   var btn = ge('reagendar-btn-save');
   btn.disabled = true; btn.textContent = 'Remarcando...';
@@ -3741,18 +3822,19 @@ function salvarReagendarEncontro() {
   function concluirLocal() {
     item.dataOriginal = item.dataOriginal || dataAntiga;
     item.data = novaData;
+    item.hora = novaHora;
     item.status = 'agendado';
     ordenarEncontros(_c.encontros);
-    registrarLog('Encontros', 'editado', item.titulo + ' (remarcado de ' + fd(dataAntiga) + ' para ' + fd(novaData) + (motivo ? ' — ' + motivo : '') + ')');
+    registrarLog('Encontros', 'editado', item.titulo + ' (remarcado de ' + fd(dataAntiga) + ' para ' + fd(novaData) + (novaHora ? ' às ' + novaHora : '') + (motivo ? ' — ' + motivo : '') + ')');
     fecharReagendarEncontro();
     if (_currentView === 'cronograma') renderCronograma();
     else if (_currentView === 'progresso') renderProgresso();
     atualizarBadgesNav();
-    showAlert('Encontro remarcado para ' + fd(novaData) + '.');
+    showAlert('Encontro remarcado para ' + fd(novaData) + (novaHora ? ' às ' + novaHora : '') + '.');
   }
 
   if (!sb || !item._id) { concluirLocal(); return; }
-  sb.from('encontros').update({ data: novaData, data_original: item.dataOriginal || dataAntiga, status: 'agendado' }).eq('id', item._id).then(function(res) {
+  sb.from('encontros').update({ data: novaData, hora: novaHora, data_original: item.dataOriginal || dataAntiga, status: 'agendado' }).eq('id', item._id).then(function(res) {
     if (res.error) throw res.error;
     concluirLocal();
   }).catch(function(e) {
@@ -5138,7 +5220,8 @@ function renderDashboard() {
   h += '<div class="dh-hero-top"><div class="dh-hero-eyebrow">' + saud + ', ' + esc(c.nome) + '</div>';
   if (c.ultimaAtualizacao) h += '<div class="dh-hero-updated">Atualizado em ' + fd(c.ultimaAtualizacao) + (c.atualizadoPor ? ' · ' + esc(c.atualizadoPor) : '') + '</div>';
   h += '</div>';
-  h += '<div class="dh-hero-title serif">' + esc(c.projeto) + '</div>';
+  h += '<div class="dh-hero-title-row"><div class="dh-hero-title serif">' + esc(c.projeto) + '</div>';
+  h += '<div class="dh-ring-wrap"><div class="dh-ring">' + svgRing(pct, 78, 7, 'var(--gold)') + '<div class="dh-ring-val">' + pct + '%</div></div><div class="dh-ring-lbl">Concluído</div></div></div>';
   h += '<div class="dh-hero-meta">';
   h += '<div class="dh-hm"><span class="dh-hm-k">Empresa</span><span class="dh-hm-v">' + esc(c.empresa) + '</span></div>';
   h += '<div class="dh-hm"><span class="dh-hm-k">Consultoria responsável</span><span class="dh-hm-v">' + esc(nomesTime) + '</span></div>';
@@ -5146,45 +5229,62 @@ function renderDashboard() {
   h += '<div class="dh-hm"><span class="dh-hm-k">Previsão</span><span class="dh-hm-v">' + fd(c.dataPrevisao) + '</span></div>';
   h += '</div></div>';
 
-  // Resumo Executivo — substitui a citação solta por fatos objetivos, tirados
-  // direto do que já está registrado no projeto. Nada aqui é prosa gerada;
-  // cada linha é uma consulta ao dado real, no formato que um relatório de
-  // status de verdade usa (fato + referência), não frase de efeito.
-  h += resumoExecutivoHTML(c, mom, faseAtiva, faseAtivaIdx);
+  // Resumo executivo, agora visual: faixa de status + cartões com ícone, no
+  // lugar da lista de bullets. Os dados são os mesmos (consulta direta ao
+  // projeto), só a apresentação deixou de ser um bloco de texto genérico.
+  var mainHTML = dhGlanceHTML(c, mom, faseAtiva, faseAtivaIdx);
 
-  // estatísticas em faixa única, divisores finos
-  h += '<div class="dh-stats">';
-  h += '<div class="dh-stat"><div class="dh-stat-num">' + dias + '<span class="dh-stat-num-of">/' + diasTotal + '</span></div><div class="dh-stat-lbl">Dias de projeto</div><div class="dh-stat-sub">desde ' + fd(c.dataInicio) + '</div></div>';
-  h += '<div class="dh-stat"><div class="dh-stat-num" style="font-size:1.15rem">' + (proxEc ? fd(proxEc.data) : '—') + '</div><div class="dh-stat-lbl">Próximo encontro</div><div class="dh-stat-sub">' + (proxEc ? esc(proxEc.titulo) : 'nenhum agendado') + '</div></div>';
-  h += '<div class="dh-stat"><div class="dh-stat-num">' + concl + '<span class="dh-stat-num-of">/' + total + '</span></div><div class="dh-stat-lbl">Entregas</div><div class="dh-stat-sub">concluídas</div></div>';
-  h += '</div>';
+  // progresso geral — track de fases. A barra percentual foi retirada daqui
+  // porque já repetia o mesmo número do anel no hero; no lugar, mostra o
+  // intervalo de datas da fase ativa (informação nova, não redundante).
+  mainHTML += '<div class="dh-progress"><div class="sec-lbl">Progresso geral</div>' + trackHTML;
+  if (faseAtiva && faseAtiva.dataInicio) {
+    mainHTML += '<div class="dh-track-meta">Fase atual desde ' + fd(faseAtiva.dataInicio) + (faseAtiva.dataConclusao ? ' · prevista até ' + fd(faseAtiva.dataConclusao) : '') + '</div>';
+  }
+  mainHTML += '</div>';
 
-  // progresso geral — sem cartão/sombra ao redor
-  h += '<div class="dh-progress"><div class="sec-lbl">Progresso geral</div>' + trackHTML;
-  h += '<div class="mini-bar-wrap"><div class="mini-bar-bg"><div class="mini-bar-fill" id="mini-bar" style="width:0%"></div></div><div class="mini-pct">' + pct + '%</div></div></div>';
+  // sidebar — entregas viram anel, dias de projeto viram linha do tempo com
+  // marcador (em vez dos 2 números soltos que estavam na faixa de estatísticas),
+  // e a navegação ganha ícone pra fechar a consistência com os cartões acima.
+  var pctEntregas = total ? Math.round((concl / total) * 100) : 0;
+  var diasPct = Math.max(0, Math.min(100, Math.round((dias / diasTotal) * 100)));
+  var diasProx = proxEc ? drest(proxEc.data) : null;
 
-  // navegação — lista editorial, sem grade de ícones repetidos
-  h += '<div class="sec-lbl">Ir para</div><div class="dh-nav-list">';
+  var sideHTML = '<div class="dh-side-card"><div class="dh-side-lbl">Entregas</div><div class="dh-side-ring-row">';
+  sideHTML += '<div class="dh-side-ring">' + svgRing(pctEntregas, 50, 5, 'var(--ok)', 'var(--cream-dk)') + '<div class="dh-side-ring-val">' + pctEntregas + '%</div></div>';
+  sideHTML += '<div class="dh-side-ring-txt"><div class="dh-side-ring-num">' + concl + '<span style="color:var(--tl);font-weight:normal;font-size:.85rem"> de ' + total + '</span></div><div class="dh-side-ring-sub">concluídas</div></div></div></div>';
+
+  sideHTML += '<div class="dh-side-card"><div class="dh-side-lbl">Dias de projeto</div><div class="dh-timeline">';
+  sideHTML += '<div class="dh-timeline-nums"><span class="dh-timeline-num">' + dias + '</span><span class="dh-timeline-of">de ' + diasTotal + ' dias</span></div>';
+  sideHTML += '<div class="dh-timeline-bar"><div class="dh-timeline-fill" style="width:' + diasPct + '%"></div><div class="dh-timeline-marker" style="left:' + diasPct + '%"></div></div>';
+  sideHTML += '<div class="dh-timeline-lbls"><span>' + fd(c.dataInicio) + '</span><span>' + fd(c.dataPrevisao) + '</span></div></div></div>';
+
+  sideHTML += '<div class="dh-side-card"><div class="dh-side-lbl">Próximo encontro</div>';
+  sideHTML += proxEc
+    ? '<div class="dh-side-meet-row"><div><div class="dh-side-ring-num" style="font-size:.95rem">' + fd(proxEc.data) + '</div><div class="dh-side-ring-sub">' + esc(proxEc.titulo) + '</div></div>' + (diasProx != null && diasProx >= 0 ? '<span class="dh-side-meet-badge">em ' + diasProx + 'd</span>' : '') + '</div>'
+    : '<div class="dh-side-ring-sub">nenhum agendado</div>';
+  sideHTML += '</div>';
+
+  sideHTML += '<div class="dh-side-card"><div class="dh-side-lbl">Ir para</div><div class="dh-nav-list-v2">';
   var navCards = [
-    {id:'progresso', title:'Progresso', kpi:'Fase: <strong>' + (faseAtiva ? esc(faseAtiva.nome) : '—') + '</strong> · <strong>' + pct + '%</strong>'},
-    {id:'entregas', title:'Entregas', kpi:'<strong>' + concl + '</strong> de <strong>' + total + '</strong> entregas'},
-    {id:'cronograma', title:'Cronograma', kpi:'<strong>' + (c.encontros||[]).length + '</strong> encontros registrados'},
-    {id:'documentos', title:'Documentos', kpi:'<strong>' + c.documentos.length + '</strong> documentos disponíveis'},
-    {id:'proximos', title:'Próximos Passos', kpi:'<strong>' + alta + '</strong> itens de alta prioridade'},
-    {id:'radar', title:'Radar de Saúde', kpi:'5 dimensões monitoradas'},
-    {id:'riscos', title:'Riscos', kpi:'<strong>' + (c.riscos||[]).length + '</strong> riscos mapeados'}
+    {id:'progresso', icon:'layers', title:'Progresso', kpi: pct + '% concluído'},
+    {id:'entregas', icon:'package', title:'Entregas', kpi: concl + ' de ' + total},
+    {id:'cronograma', icon:'calendar', title:'Cronograma', kpi: (c.encontros || []).length + ' encontros'},
+    {id:'documentos', icon:'file', title:'Documentos', kpi: c.documentos.length + ' disponíveis'},
+    {id:'proximos', icon:'flag', title:'Próximos Passos', kpi: alta + ' de alta prioridade'},
+    {id:'radar', icon:'activity', title:'Radar de Saúde', kpi: '5 dimensões'},
+    {id:'riscos', icon:'alert', title:'Riscos', kpi: (c.riscos || []).length + ' mapeados'}
   ];
   for (var n = 0; n < navCards.length; n++) {
     var nc = navCards[n];
-    h += '<div class="dh-nav-row" onclick="setView(\'' + nc.id + '\')">';
-    h += '<div class="dh-nav-row-main"><span class="dh-nav-row-title serif">' + nc.title + '</span><span class="dh-nav-row-kpi">' + nc.kpi + '</span></div>';
-    h += '<span class="dh-nav-row-arrow">&#8594;</span></div>';
+    sideHTML += '<div class="dh-nav-row-v2" onclick="setView(\'' + nc.id + '\')"><div class="dh-nav-ico">' + dhIco(nc.icon) + '</div><div class="dh-nav-v2-body"><div class="dh-nav-v2-title">' + nc.title + '</div><div class="dh-nav-v2-kpi">' + nc.kpi + '</div></div></div>';
   }
-  h += '</div>';
+  sideHTML += '</div></div>';
+
+  h += '<div class="dh-grid"><div class="dh-main">' + mainHTML + '</div><div class="dh-side">' + sideHTML + '</div></div>';
   h += npsCardHTML();
   h += footer();
   sv(h);
-  setTimeout(function() { var el = ge('mini-bar'); if (el) el.style.width = pct + '%'; }, 80);
   _npsVal = 0;
 }
 
@@ -5203,49 +5303,107 @@ function riscoMaisCritico(riscos) {
   return melhor;
 }
 
-function resumoExecutivoHTML(c, mom, faseAtiva, faseAtivaIdx) {
-  var itens = [];
+// Pequenos ícones de linha, usados nos cartões do dashboard. Sempre
+// stroke=currentColor pra herdar a cor do wrapper (var(--gc-fg) etc).
+function dhIco(name) {
+  var attrs = 'width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+  var paths = {
+    layers: '<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline>',
+    calendar: '<rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><path d="M9 16l2 2 4-4"></path>',
+    package: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><line x1="12" y1="22" x2="12" y2="12"></line>',
+    alert: '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>',
+    flag: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line>',
+    check: '<polyline points="20 6 9 17 4 12"></polyline>',
+    clock: '<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>',
+    quote: '<path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"></path><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v4z"></path>',
+    file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline>',
+    activity: '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>'
+  };
+  return '<svg ' + attrs + '>' + (paths[name] || '') + '</svg>';
+}
+
+// Mini matriz probabilidade × impacto — 3x3, célula acesa marca a combinação
+// do risco. Mesma lógica que a metodologia de riscos já usa, só que visual.
+function riskMatrixHTML(prob, impacto, color) {
+  var lv = { baixa: 0, media: 1, alta: 2 };
+  var pi = lv[prob] != null ? lv[prob] : 1;
+  var ii = lv[impacto] != null ? lv[impacto] : 1;
+  var h = '<div class="dh-rm">';
+  for (var row = 2; row >= 0; row--) {
+    for (var col = 0; col < 3; col++) {
+      var active = (row === ii && col === pi);
+      h += '<span class="dh-rm-cell' + (active ? ' active' : '') + '"' + (active ? ' style="--rmc:' + color + '"' : '') + '></span>';
+    }
+  }
+  h += '</div>';
+  return h;
+}
+
+// Anel de progresso em SVG puro (sem lib de gráfico) — usado no hero.
+function svgRing(pct, size, sw, color, bg) {
+  var p = Math.max(0, Math.min(100, pct));
+  var r = (size - sw) / 2;
+  var circ = 2 * Math.PI * r;
+  var off = circ * (1 - p / 100);
+  var c = size / 2;
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '">' +
+    '<circle cx="' + c + '" cy="' + c + '" r="' + r + '" fill="none" stroke="' + (bg || 'rgba(255,255,255,.22)') + '" stroke-width="' + sw + '"/>' +
+    '<circle cx="' + c + '" cy="' + c + '" r="' + r + '" fill="none" stroke="' + color + '" stroke-width="' + sw + '" stroke-linecap="round" stroke-dasharray="' + circ + '" stroke-dashoffset="' + off + '" transform="rotate(-90 ' + c + ' ' + c + ')"/>' +
+  '</svg>';
+}
+
+function dhGlanceHTML(c, mom, faseAtiva, faseAtivaIdx) {
+  var cards = [];
 
   if (faseAtiva) {
-    itens.push('Fase atual: <strong>' + (faseAtivaIdx + 1) + ' de ' + c.fases.length + '</strong> — ' + esc(faseAtiva.nome));
+    cards.push({icon:'layers', bg:'var(--cream)', fg:'var(--bx)', lbl:'Fase atual', val:esc(faseAtiva.nome), sub:'Fase ' + (faseAtivaIdx + 1) + ' de ' + c.fases.length});
   }
 
   var encsPassados = (c.encontros || []).filter(function(e) { return new Date(e.data) <= new Date(); });
   var ultimoEnc = encsPassados.length ? encsPassados[encsPassados.length - 1] : null;
   if (ultimoEnc) {
-    itens.push('Última atividade: <strong>' + fd(ultimoEnc.data) + '</strong> — ' + esc(ultimoEnc.titulo));
+    cards.push({icon:'calendar', bg:'var(--cream)', fg:'var(--gold-dk)', lbl:'Última atividade', val:esc(ultimoEnc.titulo), sub:fd(ultimoEnc.data)});
   }
 
   var pendentes = (c.entregas || []).filter(function(e) { return e.status !== 'concluido'; });
   if (pendentes.length) {
-    itens.push('Próxima entrega: <strong>' + esc(pendentes[0].nome) + '</strong>, prevista para ' + esc(pendentes[0].data || '—'));
+    cards.push({icon:'package', bg:'var(--cream)', fg:'var(--bx)', lbl:'Próxima entrega', val:esc(pendentes[0].nome), sub:'prevista para ' + esc(pendentes[0].data || '—')});
   } else if (c.entregas && c.entregas.length) {
-    itens.push('Todas as <strong>' + c.entregas.length + ' entregas</strong> do escopo atual estão concluídas.');
+    cards.push({icon:'check', bg:'var(--ok-bg)', fg:'var(--ok)', lbl:'Entregas', val:'Todas concluídas', sub:c.entregas.length + ' entregas no escopo atual'});
   }
 
   var riscoTop = riscoMaisCritico(c.riscos);
   if (riscoTop) {
-    itens.push('Maior risco em aberto: <strong>' + esc(riscoTop.titulo) + '</strong> (probabilidade ' + esc(riscoTop.probabilidade) + ', impacto ' + esc(riscoTop.impacto) + ')');
+    var riscoAlto = riscoTop.probabilidade === 'alta' || riscoTop.impacto === 'alta';
+    var riscoCor = riscoAlto ? 'var(--danger)' : 'var(--warn)';
+    cards.push({icon:'alert', bg: riscoAlto ? 'var(--danger-bg)' : 'var(--warn-bg)', fg: riscoCor, lbl:'Maior risco em aberto', val:esc(riscoTop.titulo),
+      sub:'probabilidade ' + esc(riscoTop.probabilidade) + ' · impacto ' + esc(riscoTop.impacto),
+      subHTML:'<div class="dh-rm-wrap">' + riskMatrixHTML(riscoTop.probabilidade, riscoTop.impacto, riscoCor) + '<span class="dh-rm-lbl">probabilidade ' + esc(riscoTop.probabilidade) + '<br>impacto ' + esc(riscoTop.impacto) + '</span></div>'});
   }
 
   var altaCount = (c.proximosPassos || []).filter(function(p) { return p.prioridade === 'alta' && !p.concluido; }).length;
   if (altaCount > 0) {
-    itens.push('<strong>' + altaCount + ' item' + (altaCount > 1 ? 'ns' : '') + ' de alta prioridade</strong> pendente' + (altaCount > 1 ? 's' : '') + ' em Próximos Passos');
+    cards.push({icon:'flag', bg:'var(--warn-bg)', fg:'var(--warn)', lbl:'Prioridades', val: altaCount + ' ' + (altaCount > 1 ? 'itens' : 'item') + ' de alta prioridade', sub:'pendente' + (altaCount > 1 ? 's' : '') + ' em Próximos Passos'});
   }
 
-  var h = '<div class="dh-resumo sec">';
-  h += '<div class="dh-resumo-top"><div class="dh-resumo-lbl">Resumo executivo</div><span class="dh-resumo-status" style="color:' + mom.cor + '">' + esc(mom.label) + '</span></div>';
-  if (itens.length) {
-    h += '<ul class="dh-resumo-list">';
-    for (var i = 0; i < itens.length; i++) h += '<li>' + itens[i] + '</li>';
-    h += '</ul>';
+  var h = '<div class="dh-status-band" style="--sc:' + mom.cor + '"><span class="dh-status-dot"></span><span class="dh-status-lbl">' + esc(mom.label) + '</span><span class="dh-status-txt">' + mom.texto + '</span></div>';
+
+  if (cards.length) {
+    h += '<div class="dh-glance">';
+    for (var i = 0; i < cards.length; i++) {
+      var cd = cards[i];
+      h += '<div class="dh-glance-card"><div class="dh-glance-icon" style="--gc-bg:' + cd.bg + ';--gc-fg:' + cd.fg + '">' + dhIco(cd.icon) + '</div>';
+      h += '<div class="dh-glance-body"><div class="dh-glance-lbl">' + cd.lbl + '</div><div class="dh-glance-val" title="' + cd.val + '">' + cd.val + '</div>' + (cd.subHTML || '<div class="dh-glance-sub" title="' + cd.sub + '">' + cd.sub + '</div>') + '</div></div>';
+    }
+    h += '</div>';
   } else {
     h += '<div class="dh-resumo-vazio">Projeto recém-iniciado — os primeiros marcos aparecerão aqui conforme forem registrados.</div>';
   }
+
   if (c.mensagemConsultor) {
-    h += '<div class="dh-resumo-nota">"' + esc(c.mensagemConsultor) + '" — ' + esc(c.consultor) + '</div>';
+    h += '<div class="dh-resumo-nota"><span class="dh-resumo-nota-ico">' + dhIco('quote') + '</span><div class="dh-resumo-nota-txt">' + esc(c.mensagemConsultor) + '<b>' + esc(c.consultor) + '</b></div></div>';
   }
-  h += '</div>';
+
   return h;
 }
 
