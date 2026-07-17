@@ -369,6 +369,16 @@ a{text-decoration:none;color:inherit}
 .ce-inline-add:hover{background:var(--bx);color:var(--white)}
 .ce-inline-edit{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;border:none;background:transparent;color:var(--tl);cursor:pointer;flex-shrink:0;transition:background .15s,color .15s}
 .ag-repetir-btn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;border:none;background:transparent;color:var(--tl);cursor:pointer;flex-shrink:0;font-size:.9rem;transition:background .15s,color .15s}
+.cal-sync-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .7rem;border-radius:var(--r);border:1px solid var(--cream-dk);background:var(--white);color:var(--tm);cursor:pointer;font-size:.74rem;font-weight:600;white-space:nowrap}
+.cal-sync-btn:hover{background:var(--cream)}
+.enc-menu{position:relative;display:inline-block}
+.enc-menu-btn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;border:none;background:transparent;color:var(--tl);cursor:pointer;font-size:1rem;font-weight:700;line-height:1}
+.enc-menu-btn:hover{background:var(--cream-dk)}
+.enc-menu-list{display:none;position:absolute;top:110%;right:0;background:var(--white);border:1px solid var(--cream-dk);border-radius:var(--r);box-shadow:var(--sh-md);min-width:180px;z-index:20;overflow:hidden}
+.enc-menu-list.on{display:block}
+.enc-menu-item{display:block;width:100%;text-align:left;padding:.6rem .85rem;border:none;background:none;font-size:.8rem;color:var(--td);cursor:pointer;white-space:nowrap}
+.enc-menu-item:hover{background:var(--cream)}
+.enc-menu-item.danger{color:var(--danger)}
 .ag-repetir-btn:hover{background:var(--cream-dk);color:var(--bx)}
 .serie-item{display:flex;align-items:center;gap:.6rem;padding:.55rem .2rem;border-bottom:1px solid var(--cream-dk);font-size:.85rem;cursor:pointer}
 .serie-item.passado{color:var(--tl);cursor:default}
@@ -537,7 +547,9 @@ a{text-decoration:none;color:inherit}
 .enc-compact-row:hover{background:var(--cream)}
 .enc-compact-row .enc-title{flex:1;min-width:120px}
 .enc-count{font-size:.62rem;font-weight:700;padding:.08rem .38rem;border-radius:99px;background:var(--cream-dk);color:var(--tm)}
-.enc-card{border:1px solid var(--cream-dk);border-radius:var(--r);overflow:hidden;margin-bottom:.4rem;position:relative}
+.enc-card{border:1px solid var(--cream-dk);border-radius:var(--r);overflow:visible;margin-bottom:.4rem;position:relative}
+.enc-toggle{border-radius:var(--r)}
+.enc-card.open .enc-toggle{border-radius:var(--r) var(--r) 0 0}
 .enc-toggle{width:100%;background:var(--cream);border:none;padding:.58rem .85rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;cursor:pointer;text-align:left}
 .enc-toggle:hover{background:var(--cream-dk)}
 .enc-tl{display:flex;align-items:center;gap:.6rem;min-width:0}
@@ -1212,6 +1224,7 @@ a{text-decoration:none;color:inherit}
     <div class="ms-stat"><div class="ms-stat-num" id="ms-stat-dia" style="color:var(--ok)">—</div><div class="ms-stat-lbl">Em dia</div></div>
     <div class="ms-stat"><div class="ms-stat-num" id="ms-stat-progresso">—</div><div class="ms-stat-lbl">Progresso médio</div></div>
     <div class="ms-stat"><div class="ms-stat-num" id="ms-stat-nps">—</div><div class="ms-stat-lbl">NPS médio da carteira</div></div>
+    <div class="ms-stat"><div class="ms-stat-num" id="ms-stat-aguardando" style="color:var(--warn)">—</div><div class="ms-stat-lbl">Encontros aguardando registro</div></div>
   </div>
 
   <div class="ms-toolbar">
@@ -1309,6 +1322,25 @@ a{text-decoration:none;color:inherit}
       </div>
       <div class="ce-form-row" style="font-size:.78rem;color:var(--tl)">Pauta, participantes e tudo mais desse encontro continuam exatamente como estão — só a data muda. O cliente vê que foi remarcado, não que é um encontro novo.</div>
       <button class="ce-btn-save" id="reagendar-btn-save" onclick="salvarReagendarEncontro()" style="width:100%;margin-top:.5rem">Remarcar encontro</button>
+    </div>
+  </div>
+</div>
+
+<div class="np-overlay" id="pedirremarcacao-overlay" onclick="if(event.target===this) fecharPedirRemarcacao()">
+  <div class="np-panel" style="max-width:420px">
+    <div class="ce-head">
+      <div class="ce-title">Pedir para remarcar</div>
+      <button class="ce-close" onclick="fecharPedirRemarcacao()">&#10005;</button>
+    </div>
+    <div class="np-body">
+      <div class="ce-form-row" id="pedirremarcacao-base-info" style="font-size:.82rem;color:var(--tl)"></div>
+      <div class="ce-form-row"><label class="ce-form-label">Nova data sugerida (opcional)</label>
+        <input class="ce-form-input" type="date" id="pedirremarcacao-data">
+      </div>
+      <div class="ce-form-row"><label class="ce-form-label">Motivo</label>
+        <textarea class="ce-form-textarea" id="pedirremarcacao-motivo" rows="3" placeholder="Ex: teremos um imprevisto nesse dia, poderia ser numa outra data?"></textarea>
+      </div>
+      <button class="ce-btn-save" id="pedirremarcacao-btn-save" onclick="salvarPedirRemarcacao()" style="width:100%;margin-top:.5rem">Enviar pedido</button>
     </div>
   </div>
 </div>
@@ -3383,11 +3415,18 @@ function msAtualizarStatsBar() {
   var total = emails.length;
   var atencao = 0, dia = 0, somaProg = 0;
   var somaNps = 0, qtdNps = 0;
+  var hojeMs = new Date(); hojeMs.setHours(0,0,0,0);
+  var totalAguardando = 0;
   for (var i = 0; i < emails.length; i++) {
     var d = _msResumoCache[emails[i]];
     if (msDiasSemAtualizacao(d) <= 3) dia++; else atencao++;
     somaProg += cprog(d.fases);
     (d.nps || []).forEach(function(n) { somaNps += n.nota; qtdNps++; });
+    if (typeof d.encontrosAguardando === 'number') {
+      totalAguardando += d.encontrosAguardando;
+    } else if (d.encontros) {
+      totalAguardando += d.encontros.filter(function(en) { return en.status === 'agendado' && en.data && new Date(en.data) < hojeMs; }).length;
+    }
   }
   var progMedio = total ? Math.round(somaProg / total) : 0;
   var elTotal = ge('ms-stat-total'); if (elTotal) elTotal.textContent = total;
@@ -3396,6 +3435,7 @@ function msAtualizarStatsBar() {
   var elProg = ge('ms-stat-progresso'); if (elProg) elProg.textContent = progMedio + '%';
   var elNps = ge('ms-stat-nps');
   if (elNps) elNps.textContent = qtdNps ? (Math.round(somaNps / qtdNps * 10) / 10) + ' / 5' : '—';
+  var elAguardando = ge('ms-stat-aguardando'); if (elAguardando) elAguardando.textContent = totalAguardando;
 }
 
 // Abre o seletor de arquivos para o consultor enviar a logo do cliente
@@ -3513,9 +3553,10 @@ function renderMasterSupabase() {
     sb.from('projetos').select('*'),
     sb.from('fases').select('projeto_id, peso, status'),
     sb.from('entregas').select('projeto_id, status'),
-    sb.from('nps').select('projeto_id, nota, data')
+    sb.from('nps').select('projeto_id, nota, data'),
+    sb.from('encontros').select('projeto_id, status, data')
   ]).then(function(resultados) {
-    var resProj = resultados[0], resFases = resultados[1], resEntregas = resultados[2], resNps = resultados[3];
+    var resProj = resultados[0], resFases = resultados[1], resEntregas = resultados[2], resNps = resultados[3], resEncontros = resultados[4];
     if (resProj.error) throw resProj.error;
     var projetos = resProj.data || [];
     if (!projetos.length) { grid.innerHTML = '<p style="color:var(--tl);padding:1rem">Nenhum projeto cadastrado ainda. Cadastre um cliente no banco de dados para começar.</p>'; return; }
@@ -3535,6 +3576,13 @@ function renderMasterSupabase() {
       if (!npsPorProjeto[n.projeto_id]) npsPorProjeto[n.projeto_id] = [];
       npsPorProjeto[n.projeto_id].push({ nota: n.nota, data: n.data });
     });
+    var hojeMs = new Date(); hojeMs.setHours(0,0,0,0);
+    var aguardandoPorProjeto = {};
+    (resEncontros.data || []).forEach(function(en) {
+      if (en.status === 'agendado' && en.data && new Date(en.data) < hojeMs) {
+        aguardandoPorProjeto[en.projeto_id] = (aguardandoPorProjeto[en.projeto_id] || 0) + 1;
+      }
+    });
 
     _msResumoCache = {};
     for (var i = 0; i < projetos.length; i++) {
@@ -3549,7 +3597,8 @@ function renderMasterSupabase() {
         horasProjeto: proj.horas_projeto, horasConsumidas: proj.horas_consumidas,
         fases: fasesPorProjeto[proj.id] || [],
         entregas: entregasPorProjeto[proj.id] || [],
-        nps: npsPorProjeto[proj.id] || []
+        nps: npsPorProjeto[proj.id] || [],
+        encontrosAguardando: aguardandoPorProjeto[proj.id] || 0
       };
       _msResumoCache[email] = resumo;
     }
@@ -3689,6 +3738,79 @@ function salvarReagendarEncontro() {
   });
 }
 
+// ═══════════════════════════════════════════
+// MENU "MAIS OPÇÕES" DO ENCONTRO
+// ═══════════════════════════════════════════
+function toggleEncMenu(id, ev) {
+  if (ev) ev.stopPropagation();
+  var alvo = ge(id);
+  var estavaAberto = alvo.classList.contains('on');
+  var todos = document.querySelectorAll('.enc-menu-list.on');
+  for (var i = 0; i < todos.length; i++) todos[i].classList.remove('on');
+  if (!estavaAberto) alvo.classList.add('on');
+}
+function fecharTodosEncMenus() {
+  var todos = document.querySelectorAll('.enc-menu-list.on');
+  for (var i = 0; i < todos.length; i++) todos[i].classList.remove('on');
+}
+document.addEventListener('click', function(ev) {
+  if (ev.target.closest('.enc-menu')) return;
+  var todos = document.querySelectorAll('.enc-menu-list.on');
+  for (var i = 0; i < todos.length; i++) todos[i].classList.remove('on');
+});
+
+var _pedirRemarcacaoIdx = null;
+function abrirPedirRemarcacao(idx) {
+  var base = _c && _c.encontros && _c.encontros[idx];
+  if (!base) return;
+  _pedirRemarcacaoIdx = idx;
+  ge('pedirremarcacao-base-info').textContent = '"' + base.titulo + '" — atualmente em ' + fd(base.data) + '.';
+  ge('pedirremarcacao-data').value = '';
+  ge('pedirremarcacao-motivo').value = '';
+  var btn = ge('pedirremarcacao-btn-save');
+  btn.disabled = false; btn.textContent = 'Enviar pedido';
+  ge('pedirremarcacao-overlay').className = 'np-overlay on';
+}
+function fecharPedirRemarcacao() {
+  ge('pedirremarcacao-overlay').className = 'np-overlay';
+  _pedirRemarcacaoIdx = null;
+}
+function salvarPedirRemarcacao() {
+  var base = _c && _c.encontros && _c.encontros[_pedirRemarcacaoIdx];
+  var motivo = (ge('pedirremarcacao-motivo').value || '').trim();
+  var novaDataSugerida = ge('pedirremarcacao-data').value;
+  if (!base) return;
+  if (!motivo) { showAlert('Descreva o motivo do pedido.'); return; }
+  if (!sb || !_c._projetoId) { showAlert('Não foi possível enviar o pedido agora.', {danger:true}); return; }
+  var responsavelNome = ((_c.equipe || []).filter(function(m) { return m.contatoPortal; })[0] || {}).nome || _c.consultor;
+  var descricao = 'Solicitado por ' + _c.nome + '. Encontro atual: ' + fd(base.data) + '.' + (novaDataSugerida ? ' Nova data sugerida: ' + fd(novaDataSugerida) + '.' : '') + ' Motivo: ' + motivo;
+  var limite = new Date(); limite.setDate(limite.getDate() + 2);
+  var item = {
+    titulo: 'Pedido de remarcação: ' + base.titulo,
+    descricao: descricao,
+    prioridade: 'alta',
+    dataLimite: limite.toISOString().slice(0, 10),
+    responsavel: responsavelNome,
+    concluido: false
+  };
+  var btn = ge('pedirremarcacao-btn-save');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  sb.from('proximos_passos').insert(sbItemToRow('proximosPassos', item, _c._projetoId)).select().single().then(function(res) {
+    if (res.error) throw res.error;
+    item._id = res.data.id;
+    if (!_c.proximosPassos) _c.proximosPassos = [];
+    _c.proximosPassos.push(item);
+    fecharPedirRemarcacao();
+    atualizarBadgesNav();
+    showAlert('Pedido enviado! ' + responsavelNome + ' vai confirmar a nova data com você em breve.');
+  }).catch(function(e) {
+    console.error('Erro ao pedir remarcação:', e);
+    btn.disabled = false; btn.textContent = 'Enviar pedido';
+    var motivoErro = (e && e.message) ? e.message : 'motivo não identificado';
+    showAlert('Não foi possível enviar o pedido agora.\n\nMotivo retornado: ' + motivoErro, {danger:true});
+  });
+}
+
 var _cancelarIdx = null;
 function abrirCancelarEncontro(idx) {
   var base = _c && _c.encontros && _c.encontros[idx];
@@ -3732,6 +3854,26 @@ function salvarCancelarEncontro() {
     btn.disabled = false; btn.textContent = 'Confirmar cancelamento';
     var motivoErro = (e && e.message) ? e.message : 'motivo não identificado';
     showAlert('Não foi possível cancelar este encontro agora.\n\nMotivo retornado: ' + motivoErro, {danger:true});
+  });
+}
+function marcarEncontroRealizado(idx) {
+  var item = _c && _c.encontros && _c.encontros[idx];
+  if (!item) return;
+  function concluirLocal() {
+    item.status = 'realizado';
+    registrarLog('Encontros', 'editado', item.titulo + ' (marcado como realizado)');
+    if (_currentView === 'cronograma') renderCronograma();
+    else if (_currentView === 'progresso') renderProgresso();
+    atualizarBadgesNav();
+  }
+  if (!sb || !item._id) { concluirLocal(); return; }
+  sb.from('encontros').update({ status: 'realizado' }).eq('id', item._id).then(function(res) {
+    if (res.error) throw res.error;
+    concluirLocal();
+  }).catch(function(e) {
+    console.error('Erro ao marcar encontro como realizado:', e);
+    var motivoErro = (e && e.message) ? e.message : 'motivo não identificado';
+    showAlert('Não foi possível atualizar este encontro agora.\n\nMotivo retornado: ' + motivoErro, {danger:true});
   });
 }
 function gerarSerieId() {
@@ -6252,21 +6394,27 @@ function agendaSectionHTML() {
       // Data já passou — agora reflete o status real do encontro (antes disso ser
       // corrigido, esse rótulo só adivinhava "Realizado" pela data, mesmo que o
       // campo Status do formulário estivesse marcado como Agendado).
-      dfLbl = a.status === 'agendado' ? '<span class="badge b-warn">Não confirmado</span>' : '<span class="badge b-ok">Realizado</span>';
+      dfLbl = a.status === 'agendado' ? '<span class="badge b-warn">Aguardando registro</span>' : '<span class="badge b-ok">Realizado</span>';
     }
-    var repetirBtn = '';
-    var reagendarBtn = '';
-    var cancelarBtn = '';
-    if (a._cat === 'encontros') {
-      repetirBtn = a.serieId
-        ? '<button class="ag-repetir-btn" title="Gerenciar série de encontros" onclick="abrirGerenciarSerie(\'' + a.serieId + '\')"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>'
-        : '<button class="ag-repetir-btn" title="Repetir este encontro nas próximas semanas" onclick="abrirRepetirEncontro(' + a._idx + ')">&#128257;</button>';
-      if (_isMaster && a.status !== 'realizado') {
-        reagendarBtn = '<button class="ag-repetir-btn" title="Remarcar para outra data" onclick="abrirReagendarEncontro(' + a._idx + ')">&#128198;</button>';
+    var menuBtn = '';
+    if (a._cat === 'encontros' && _isMaster) {
+      var menuId = 'encmenu-' + a._idx;
+      var itensMenu = '';
+      itensMenu += '<button class="enc-menu-item" onclick="fecharTodosEncMenus();ceQuickEdit(\'encontros\',' + a._idx + ')">Editar tudo</button>';
+      if (a.status === 'agendado') {
+        itensMenu += '<button class="enc-menu-item" onclick="fecharTodosEncMenus();marcarEncontroRealizado(' + a._idx + ')">Marcar como realizado</button>';
       }
-      if (_isMaster && a.status !== 'realizado' && a.status !== 'cancelado') {
-        cancelarBtn = '<button class="ag-repetir-btn" title="Cancelar este encontro" onclick="abrirCancelarEncontro(' + a._idx + ')">&#10005;</button>';
+      if (a.status !== 'realizado') {
+        itensMenu += '<button class="enc-menu-item" onclick="fecharTodosEncMenus();abrirReagendarEncontro(' + a._idx + ')">Remarcar</button>';
       }
+      itensMenu += a.serieId
+        ? '<button class="enc-menu-item" onclick="fecharTodosEncMenus();abrirGerenciarSerie(\'' + a.serieId + '\')">Gerenciar série</button>'
+        : '<button class="enc-menu-item" onclick="fecharTodosEncMenus();abrirRepetirEncontro(' + a._idx + ')">Repetir semanalmente</button>';
+      if (a.status !== 'realizado' && a.status !== 'cancelado') {
+        itensMenu += '<button class="enc-menu-item danger" onclick="fecharTodosEncMenus();abrirCancelarEncontro(' + a._idx + ')">Cancelar encontro</button>';
+      }
+      menuBtn = '<div class="enc-menu"><button class="enc-menu-btn" title="Mais opções" onclick="toggleEncMenu(\'' + menuId + '\',event)">&#8942;</button>' +
+        '<div class="enc-menu-list" id="' + menuId + '">' + itensMenu + '</div></div>';
     }
     // Acordeão completo — mesmo template que já existia (e já funcionava bem) em
     // Progresso. Antes, esse nível de detalhe (resumo, destaques, combinados) só
@@ -6276,10 +6424,10 @@ function agendaSectionHTML() {
     var eid = 'crenc-' + a._cat + '-' + a._idx;
     var remarcadoBdg = a.dataOriginal ? '<span class="badge b-tag" title="Data original: ' + fd(a.dataOriginal) + '">Remarcado</span>' : '';
     var h2 = '<div class="enc-card" id="' + eid + '">';
-    h2 += '<button class="enc-toggle" style="' + (_isMaster ? 'padding-right:8.5rem' : '') + '" onclick="toggleEnc(\'' + eid + '\')">';
+    h2 += '<button class="enc-toggle" style="' + (_isMaster ? 'padding-right:3.4rem' : '') + '" onclick="toggleEnc(\'' + eid + '\')">';
     h2 += '<div class="enc-tl"><span class="enc-date">' + fdbr(a.data) + '</span><span class="enc-title">' + esc(a.titulo) + '</span></div>';
     h2 += '<div class="enc-tr">' + remarcadoBdg + '<span class="badge b-tag">' + cap(a.tipo) + '</span>' + dfLbl + chevSVG().replace('xchev','enc-chev') + '</div></button>';
-    h2 += '<div class="ce-edit-abs" style="right:2.15rem;top:.4rem">' + cancelarBtn + reagendarBtn + repetirBtn + ceEditIconHTML(a._cat, a._idx) + '</div>';
+    h2 += '<div class="ce-edit-abs" style="right:.55rem;top:.4rem">' + (menuBtn || ceEditIconHTML(a._cat, a._idx)) + '</div>';
     h2 += '<div class="enc-body"><div class="enc-inner">';
     if (a.status === 'cancelado' && a.motivoCancelamento) {
       h2 += '<div class="enc-resumo" style="border-color:var(--danger)"><strong>Cancelado:</strong> ' + esc(a.motivoCancelamento) + '</div>';
@@ -6309,12 +6457,15 @@ function agendaSectionHTML() {
     if (df >= 0) {
       var calDesc = (a.resumo || (a.pauta||[]).join('; ') || '').replace(/'/g,"\\'");
       var calTitulo = (a.titulo||'').replace(/'/g,"\\'");
-      h2 += '<div class="enc-cal-row" style="display:flex;gap:.5rem;margin:.5rem 0">';
-      h2 += '<button class="ag-repetir-btn" title="Adicionar ao Google Calendar" onclick="event.stopPropagation();calGoogleLink(\'' + calTitulo + '\',\'' + a.data + '\',\'' + calDesc + '\')">&#128197; Google Agenda</button>';
-      h2 += '<button class="ag-repetir-btn" title="Baixar arquivo .ics" onclick="event.stopPropagation();calBaixarICS(\'' + calTitulo + '\',\'' + a.data + '\',\'' + calDesc + '\')">&#11015; .ics</button>';
+      h2 += '<div class="enc-cal-row" style="display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0">';
+      h2 += '<button class="cal-sync-btn" title="Adicionar ao Google Calendar" onclick="event.stopPropagation();calGoogleLink(\'' + calTitulo + '\',\'' + a.data + '\',\'' + calDesc + '\')">&#128197; Google Agenda</button>';
+      h2 += '<button class="cal-sync-btn" title="Baixar arquivo .ics" onclick="event.stopPropagation();calBaixarICS(\'' + calTitulo + '\',\'' + a.data + '\',\'' + calDesc + '\')">&#11015; .ics</button>';
       h2 += '</div>';
     }
     h2 += '<button class="checkin-btn" data-ci="ci_' + eid + '" onclick="toggleCheckin(\'enc\',\'' + esc(_c.empresa) + '\',\'' + eid + '\',this)">Marcar como ciente</button>';
+    if (!_isMaster && a._cat === 'encontros' && df >= 0 && a.status !== 'cancelado') {
+      h2 += ' <button class="checkin-btn" onclick="abrirPedirRemarcacao(' + a._idx + ')">Pedir para remarcar</button>';
+    }
     h2 += '</div></div></div>';
     return h2;
   }
