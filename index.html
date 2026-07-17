@@ -547,7 +547,8 @@ a{text-decoration:none;color:inherit}
 .enc-compact-row:hover{background:var(--cream)}
 .enc-compact-row .enc-title{flex:1;min-width:120px}
 .enc-count{font-size:.62rem;font-weight:700;padding:.08rem .38rem;border-radius:99px;background:var(--cream-dk);color:var(--tm)}
-.enc-card{border:1px solid var(--cream-dk);border-radius:var(--r);overflow:visible;margin-bottom:.4rem;position:relative}
+.enc-card{border:1px solid var(--cream-dk);border-radius:var(--r);overflow:visible;margin-bottom:.4rem;position:relative;z-index:0}
+.enc-card.menu-aberto{z-index:30}
 .enc-toggle{border-radius:var(--r)}
 .enc-card.open .enc-toggle{border-radius:var(--r) var(--r) 0 0}
 .enc-toggle{width:100%;background:var(--cream);border:none;padding:.58rem .85rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;cursor:pointer;text-align:left}
@@ -1047,6 +1048,7 @@ a{text-decoration:none;color:inherit}
 .ccd-dot.ccd-presencial{background:var(--bx)}
 .ccd-dot.ccd-realizado{background:var(--ok)}
 .ccd-dot.ccd-entrega{border-radius:1px;background:var(--gold)}
+.ccd-dot.ccd-cancelado{background:var(--tl);opacity:.5}
 .cron-cal-cell.selected .ccd-dot{background:var(--white)}
 .cron-cal-legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.68rem;color:var(--tm);padding-top:.6rem;margin-top:.55rem;border-top:1px solid var(--cream-dk)}
 .cron-cal-legend span{display:flex;align-items:center;gap:.3rem}
@@ -1610,7 +1612,7 @@ function sbRowToFront(tabela, row) {
     return { _id: row.id, data: row.data, titulo: row.titulo, tipo: row.tipo, pauta: row.pauta || [], docs: row.docs || [] };
   }
   if (tabela === 'encontros') {
-    return { _id: row.id, data: row.data, titulo: row.titulo, tipo: row.tipo, status: row.status || 'agendado', fase: row.fase, participantes: row.participantes || [], pauta: row.pauta || [], resumo: row.resumo, destaques: row.destaques || [], proximosPassosReuniao: row.proximos_passos_reuniao || [], docs: row.docs || [], criadoEm: row.criado_em, serieId: row.serie_id, dataOriginal: row.data_original, motivoCancelamento: row.motivo_cancelamento };
+    return { _id: row.id, data: row.data, hora: row.hora ? row.hora.slice(0,5) : null, titulo: row.titulo, tipo: row.tipo, status: row.status || 'agendado', fase: row.fase, participantes: row.participantes || [], pauta: row.pauta || [], resumo: row.resumo, destaques: row.destaques || [], proximosPassosReuniao: row.proximos_passos_reuniao || [], docs: row.docs || [], criadoEm: row.criado_em, serieId: row.serie_id, dataOriginal: row.data_original, motivoCancelamento: row.motivo_cancelamento };
   }
   if (tabela === 'equipe') {
     return { _id: row.id, nome: row.nome, papel: row.papel, especialidade: row.especialidade, bio: row.bio, foto: row.foto_url, email: row.email, telefone: row.telefone, whatsapp: row.whatsapp, contatoPortal: !!row.contato_portal };
@@ -1654,7 +1656,7 @@ function sbItemToRow(tabela, item, projetoId) {
     return { projeto_id: projetoId, data: item.data || null, titulo: item.titulo, tipo: item.tipo || null, pauta: item.pauta || [], docs: item.docs || [] };
   }
   if (tabela === 'encontros') {
-    return { projeto_id: projetoId, data: item.data || null, titulo: item.titulo, tipo: item.tipo || null, status: item.status || 'agendado', fase: item.fase || null, participantes: item.participantes || [], pauta: item.pauta || [], resumo: item.resumo || null, destaques: item.destaques || [], proximos_passos_reuniao: item.proximosPassosReuniao || [], docs: item.docs || [], serie_id: item.serieId || null, data_original: item.dataOriginal || null, motivo_cancelamento: item.motivoCancelamento || null };
+    return { projeto_id: projetoId, data: item.data || null, hora: item.hora || null, titulo: item.titulo, tipo: item.tipo || null, status: item.status || 'agendado', fase: item.fase || null, participantes: item.participantes || [], pauta: item.pauta || [], resumo: item.resumo || null, destaques: item.destaques || [], proximos_passos_reuniao: item.proximosPassosReuniao || [], docs: item.docs || [], serie_id: item.serieId || null, data_original: item.dataOriginal || null, motivo_cancelamento: item.motivoCancelamento || null };
   }
   if (tabela === 'equipe') {
     return { projeto_id: projetoId, nome: item.nome, papel: item.papel || null, especialidade: item.especialidade || null, bio: item.bio || null, foto_url: item.foto || null, email: item.email || null, telefone: item.telefone || null, whatsapp: item.whatsapp || null, contato_portal: item.contatoPortal === true || item.contatoPortal === 'sim' };
@@ -2472,10 +2474,11 @@ var CE_CATEGORIAS = [
   },
   { id:'encontros', label:'Encontros', campo:'encontros',
     titulo: function(i){ return i.titulo; },
-    sub: function(i){ return fd(i.data) + ' · ' + cap(i.tipo||'') + ' · ' + (i.status==='realizado' ? 'Realizado' : 'Agendado'); },
+    sub: function(i){ return fd(i.data) + (i.hora ? ' ' + i.hora : '') + ' · ' + cap(i.tipo||'') + ' · ' + (i.status==='realizado' ? 'Realizado' : i.status==='cancelado' ? 'Cancelado' : 'Agendado'); },
     campos: [
       { k:'titulo', label:'Título do encontro', tipo:'text', req:true },
       { k:'data', label:'Data', tipo:'date', req:true },
+      { k:'hora', label:'Horário (opcional)', tipo:'time' },
       { k:'tipo', label:'Tipo', tipo:'select', opcoes:[['presencial','Presencial'],['online','Online']], req:true },
       { k:'status', label:'Status', tipo:'select', opcoes:[['agendado','Agendado'],['realizado','Realizado']], req:true },
       { k:'fase', label:'Fase relacionada', tipo:'text' },
@@ -2691,6 +2694,23 @@ function ceToast() {
   var t = ge('ce-toast');
   t.className = 'ce-saved-toast on';
   setTimeout(function(){ t.className = 'ce-saved-toast'; }, 1800);
+}
+
+// Oferece adicionar o encontro recém-criado direto no Google Agenda, sem
+// precisar sair do fluxo, achar o card na lista e abrir o menu. Não é
+// automático de verdade (isso exigiria a pessoa autorizar acesso à própria
+// conta Google, um projeto à parte) — mas encurta pra 1 clique só.
+function ofertarGoogleAgenda(item) {
+  var icon = ge('app-modal-icon');
+  icon.className = 'app-modal-icon info';
+  icon.innerHTML = ICO_INFO;
+  ge('app-modal-msg').textContent = 'Encontro salvo! Já quer colocar "' + item.titulo + '" na sua agenda do Google?';
+  var desc = (item.resumo || (item.pauta||[]).join('; ') || '').replace(/'/g,"\\'").replace(/\n/g,' ');
+  var titulo = (item.titulo||'').replace(/'/g,"\\'");
+  ge('app-modal-actions').innerHTML =
+    '<button class="app-modal-btn ghost" onclick="closeAppModal()">Agora não</button>' +
+    '<button class="app-modal-btn primary" onclick="calGoogleLink(\'' + titulo + '\',\'' + item.data + '\',\'' + desc + '\',\'' + (item.hora||'') + '\');closeAppModal()">Adicionar ao Google Agenda</button>';
+  ge('app-modal-overlay').className = 'app-modal-overlay on';
 }
 
 function ceFindCat(id) {
@@ -3089,9 +3109,14 @@ function ceFinalizarSalvamento(cat, item) {
   ceRenderLista();
   setView(_currentView);
 
+  // Ao criar um encontro novo (não ao só editar um existente) com data hoje ou
+  // no futuro e que não nasce cancelado, oferece já colocar na agenda —
+  // encurta o caminho de "salvei" pra "tá na minha agenda" pra 1 clique.
+  var ofertarAgenda = isNovo && cat.campo === 'encontros' && item.status !== 'cancelado' && item.data && item.data >= new Date().toISOString().slice(0,10);
+
   // Se não há conexão com o banco ou não sabemos o id do projeto, paramos aqui
   // (a mudança fica só na memória desta sessão, igual ao comportamento anterior)
-  if (!sb || !_c._projetoId) { ceToast(); return; }
+  if (!sb || !_c._projetoId) { ofertarAgenda ? ofertarGoogleAgenda(item) : ceToast(); return; }
 
   sbSalvarItem(cat.campo, item, _c._projetoId).then(function(salvo) {
     // Atualiza o item local com o _id retornado pelo banco (necessário para futuras edições)
@@ -3100,7 +3125,7 @@ function ceFinalizarSalvamento(cat, item) {
       var idx = _c[cat.campo].indexOf(item);
       if (idx !== -1) _c[cat.campo][idx] = salvo;
     }
-    ceToast();
+    ofertarAgenda ? ofertarGoogleAgenda(salvo) : ceToast();
   }).catch(function(e) {
     console.error('Erro ao salvar no banco:', e);
     showAlert('A alteração apareceu na tela, mas não foi possível salvar no banco de dados. Verifique sua conexão e tente novamente.', {danger:true});
@@ -3746,17 +3771,28 @@ function toggleEncMenu(id, ev) {
   var alvo = ge(id);
   var estavaAberto = alvo.classList.contains('on');
   var todos = document.querySelectorAll('.enc-menu-list.on');
-  for (var i = 0; i < todos.length; i++) todos[i].classList.remove('on');
-  if (!estavaAberto) alvo.classList.add('on');
+  for (var i = 0; i < todos.length; i++) {
+    todos[i].classList.remove('on');
+    var cardAntigo = todos[i].closest('.enc-card');
+    if (cardAntigo) cardAntigo.classList.remove('menu-aberto');
+  }
+  if (!estavaAberto) {
+    alvo.classList.add('on');
+    var card = alvo.closest('.enc-card');
+    if (card) card.classList.add('menu-aberto');
+  }
 }
 function fecharTodosEncMenus() {
   var todos = document.querySelectorAll('.enc-menu-list.on');
-  for (var i = 0; i < todos.length; i++) todos[i].classList.remove('on');
+  for (var i = 0; i < todos.length; i++) {
+    todos[i].classList.remove('on');
+    var card = todos[i].closest('.enc-card');
+    if (card) card.classList.remove('menu-aberto');
+  }
 }
 document.addEventListener('click', function(ev) {
   if (ev.target.closest('.enc-menu')) return;
-  var todos = document.querySelectorAll('.enc-menu-list.on');
-  for (var i = 0; i < todos.length; i++) todos[i].classList.remove('on');
+  fecharTodosEncMenus();
 });
 
 var _pedirRemarcacaoIdx = null;
@@ -5007,25 +5043,46 @@ function executarBusca(termo) {
 // ═══════════════════════════════════════════
 // A tabela só guarda a data (sem hora), então tratamos como evento de dia
 // inteiro — é o formato que menos assume coisa errada sobre o horário real.
-function calGoogleLink(titulo, dataISO, descricao) {
-  var d = dataISO.replace(/-/g, '');
-  var dNext = new Date(dataISO + 'T00:00:00'); dNext.setDate(dNext.getDate() + 1);
-  var dFim = dNext.toISOString().slice(0,10).replace(/-/g, '');
-  var url = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
-    + '&text=' + encodeURIComponent('EXPLORE: ' + titulo)
-    + '&dates=' + d + '/' + dFim
-    + '&details=' + encodeURIComponent(descricao || '');
+function calGoogleLink(titulo, dataISO, descricao, hora) {
+  if (hora) hora = hora.slice(0, 5); // tolera "HH:MM:SS" vindo de qualquer lugar, sem quebrar a data
+  var url;
+  if (hora) {
+    var ini = new Date(dataISO + 'T' + hora + ':00');
+    var fim = new Date(ini.getTime() + 60 * 60000); // 1h de duração padrão
+    var fmt = function(dt) { return dt.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; };
+    url = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+      + '&text=' + encodeURIComponent('EXPLORE: ' + titulo)
+      + '&dates=' + fmt(ini) + '/' + fmt(fim)
+      + '&details=' + encodeURIComponent(descricao || '');
+  } else {
+    var d = dataISO.replace(/-/g, '');
+    var dNext = new Date(dataISO + 'T00:00:00'); dNext.setDate(dNext.getDate() + 1);
+    var dFim = dNext.toISOString().slice(0,10).replace(/-/g, '');
+    url = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+      + '&text=' + encodeURIComponent('EXPLORE: ' + titulo)
+      + '&dates=' + d + '/' + dFim
+      + '&details=' + encodeURIComponent(descricao || '');
+  }
   window.open(url, '_blank');
 }
-function calBaixarICS(titulo, dataISO, descricao) {
-  var d = dataISO.replace(/-/g, '');
-  var dNext = new Date(dataISO + 'T00:00:00'); dNext.setDate(dNext.getDate() + 1);
-  var dFim = dNext.toISOString().slice(0,10).replace(/-/g, '');
+function calBaixarICS(titulo, dataISO, descricao, hora) {
+  if (hora) hora = hora.slice(0, 5);
+  var corpo;
+  if (hora) {
+    var ini = new Date(dataISO + 'T' + hora + ':00');
+    var fim = new Date(ini.getTime() + 60 * 60000);
+    var fmt = function(dt) { return dt.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; };
+    corpo = 'DTSTART:' + fmt(ini) + '\r\nDTEND:' + fmt(fim) + '\r\n';
+  } else {
+    var d = dataISO.replace(/-/g, '');
+    var dNext = new Date(dataISO + 'T00:00:00'); dNext.setDate(dNext.getDate() + 1);
+    var dFim = dNext.toISOString().slice(0,10).replace(/-/g, '');
+    corpo = 'DTSTART;VALUE=DATE:' + d + '\r\nDTEND;VALUE=DATE:' + dFim + '\r\n';
+  }
   var ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//EXPLORE//Portal do Cliente//PT-BR\r\nBEGIN:VEVENT\r\n'
     + 'UID:' + Date.now() + '@portal.explore\r\n'
     + 'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z\r\n'
-    + 'DTSTART;VALUE=DATE:' + d + '\r\n'
-    + 'DTEND;VALUE=DATE:' + dFim + '\r\n'
+    + corpo
     + 'SUMMARY:EXPLORE: ' + titulo + '\r\n'
     + 'DESCRIPTION:' + (descricao || '').replace(/\n/g,'\\n') + '\r\n'
     + 'END:VEVENT\r\nEND:VCALENDAR';
@@ -5256,7 +5313,7 @@ function renderProgresso() {
       h += '<div class="enc-sec-lbl">Encontros<span class="enc-count">' + encs.length + '</span></div>';
       for (var ei2 = 0; ei2 < encs.length; ei2++) {
         var enc = encs[ei2];
-        var encStBdg = enc.status === 'realizado' ? '<span class="badge b-ok">Realizado</span>' : '<span class="badge b-pend">Agendado</span>';
+        var encStBdg = enc.status === 'realizado' ? '<span class="badge b-ok">Realizado</span>' : enc.status === 'cancelado' ? '<span class="badge b-danger">Cancelado</span>' : '<span class="badge b-pend">Agendado</span>';
         h += '<div class="enc-compact-row" onclick="setView(\'cronograma\')">';
         h += '<span class="enc-date">' + fdbr(enc.data) + '</span><span class="enc-title">' + esc(enc.titulo) + '</span>';
         h += '<span class="badge b-tag">' + cap(enc.tipo) + '</span>' + encStBdg;
@@ -5395,7 +5452,7 @@ function cronCalendarHTML(c) {
       var mostrar = dAtvs.slice(0, 4);
       for (var de = 0; de < mostrar.length; de++) {
         var at = mostrar[de];
-        var dotCls = at.tipo === 'entrega' ? 'ccd-entrega' : (at.raw.tipo === 'online' ? 'ccd-online' : 'ccd-presencial');
+        var dotCls = at.tipo === 'entrega' ? 'ccd-entrega' : (at.raw.status === 'cancelado' ? 'ccd-cancelado' : at.raw.tipo === 'online' ? 'ccd-online' : 'ccd-presencial');
         h += '<span class="ccd-dot ' + dotCls + '"></span>';
       }
       h += '</span>';
@@ -5451,7 +5508,7 @@ function cronAtividadeItemHTML(item) {
     var e = item.raw;
     dotCls = e.tipo === 'online' ? 'enc-online' : 'enc-presencial';
     titulo = e.titulo;
-    sub = 'Encontro' + (e.fase ? ' · ' + e.fase : '') + (e.status === 'realizado' ? ' · Realizado' : ' · Agendado');
+    sub = 'Encontro' + (e.fase ? ' · ' + e.fase : '') + (e.hora ? ' · ' + e.hora : '') + (e.status === 'realizado' ? ' · Realizado' : e.status === 'cancelado' ? ' · Cancelado' : ' · Agendado');
   } else {
     var ent = item.raw;
     dotCls = 'entrega';
@@ -6358,7 +6415,7 @@ function agendaTodosItens(c) {
     if (!e.data) continue;
     var chave = e.data + '|' + (e.titulo || '').toLowerCase().trim();
     if (chaves[chave]) continue;
-    lista.push({ _cat: 'encontros', _idx: j, data: e.data, titulo: e.titulo, tipo: e.tipo, pauta: e.pauta || [], docs: e.docs || [], status: e.status, serieId: e.serieId, dataOriginal: e.dataOriginal, motivoCancelamento: e.motivoCancelamento });
+    lista.push(Object.assign({ _cat: 'encontros', _idx: j }, e));
   }
   return lista;
 }
@@ -6425,7 +6482,7 @@ function agendaSectionHTML() {
     var remarcadoBdg = a.dataOriginal ? '<span class="badge b-tag" title="Data original: ' + fd(a.dataOriginal) + '">Remarcado</span>' : '';
     var h2 = '<div class="enc-card" id="' + eid + '">';
     h2 += '<button class="enc-toggle" style="' + (_isMaster ? 'padding-right:3.4rem' : '') + '" onclick="toggleEnc(\'' + eid + '\')">';
-    h2 += '<div class="enc-tl"><span class="enc-date">' + fdbr(a.data) + '</span><span class="enc-title">' + esc(a.titulo) + '</span></div>';
+    h2 += '<div class="enc-tl"><span class="enc-date">' + fdbr(a.data) + (a.hora ? ' &middot; ' + a.hora : '') + '</span><span class="enc-title">' + esc(a.titulo) + '</span></div>';
     h2 += '<div class="enc-tr">' + remarcadoBdg + '<span class="badge b-tag">' + cap(a.tipo) + '</span>' + dfLbl + chevSVG().replace('xchev','enc-chev') + '</div></button>';
     h2 += '<div class="ce-edit-abs" style="right:.55rem;top:.4rem">' + (menuBtn || ceEditIconHTML(a._cat, a._idx)) + '</div>';
     h2 += '<div class="enc-body"><div class="enc-inner">';
@@ -6458,8 +6515,8 @@ function agendaSectionHTML() {
       var calDesc = (a.resumo || (a.pauta||[]).join('; ') || '').replace(/'/g,"\\'");
       var calTitulo = (a.titulo||'').replace(/'/g,"\\'");
       h2 += '<div class="enc-cal-row" style="display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0">';
-      h2 += '<button class="cal-sync-btn" title="Adicionar ao Google Calendar" onclick="event.stopPropagation();calGoogleLink(\'' + calTitulo + '\',\'' + a.data + '\',\'' + calDesc + '\')">&#128197; Google Agenda</button>';
-      h2 += '<button class="cal-sync-btn" title="Baixar arquivo .ics" onclick="event.stopPropagation();calBaixarICS(\'' + calTitulo + '\',\'' + a.data + '\',\'' + calDesc + '\')">&#11015; .ics</button>';
+      h2 += '<button class="cal-sync-btn" title="Adicionar ao Google Calendar" onclick="event.stopPropagation();calGoogleLink(\'' + calTitulo + '\',\'' + a.data + '\',\'' + calDesc + '\',\'' + (a.hora||'') + '\')">&#128197; Google Agenda</button>';
+      h2 += '<button class="cal-sync-btn" title="Baixar arquivo .ics" onclick="event.stopPropagation();calBaixarICS(\'' + calTitulo + '\',\'' + a.data + '\',\'' + calDesc + '\',\'' + (a.hora||'') + '\')">&#11015; .ics</button>';
       h2 += '</div>';
     }
     h2 += '<button class="checkin-btn" data-ci="ci_' + eid + '" onclick="toggleCheckin(\'enc\',\'' + esc(_c.empresa) + '\',\'' + eid + '\',this)">Marcar como ciente</button>';
