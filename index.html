@@ -4371,6 +4371,7 @@ function msExcluirProjetoConfirmado(email) {
       : '<p style="color:var(--tl);padding:1rem">Nenhum projeto cadastrado ainda. Cadastre um cliente para começar.</p>';
     msAplicarFiltro();
   }
+  msAtualizarStatsBar();
 
   sb.from('projetos').select('id').eq('cliente_email', email).maybeSingle().then(function(res) {
     if (res.error) throw res.error;
