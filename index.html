@@ -180,6 +180,7 @@ a{text-decoration:none;color:inherit}
 /* Painel de Projetos: destaque de projeto recém-criado */
 .ms-novo-badge{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--bx);background:var(--gold-lt);border-radius:99px;padding:.12rem .45rem;vertical-align:middle;margin-left:.35rem}
 .ms-insatisfeito-badge{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--danger);background:var(--danger-bg);border-radius:99px;padding:.12rem .45rem;vertical-align:middle;margin-left:.35rem}
+.ms-encerrado-badge{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--tl);background:var(--line);border-radius:99px;padding:.12rem .45rem;vertical-align:middle;margin-left:.35rem}
 
 /* Painel de Projetos: mensagem quando busca/filtro não encontra nada */
 .ms-empty-state{max-width:1180px;margin:0 auto;padding:0 2.2rem 3rem;text-align:center;color:var(--tl);font-size:.86rem}
@@ -2030,8 +2031,18 @@ function drest(s) {
   return Math.ceil((new Date(s) - new Date()) / 86400000);
 }
 function cpraz(i, f) {
+  if (!i) i = (new Date()).toISOString().slice(0, 10);
   var t = Math.max(1, new Date(f) - new Date(i));
   return Math.min(100, Math.max(0, Math.round((new Date() - new Date(i)) / t * 100)));
+}
+// Projeto encerrado = acesso somente leitura de verdade: usado pra bloquear os
+// pontos de entrada de escrita (adicionar/editar/excluir/aprovar/solicitar),
+// não só mostrar uma faixa de aviso que ninguém aplicava.
+function projetoBloqueado() {
+  return !!(_c && _c.encerrado);
+}
+function avisoProjetoEncerrado() {
+  showAlert('Este projeto está encerrado e está em modo somente leitura. Para editar, reabra o projeto no Painel de Projetos.', {danger:true});
 }
 function cprog(fases) {
   var p = 0;
@@ -2504,6 +2515,7 @@ var CE_CATEGORIAS = [
     campos: [
       { k:'nome', label:'Nome da entrega', tipo:'text', req:true },
       { k:'status', label:'Status', tipo:'select', opcoes:[['pendente','Pendente'],['em_andamento','Em andamento'],['concluido','Concluído']], req:true },
+      { k:'inicioISO', label:'Início', tipo:'date' },
       { k:'dataISO', label:'Prazo', tipo:'date' },
       { k:'responsavel', label:'Responsável', tipo:'text' },
       { k:'descricao', label:'Descrição', tipo:'textarea' }
@@ -2702,18 +2714,19 @@ function togglePwVisibility(id, btn) {
 // Só aparece para o consultor (_isMaster). Pula a grade da Central de Edição e vai
 // direto pro formulário de cadastro daquela categoria.
 function ceAddBtnHTML(catId, label) {
-  if (!_isMaster) return '';
+  if (!_isMaster || projetoBloqueado()) return '';
   return '<button class="ce-inline-add" onclick="ceQuickAdd(\'' + catId + '\')">+ ' + esc(label) + '</button>';
 }
 
 // Monta o ícone de lápis usado em cada item já existente nas telas do cliente.
 // idx é a posição do item no array daquela categoria (_c[campo][idx]).
 function ceEditIconHTML(catId, idx) {
-  if (!_isMaster) return '';
+  if (!_isMaster || projetoBloqueado()) return '';
   return '<button class="ce-inline-edit" onclick="event.stopPropagation();ceQuickEdit(\'' + catId + '\',' + idx + ')" title="Editar">' + pencilSVG() + '</button>';
 }
 
 function ceQuickAdd(catId) {
+  if (projetoBloqueado()) { avisoProjetoEncerrado(); return; }
   _ceRequestToken++;
   ge('ce-overlay').className = 'ce-overlay on';
   _ceCat = ceFindCat(catId);
@@ -2722,6 +2735,7 @@ function ceQuickAdd(catId) {
 }
 
 function ceQuickEdit(catId, idx) {
+  if (projetoBloqueado()) { avisoProjetoEncerrado(); return; }
   _ceRequestToken++;
   ge('ce-overlay').className = 'ce-overlay on';
   _ceCat = ceFindCat(catId);
@@ -2732,6 +2746,7 @@ function ceQuickEdit(catId, idx) {
 // Mesma lógica, mas para categorias de campo único (tipo 'single'), como os blocos
 // de Empresa e Consultor dentro de Dados da Empresa.
 function ceQuickEditSingle(catId) {
+  if (projetoBloqueado()) { avisoProjetoEncerrado(); return; }
   _ceRequestToken++;
   ge('ce-overlay').className = 'ce-overlay on';
   _ceCat = ceFindCat(catId);
@@ -3082,6 +3097,7 @@ function diagnosticoErroSupabase(motivo, contexto) {
 }
 
 function ceSaveItem() {
+  if (projetoBloqueado() && _ceCat && _ceCat.id !== 'feedback') { avisoProjetoEncerrado(); return; }
   var cat = _ceCat;
   var item = _ceEditIdx === -1 ? {} : Object.assign({}, _c[cat.campo][_ceEditIdx]);
   var projetoAlvo = _c; // referência ao projeto sendo editado agora — conferida de novo após o upload, que pode demorar o suficiente pro consultor trocar de cliente nesse meio tempo
@@ -3164,6 +3180,7 @@ function ceSaveItem() {
 // Marca/desmarca um próximo passo como concluído com um clique só, sem abrir o
 // formulário. Atualização otimista, com reversão automática se o banco recusar.
 function toggleProximoPassoConcluido(idx) {
+  if (projetoBloqueado()) { avisoProjetoEncerrado(); return; }
   var item = _c.proximosPassos[idx];
   if (!item) return;
   item.concluido = !item.concluido;
@@ -3243,6 +3260,7 @@ function ceDeleteItem(i) {
 }
 
 function ceDeleteItemConfirmado(i) {
+  if (projetoBloqueado() && _ceCat && _ceCat.id !== 'feedback') { avisoProjetoEncerrado(); return; }
   var item = _c[_ceCat.campo][i];
   var cat = _ceCat;
 
@@ -3444,12 +3462,13 @@ function msCardHTML(email, d) {
   var html = '<div class="ms-card" data-ms-email="' + esc(email) + '" data-ms-status="' + statusBucket + '" data-ms-search="' + esc(buscaTxt) + '" onclick="masterOpenClient(\'' + email + '\')">';
   html += '<div class="ms-card-head">';
   html += '<div class="ms-logo">' + logoConteudo + '</div>';
-  html += '<div class="ms-card-head-txt"><div class="ms-emp">' + esc(d.empresa) + (ehNovo ? ' <span class="ms-novo-badge">Novo</span>' : '') + (insatisfeito ? ' <span class="ms-insatisfeito-badge" title="Última avaliação: ' + npsRecente.nota + '/5">&#9888; Insatisfeito</span>' : '') + (horasNoLimite ? ' <span class="ms-insatisfeito-badge" title="' + (d.horasConsumidas||0) + ' de ' + d.horasProjeto + ' horas contratadas">&#9203; ' + horasPctCard + '% das horas</span>' : '') + '</div>';
+  html += '<div class="ms-card-head-txt"><div class="ms-emp">' + esc(d.empresa) + (ehNovo ? ' <span class="ms-novo-badge">Novo</span>' : '') + (d.encerrado ? ' <span class="ms-encerrado-badge">Encerrado</span>' : '') + (insatisfeito ? ' <span class="ms-insatisfeito-badge" title="Última avaliação: ' + npsRecente.nota + '/5">&#9888; Insatisfeito</span>' : '') + (horasNoLimite ? ' <span class="ms-insatisfeito-badge" title="' + (d.horasConsumidas||0) + ' de ' + d.horasProjeto + ' horas contratadas">&#9203; ' + horasPctCard + '% das horas</span>' : '') + '</div>';
   html += '<div class="ms-proj">' + esc(d.projeto) + '</div>';
   html += '<div class="ms-cli">' + esc(d.nome) + '</div></div>';
   html += '<div class="ms-menu-wrap"><button class="ms-menu-btn" title="Mais opções" onclick="event.stopPropagation();msToggleMenu(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>';
   html += '<div class="ms-dropdown">';
   html += '<button class="ms-dd-item" onclick="event.stopPropagation();msAdicionarLogo(\'' + email + '\')">Adicionar logo</button>';
+  html += '<button class="ms-dd-item" onclick="event.stopPropagation();msToggleEncerrado(\'' + email + '\')">' + (d.encerrado ? 'Reabrir projeto' : 'Encerrar projeto') + '</button>';
   html += '<button class="ms-dd-item danger" onclick="event.stopPropagation();msExcluirProjeto(\'' + email + '\')">Excluir projeto</button>';
   html += '</div></div>';
   html += '</div>';
@@ -3725,6 +3744,7 @@ function renderMasterSupabase() {
         logoUrl: proj.logo_url, dataInicio: proj.data_inicio,
         criadoEm: proj.created_at || proj.inserted_at || proj.criado_em || null,
         horasProjeto: proj.horas_projeto, horasConsumidas: proj.horas_consumidas,
+        encerrado: !!proj.encerrado, dataEncerramento: proj.data_encerramento,
         fases: fasesPorProjeto[proj.id] || [],
         entregas: entregasPorProjeto[proj.id] || [],
         nps: npsPorProjeto[proj.id] || [],
@@ -3905,6 +3925,7 @@ document.addEventListener('click', function(ev) {
 
 var _pedirRemarcacaoIdx = null;
 function abrirPedirRemarcacao(idx) {
+  if (projetoBloqueado()) { avisoProjetoEncerrado(); return; }
   var base = _c && _c.encontros && _c.encontros[idx];
   if (!base) return;
   _pedirRemarcacaoIdx = idx;
@@ -4144,6 +4165,7 @@ function cancelarSelecionadosSerie() {
 // que o próprio consultor escolhia; não existia nenhuma ação do lado do
 // cliente confirmando que recebeu e validou o trabalho.
 function aprovarEntrega(idx) {
+  if (projetoBloqueado()) { avisoProjetoEncerrado(); return; }
   var e = _c.entregas[idx];
   if (!e || !sb) return;
   showConfirm('Confirma que esta entrega está aprovada? "' + e.nome + '"', function() {
@@ -4163,6 +4185,7 @@ function aprovarEntrega(idx) {
 }
 var _ajustesEntregaIdx = null;
 function abrirAjustesEntrega(idx) {
+  if (projetoBloqueado()) { avisoProjetoEncerrado(); return; }
   _ajustesEntregaIdx = idx;
   ge('ajustes-texto').value = '';
   var btn = ge('ajustes-btn-save');
@@ -4199,6 +4222,7 @@ function salvarAjustesEntrega() {
 // prioridade pro consultor confirmar, reaproveitando a estrutura que já existe
 // em vez de criar uma tabela nova só pra isso.
 function abrirSolicitarReuniao() {
+  if (projetoBloqueado()) { avisoProjetoEncerrado(); return; }
   ge('solreuniao-motivo').value = '';
   ge('solreuniao-horarios').value = '';
   var btn = ge('solreuniao-btn-save');
@@ -4365,6 +4389,44 @@ function npSalvar() {
     } else {
       npErro('Não foi possível criar o projeto. Motivo: ' + motivo + '. ' + diagnosticoErroSupabase(motivo, 'tabela'));
     }
+  });
+}
+
+// Encerra ou reabre um projeto de verdade — isso é o que faz o "acesso somente
+// leitura" citado no cabeçalho do cliente valer alguma coisa, em vez de só
+// mostrar uma faixa de aviso sem nenhum bloqueio por trás dela.
+function msToggleEncerrado(email) {
+  var abertos = document.querySelectorAll('.ms-dropdown.on');
+  for (var i = 0; i < abertos.length; i++) abertos[i].classList.remove('on');
+  var d = _msResumoCache[email];
+  if (!d) return;
+  var vaiEncerrar = !d.encerrado;
+  var msg = vaiEncerrar
+    ? 'Encerrar o projeto de "' + (d.empresa || email) + '"? O acesso do cliente passa a ser somente leitura (não dá mais para adicionar, editar ou excluir nada) até o projeto ser reaberto.'
+    : 'Reabrir o projeto de "' + (d.empresa || email) + '"? O acesso volta a ser normal, com edição liberada.';
+  showConfirm(msg, function() { msToggleEncerradoConfirmado(email, vaiEncerrar); }, {confirmLabel: vaiEncerrar ? 'Encerrar' : 'Reabrir'});
+}
+
+function msToggleEncerradoConfirmado(email, vaiEncerrar) {
+  if (!sb) { showAlert('Sem conexão com o banco de dados.', {danger:true}); return; }
+  var d = _msResumoCache[email];
+  if (!d) return;
+  var agora = vaiEncerrar ? new Date().toISOString().slice(0, 10) : null;
+  d.encerrado = vaiEncerrar;
+  d.dataEncerramento = agora;
+  msRenderGrid();
+  msAtualizarStatsBar();
+  if (_c && _c._projetoId === d._projetoId) { _c.encerrado = vaiEncerrar; _c.dataEncerramento = agora; setView(_currentView); }
+  sbAtualizarProjetoCampos(d._projetoId, { encerrado: vaiEncerrar, data_encerramento: agora }).then(function() {
+    ceToast();
+  }).catch(function(e) {
+    console.error('Erro ao encerrar/reabrir projeto:', e);
+    d.encerrado = !vaiEncerrar;
+    d.dataEncerramento = vaiEncerrar ? null : agora;
+    msRenderGrid();
+    msAtualizarStatsBar();
+    if (_c && _c._projetoId === d._projetoId) { _c.encerrado = !vaiEncerrar; setView(_currentView); }
+    showAlert('Não foi possível salvar essa alteração no banco. Tente novamente.', {danger:true});
   });
 }
 
@@ -6607,7 +6669,40 @@ function agendaTodosItens(c) {
     if (chaves[chave]) continue;
     lista.push(Object.assign({ _cat: 'encontros', _idx: j }, e));
   }
+  // Entregas (prazos de entregáveis) também são compromissos do cronograma —
+  // sem isso, o calendário mostrava a bolinha do prazo no dia certo, mas a
+  // lista de Compromissos abaixo dele nunca listava a entrega em si.
+  var ents = c.entregas || [];
+  for (var k = 0; k < ents.length; k++) {
+    if (!ents[k].dataISO) continue;
+    lista.push(Object.assign({ _idx: k }, ents[k], { _cat: 'entregas', data: ents[k].dataISO }));
+  }
   return lista;
+}
+
+// Card compacto de entrega dentro da lista de Compromissos — mesma linguagem visual
+// da aba Entregas (classe .ec), mas sem os botões de aprovação, que continuam
+// exclusivos da aba própria pra não duplicar ação em dois lugares.
+function renderItemEntrega(e) {
+  var cls = e.status === 'concluido' ? 'eco' : e.status === 'em_andamento' ? 'ecw' : 'ecp';
+  var pr = cpraz(e.inicioISO, e.dataISO);
+  var pc = e.status === 'concluido' ? 'var(--ok)' : pr > 85 ? 'var(--danger)' : pr > 60 ? 'var(--warn)' : 'var(--bx)';
+  var av = ini2(e.responsavel);
+  var hasDocs = e.docs && e.docs.length > 0;
+  var ecid = 'crenc-entregas-' + e._idx;
+  var h = '<div class="ec ' + cls + '" id="' + ecid + '">';
+  h += '<div class="ec-main"' + (hasDocs ? ' style="cursor:pointer" onclick="toggleX(\'' + ecid + '\',\'entregas\')"' : '') + '>';
+  h += '<div><div class="ec-nome">' + esc(e.nome) + '</div><div class="ec-desc">' + esc(e.descricao) + '</div>';
+  h += '<div class="ec-meta">' + badgeSt(e.status) + '<div class="ec-resp"><div class="ec-av">' + av + '</div>' + esc(e.responsavel) + '</div></div></div>';
+  h += '<div class="ec-right"><div class="ec-data-lbl">Previsão</div><div class="ec-data">' + esc(e.data) + '</div>';
+  h += '<div class="ec-pbar"><div class="ec-pfill" style="width:' + pr + '%;background:' + pc + '"></div></div>';
+  if (hasDocs) h += chevSVG();
+  h += '</div>' + ceEditIconHTML('entregas', e._idx) + '</div>';
+  if (hasDocs) {
+    h += '<div class="xbody" id="' + ecid + '-b"><div class="xinner">' + docsRelHTML(e.docs) + '</div></div>';
+  }
+  h += '</div>';
+  return h;
 }
 
 // Seção "Compromissos" (próximos + realizados), embutida dentro do Cronograma —
@@ -6631,6 +6726,7 @@ function agendaSectionHTML() {
   var futuros = agenda.filter(function(a){ return new Date(a.data) >= hoje; });
   var passados = agenda.filter(function(a){ return new Date(a.data) < hoje; });
   function renderItem(a) {
+    if (a._cat === 'entregas') return renderItemEntrega(a);
     var df = Math.ceil((new Date(a.data) - hoje) / 86400000);
     var dfLbl;
     if (a.status === 'cancelado') {
@@ -6709,7 +6805,7 @@ function agendaSectionHTML() {
       h2 += '<button class="cal-sync-btn" title="Baixar arquivo .ics" onclick="event.stopPropagation();calBaixarICS(\'' + calTitulo + '\',\'' + a.data + '\',\'' + calDesc + '\',\'' + (a.hora||'') + '\')">&#11015; .ics</button>';
       h2 += '</div>';
     }
-    h2 += '<button class="checkin-btn" data-ci="ci_' + eid + '" onclick="toggleCheckin(\'enc\',\'' + esc(_c.empresa) + '\',\'' + eid + '\',this)">Marcar como ciente</button>';
+    h2 += '<button class="checkin-btn" data-ci="ci_' + eid + '" onclick="toggleCheckin(\'enc\',\'' + esc(_c.empresa).replace(/'/g,"\\'") + '\',\'' + eid + '\',this)">Marcar como ciente</button>';
     if (!_isMaster && a._cat === 'encontros' && df >= 0 && a.status !== 'cancelado') {
       h2 += ' <button class="checkin-btn" onclick="abrirPedirRemarcacao(' + a._idx + ')">Pedir para remarcar</button>';
     }
