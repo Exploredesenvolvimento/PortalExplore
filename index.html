@@ -1643,6 +1643,19 @@ try {
   if (window.supabase) sb = window.supabase.createClient(SB_URL, SB_KEY);
 } catch (e) { console.error('Falha ao iniciar Supabase:', e); }
 
+// Token de sessão (ver tabela "sessoes" e função _sessao_atual() no banco): sem
+// isso, o RLS de projetos/fases/entregas/nps/encontros barra qualquer consulta,
+// pois exige uma sessão válida no cabeçalho "x-session-token". É criado pelo
+// verificar_login() no login e precisa ser reaplicado ao restaurar sessão salva.
+var _tokenSessao = null;
+function aplicarTokenSessao(token) {
+  _tokenSessao = token || null;
+  if (!window.supabase) return;
+  try {
+    sb = window.supabase.createClient(SB_URL, SB_KEY, _tokenSessao ? { global: { headers: { 'x-session-token': _tokenSessao } } } : {});
+  } catch (e) { console.error('Falha ao aplicar token de sessão:', e); }
+}
+
 // Verdadeiro só quando o arquivo está no nosso próprio Storage (subido pelo portal).
 // Links externos (Google Drive etc.) não dá pra forçar download por questão de segurança
 // do navegador, então esses continuam abrindo o link normalmente.
@@ -2282,8 +2295,10 @@ function emptyStateHTML(iconTipo, titulo, subtitulo) {
 // ═══════════════════════════════════════════
 // Sessão: guarda só e-mail/papel/origem no navegador (nunca a senha), para a pessoa
 // não precisar logar de novo a cada atualização de página.
-function salvarSessao(email, papel, origem, clienteAberto) {
-  ssSet('explore_sessao', JSON.stringify({ email: email, papel: papel, origem: origem, clienteAberto: clienteAberto || null }));
+function salvarSessao(email, papel, origem, clienteAberto, token) {
+  var atual = {};
+  try { atual = JSON.parse(ssGet('explore_sessao') || '{}') || {}; } catch(e) {}
+  ssSet('explore_sessao', JSON.stringify({ email: email, papel: papel, origem: origem, clienteAberto: clienteAberto || null, token: (token !== undefined ? token : atual.token) || null }));
 }
 function limparSessao() {
   ssDel('explore_sessao');
@@ -2340,12 +2355,16 @@ function doLogin() {
       doLoginLocal(email, senha);
       return;
     }
+    // Aplica o token de sessão antes de qualquer outra consulta: o RLS de
+    // projetos/fases/entregas/nps/encontros exige esse cabeçalho, senão toda
+    // consulta volta vazia (ver aplicarTokenSessao()).
+    aplicarTokenSessao(usuario.token);
     if (usuario.papel === 'consultor') {
       restaurarBotao();
       registrarSucessoLogin();
       _isMaster = true;
       _masterEmail = email;
-      salvarSessao(email, 'consultor', 'sb');
+      salvarSessao(email, 'consultor', 'sb', null, usuario.token);
       ge('login-screen').style.display = 'none';
       renderMasterSupabase();
       return;
@@ -2357,7 +2376,7 @@ function doLogin() {
       restaurarBotao();
       if (!dados) { registrarFalhaLogin(); err.textContent = 'Projeto não encontrado para este e-mail.'; err.style.display = 'block'; return; }
       registrarSucessoLogin();
-      salvarSessao(email, 'cliente', 'sb');
+      salvarSessao(email, 'cliente', 'sb', null, usuario.token);
       ge('login-screen').style.display = 'none';
       openClient(dados);
     }).catch(function(e) {
@@ -2409,6 +2428,8 @@ function tentarRestaurarSessao() {
   var sess;
   try { sess = JSON.parse(raw); } catch(e) { limparSessao(); return; }
   if (!sess || !sess.email || !sess.papel) { limparSessao(); return; }
+
+  if (sess.origem === 'sb' && sess.token) aplicarTokenSessao(sess.token);
 
   if (sess.papel === 'consultor') {
     _isMaster = true;
@@ -3352,6 +3373,7 @@ function openClient(dados) {
 
 function doLogout() {
   limparSessao();
+  aplicarTokenSessao(null);
   _c = null; _isMaster = false; _masterEmail = null;
   if (location.hash) history.replaceState(null, '', location.pathname + location.search);
   ge('app').className = '';
