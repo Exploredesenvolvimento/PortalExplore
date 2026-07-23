@@ -1640,9 +1640,33 @@ var CLIENTES = {};
 var SB_URL = 'https://rrwfntxriwowexmgdyui.supabase.co';
 var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyd2ZudHhyaXdvd2V4bWdkeXVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3NzUwMjQsImV4cCI6MjA5ODM1MTAyNH0.fdhRidRhAeehtH4Hwk9uSd75Iy_qfjFQU9hOs6PdFIA';
 var sb = null;
-try {
-  if (window.supabase) sb = window.supabase.createClient(SB_URL, SB_KEY);
-} catch (e) { console.error('Falha ao iniciar Supabase:', e); }
+// Carrega o cliente Supabase com algumas tentativas: a tag <script> do CDN pode
+// falhar por uma instabilidade de rede pontual, e sem isso window.supabase fica
+// undefined pro resto da página — o que fazia a restauração de sessão cair no
+// modo de demonstração (3 clientes fictícios) só porque a conexão real nunca
+// chegou a existir. callback() roda quando terminar (com ou sem sucesso).
+var _sbTentativas = 0;
+function inicializarSupabase(callback) {
+  if (window.supabase) {
+    try { sb = window.supabase.createClient(SB_URL, SB_KEY); } catch (e) { console.error('Falha ao iniciar Supabase:', e); }
+    callback();
+    return;
+  }
+  _sbTentativas++;
+  if (_sbTentativas === 1) {
+    // primeira falha: a tag original do <head> pode ter dado erro de rede —
+    // tenta buscar a biblioteca de novo antes de desistir
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+    document.head.appendChild(s);
+  }
+  if (_sbTentativas > 10) {
+    console.error('Não foi possível carregar a biblioteca do Supabase depois de várias tentativas.');
+    callback();
+    return;
+  }
+  setTimeout(function() { inicializarSupabase(callback); }, 400);
+}
 
 // Token de sessão (ver tabela "sessoes" e função _sessao_atual() no banco): sem
 // isso, o RLS de projetos/fases/entregas/nps/encontros barra qualquer consulta,
@@ -1795,6 +1819,7 @@ function hashSenha(senha, salt) {
 // privilégio elevado no banco, migra contas antigas (ainda em texto puro) para
 // hash automaticamente no primeiro login bem-sucedido, sem exigir troca de senha.
 function sbLogin(email, senha) {
+  if (!sb) return Promise.reject(new Error('Conexão com o banco de dados ainda não está pronta. Aguarde alguns segundos e tente de novo.'));
   return sb.rpc('verificar_login', { p_email: email, p_senha: senha })
     .then(function(res) {
       if (res.error) throw res.error;
@@ -2433,6 +2458,14 @@ function doLoginLocal(email, senha) {
 
 // Tenta restaurar a sessão salva no navegador (chamada uma vez, ao carregar a página).
 // Se der certo, pula a tela de login direto para onde a pessoa estava.
+function mostrarErroConexaoRestauracao() {
+  var icon = ge('app-modal-icon');
+  icon.className = 'app-modal-icon danger';
+  icon.innerHTML = ICO_DANGER;
+  ge('app-modal-msg').textContent = 'Não foi possível conectar ao banco de dados agora (provavelmente uma instabilidade de rede). Recarregue a página para tentar de novo — seus dados continuam salvos, ninguém foi perdido.';
+  ge('app-modal-actions').innerHTML = '<button class="app-modal-btn primary" onclick="location.reload()">Recarregar página</button>';
+  ge('app-modal-overlay').className = 'app-modal-overlay on';
+}
 function tentarRestaurarSessao() {
   var raw = ssGet('explore_sessao');
   if (!raw) return;
@@ -2443,6 +2476,7 @@ function tentarRestaurarSessao() {
   if (sess.origem === 'sb' && sess.token) aplicarTokenSessao(sess.token);
 
   if (sess.papel === 'consultor') {
+    if (sess.origem === 'sb' && !sb) { mostrarErroConexaoRestauracao(); return; }
     _isMaster = true;
     _masterEmail = sess.email;
     ge('login-screen').style.display = 'none';
@@ -2456,6 +2490,7 @@ function tentarRestaurarSessao() {
   }
 
   // papel === 'cliente'
+  if (sess.origem === 'sb' && !sb) { mostrarErroConexaoRestauracao(); return; }
   if (sb && sess.origem === 'sb') {
     ge('l-restoring').style.display = 'flex';
     ge('l-logo').style.display = 'none';
@@ -4474,7 +4509,25 @@ function msExcluirProjetoConfirmado(email) {
   });
 }
 
+// Volta do detalhe de um cliente para o Painel de Projetos, mantendo a sessão do
+// consultor intacta (só troca o que está na tela, não desloga).
+function masterVoltarPainel() {
+  _c = null;
+  marcarClienteAbertoNaSessao(null);
+  document.getElementById('login-screen').style.display = 'none';
+  if (sb) renderMasterSupabase(); else renderMaster();
+}
+
+// Atualiza só o campo "clienteAberto" da sessão já salva, sem mexer no resto
+// (email/papel/token) — chamado ao abrir e ao fechar o detalhe de um cliente.
+function marcarClienteAbertoNaSessao(email) {
+  var sess = null;
+  try { sess = JSON.parse(ssGet('explore_sessao') || 'null'); } catch(e) {}
+  if (sess) salvarSessao(sess.email, sess.papel, sess.origem, email || null, sess.token);
+}
+
 function masterOpenClient(email) {
+  marcarClienteAbertoNaSessao(email);
   // Se já abrimos esse projeto nesta sessão (dados completos, não o resumo da
   // grade), usa o cache — mais rápido, não refaz as 14 consultas.
   if (_msCacheCompleto[email]) { openClient(_msCacheCompleto[email]); return; }
@@ -7020,13 +7073,15 @@ function renderSobre() {
   var sbOverlay = document.getElementById('sb-overlay');
   if (sbOverlay) sbOverlay.addEventListener('click', closeSidebar);
 
-  // Sidebar back button
+  // Sidebar back button — volta ao Painel de Projetos SEM destruir a sessão salva.
+  // Antes chamava doLogout() (que apaga a sessão do navegador) e depois tentava
+  // "desfazer" isso na marra; funcionava na hora, mas qualquer atualização de
+  // página depois disso caía direto na tela de login, porque a sessão real já
+  // tinha sido apagada. Também chamava renderMaster() (dados de demonstração)
+  // em vez de renderMasterSupabase() (dados reais do banco).
   var sbBack = document.getElementById('sb-back-btn');
   if (sbBack) sbBack.addEventListener('click', function() {
-    doLogout();
-    _isMaster = true;
-    document.getElementById('login-screen').style.display = 'none';
-    renderMaster();
+    masterVoltarPainel();
     window.scrollTo(0, 0);
   });
 
@@ -7081,8 +7136,12 @@ function renderSobre() {
   // que some sozinha quando a aba fecha).
   lsDel('explore_sessao');
 
-  // Restaura sessão salva (evita deslogar ao atualizar a página, mas não sobrevive ao fechar a aba)
-  tentarRestaurarSessao();
+  // Restaura sessão salva (evita deslogar ao atualizar a página, mas não sobrevive ao fechar a aba).
+  // Espera o cliente Supabase estar pronto (com as tentativas de retry) antes de
+  // decidir se restaura os dados reais ou mostra erro de conexão — sem isso,
+  // uma falha passageira de rede no carregamento do CDN podia ser confundida
+  // com "os projetos sumiram".
+  inicializarSupabase(tentarRestaurarSessao);
 
 })();
 
