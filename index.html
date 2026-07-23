@@ -880,6 +880,43 @@ a{text-decoration:none;color:inherit}
 .ce-peso-soma.ok{background:var(--ok-bg);color:var(--ok)}
 .ce-peso-soma.warn{background:var(--warn-bg);color:var(--warn)}
 .eq-espec{font-size:.72rem;font-weight:700;color:var(--tm);padding:.15rem .5rem;background:var(--cream);border-radius:4px;display:inline-block;margin-bottom:.55rem}
+
+/* modal de resumo da ata */
+.ata-modal{border-radius:var(--rl);box-shadow:0 20px 60px rgba(44,26,36,.35)}
+.ata-modal-header{display:flex;align-items:center;gap:.85rem;padding:1.1rem 1.3rem;background:linear-gradient(135deg,var(--bx),var(--bx-dk));flex-shrink:0}
+.ata-modal-header-icon{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.ata-modal-header-titulo{font-family:Georgia,serif;font-size:1.05rem;font-weight:700;color:var(--white);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ata-modal-header-sub{font-size:.72rem;color:rgba(255,255,255,.7);margin-top:.15rem;letter-spacing:.03em}
+.ata-pdf-pill{font-size:.74rem;font-weight:700;color:var(--white);background:rgba(255,255,255,.16);padding:.4rem .75rem;border-radius:99px;white-space:nowrap;transition:background .15s ease}
+.ata-pdf-pill:hover{background:rgba(255,255,255,.28)}
+.ata-modal-close{border:none;background:rgba(255,255,255,.12);color:var(--white);width:28px;height:28px;border-radius:50%;font-size:.95rem;cursor:pointer;flex-shrink:0;transition:background .15s ease}
+.ata-modal-close:hover{background:rgba(255,255,255,.24)}
+
+.ata-resumo-card{background:var(--cream);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0;padding:.9rem 1.1rem;margin-bottom:1.3rem;font-family:Georgia,serif;font-size:.92rem;font-style:italic;color:var(--td);line-height:1.65}
+
+.ata-section{margin-bottom:1.3rem}
+.ata-section:last-child{margin-bottom:0}
+.ata-section-title{display:flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:.65rem}
+
+.ata-participantes{display:flex;flex-wrap:wrap;gap:.6rem}
+.ata-participante{display:flex;align-items:center;gap:.4rem;background:var(--white);border:1px solid var(--cream-dk);border-radius:99px;padding:.25rem .7rem .25rem .25rem}
+.ata-participante-av{width:22px;height:22px;border-radius:50%;background:var(--bx);color:var(--white);font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ata-participante-nome{font-size:.76rem;color:var(--tm);font-weight:600}
+
+.ata-pauta-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.55rem}
+.ata-pauta-item{display:flex;align-items:flex-start;gap:.6rem;font-size:.84rem;color:var(--tm);line-height:1.55}
+.ata-pauta-num{width:19px;height:19px;border-radius:50%;background:var(--bx);color:var(--white);font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem}
+
+.ata-destaque-card{background:var(--white);border:1px solid var(--cream-dk);border-radius:var(--r);padding:1rem 1.1rem}
+.ata-destaque-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.6rem}
+.ata-destaque-item{display:flex;align-items:flex-start;gap:.55rem;font-size:.83rem;color:var(--tm);line-height:1.55}
+.ata-destaque-ico{color:var(--gold-dk);flex-shrink:0;margin-top:.15rem}
+
+.ata-pendencia-card{background:var(--warn-bg);border-radius:var(--r);padding:1rem 1.1rem}
+.ata-pendencia-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.65rem}
+.ata-pendencia-item{display:flex;align-items:flex-start;gap:.55rem;font-size:.83rem;color:var(--td);line-height:1.55}
+.ata-pendencia-ico{color:var(--warn);flex-shrink:0;margin-top:.1rem}
+
 .eq-espec-wrap{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.55rem}
 .eq-espec-wrap .eq-espec{margin-bottom:0}
 .ce-multiselect{display:flex;flex-wrap:wrap;gap:.45rem}
@@ -1594,15 +1631,19 @@ a{text-decoration:none;color:inherit}
   </div>
 
   <div class="app-modal-overlay" id="ata-overlay" onclick="if(event.target===this) fecharAtaDetalhe()">
-    <div class="app-modal" style="max-width:640px;width:92vw;max-height:86vh;display:flex;flex-direction:column;padding:0;overflow:hidden">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;border-bottom:1px solid var(--line);flex-shrink:0">
-        <div id="ata-titulo" style="font-weight:700;font-size:.92rem;color:var(--td)"></div>
-        <div style="display:flex;gap:.7rem;align-items:center;flex-shrink:0">
-          <a id="ata-abrir-pdf" href="#" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--bx);font-weight:700;white-space:nowrap">Ver PDF original &#8599;</a>
-          <button onclick="fecharAtaDetalhe()" style="border:none;background:none;font-size:1.1rem;cursor:pointer;color:var(--tm)">&#10005;</button>
+    <div class="app-modal ata-modal" style="max-width:640px;width:92vw;max-height:86vh;display:flex;flex-direction:column;padding:0;overflow:hidden">
+      <div class="ata-modal-header">
+        <div class="ata-modal-header-icon">&#128196;</div>
+        <div style="min-width:0;flex:1">
+          <div id="ata-titulo" class="ata-modal-header-titulo"></div>
+          <div id="ata-modal-header-sub" class="ata-modal-header-sub"></div>
+        </div>
+        <div style="display:flex;gap:.6rem;align-items:center;flex-shrink:0">
+          <a id="ata-abrir-pdf" href="#" target="_blank" rel="noopener" class="ata-pdf-pill">PDF original &#8599;</a>
+          <button onclick="fecharAtaDetalhe()" class="ata-modal-close">&#10005;</button>
         </div>
       </div>
-      <div id="ata-corpo" style="padding:1.1rem;overflow-y:auto;flex:1"></div>
+      <div id="ata-corpo" style="padding:1.3rem 1.4rem;overflow-y:auto;flex:1"></div>
     </div>
   </div>
 
@@ -1746,7 +1787,7 @@ function sbRowToFront(tabela, row) {
     return { _id: row.id, nome: row.nome, status: row.status, data: row.data_prevista ? fd(row.data_prevista) : '', dataISO: row.data_prevista, responsavel: row.responsavel, inicioISO: row.data_inicio, descricao: row.descricao, docs: row.docs || [], criadoEm: row.criado_em, aprovadoPeloCliente: !!row.aprovado_pelo_cliente, aprovadoEm: row.aprovado_em, ajustesSolicitados: row.ajustes_solicitados };
   }
   if (tabela === 'documentos') {
-    return { _id: row.id, nome: row.codigo, titulo: row.titulo, categoria: row.categoria, status: row.status, data: row.data ? fd(row.data) : '', tamanho: row.tamanho, url: row.url, criadoEm: row.criado_em };
+    return { _id: row.id, nome: row.codigo, titulo: row.titulo, categoria: row.categoria, status: row.status, data: row.data ? fd(row.data) : '', dataISO: row.data, tamanho: row.tamanho, url: row.url, criadoEm: row.criado_em };
   }
   if (tabela === 'proximos_passos') {
     return { _id: row.id, titulo: row.titulo, descricao: row.descricao, prioridade: row.prioridade, dataLimite: row.data_limite, responsavel: row.responsavel, concluido: !!row.concluido, concluidoEm: row.concluido_em, criadoEm: row.criado_em };
@@ -1790,7 +1831,7 @@ function sbItemToRow(tabela, item, projetoId) {
     return { projeto_id: projetoId, nome: item.nome, status: item.status, data_prevista: item.dataISO || null, responsavel: item.responsavel || null, data_inicio: item.inicioISO || null, descricao: item.descricao || null, docs: item.docs || [] };
   }
   if (tabela === 'documentos') {
-    return { projeto_id: projetoId, codigo: item.nome, titulo: item.titulo, categoria: item.categoria || null, status: item.status || null, data: item.data || null, tamanho: item.tamanho || null, url: item.url || null };
+    return { projeto_id: projetoId, codigo: item.nome, titulo: item.titulo, categoria: item.categoria || null, status: item.status || null, data: item.dataISO || item.data || null, tamanho: item.tamanho || null, url: item.url || null };
   }
   if (tabela === 'proximos_passos') {
     return { projeto_id: projetoId, titulo: item.titulo, descricao: item.descricao || null, prioridade: item.prioridade || null, data_limite: item.dataLimite || null, responsavel: item.responsavel || null, concluido: item.concluido === true || item.concluido === 'sim', concluido_em: item.concluidoEm || null };
@@ -2523,6 +2564,29 @@ function tentarRestaurarSessao() {
     _isMaster = true;
     _masterEmail = sess.email;
     ge('login-screen').style.display = 'none';
+
+    // Se tinha um projeto específico aberto, pula o Painel de Projetos e vai
+    // direto pra ele — chamar renderMasterSupabase() aqui e só depois trocar
+    // de tela criava um "flash" do painel toda vez que a página recarregava
+    // dentro de um projeto, porque o carregamento do projeto é assíncrono e
+    // o painel já tinha sido pintado na tela nesse meio tempo.
+    if (sess.clienteAberto && sb && sess.origem === 'sb') {
+      ge('l-restoring').style.display = 'flex';
+      ge('l-logo').style.display = 'none';
+      ge('l-card').style.display = 'none';
+      sbCarregarProjeto(sess.clienteAberto).then(function(dados) {
+        ge('l-restoring').style.display = 'none';
+        if (!dados) { renderMasterSupabase(); return; } // projeto não existe mais: cai no painel normalmente
+        _msCacheCompleto[sess.clienteAberto] = dados;
+        openClient(dados);
+      }).catch(function(e) {
+        console.error('Falha ao restaurar projeto aberto:', e);
+        ge('l-restoring').style.display = 'none';
+        renderMasterSupabase(); // erro de rede passageiro: mostra o painel em vez de travar a tela de carregamento
+      });
+      return;
+    }
+
     if (sb && sess.origem === 'sb') {
       renderMasterSupabase();
     } else {
@@ -3106,6 +3170,7 @@ function ceRenderForm(item) {
   for (var i = 0; i < cat.campos.length; i++) {
     var f = cat.campos[i];
     var val = item[f.k] != null ? item[f.k] : '';
+    if (f.tipo === 'date' && item[f.k + 'ISO'] != null) val = item[f.k + 'ISO'];
     h += '<div class="ce-form-row"><label class="ce-form-label">' + esc(f.label) + (f.req ? ' *' : '') + '</label>';
     if (f.readonly) {
       h += '<div class="ce-form-readonly">' + esc(val) + '</div>';
@@ -3259,6 +3324,15 @@ function ceSaveItem() {
     } else {
       item[f.k] = f.tipo === 'number' ? Number(val) : val;
     }
+  }
+
+  // Documentos guarda a data em dois formatos: dataISO (para ordenar e gravar
+  // no banco) e data (DD/MM/AAAA, só para exibição) — sem isso, um documento
+  // recém-criado ficava com a data "crua" do input e a lista passava a
+  // ordenar por ordem de upload em vez de pela data do próprio documento.
+  if (cat.id === 'documentos') {
+    item.dataISO = item.data || null;
+    item.data = item.data ? fd(item.data) : '';
   }
 
   // Contato no portal depende de WhatsApp preenchido — sem isso o botão de
@@ -5307,25 +5381,36 @@ function encontroPorDocCodigo(codigo) {
   return null;
 }
 
+function ataIniciais(nome) {
+  var partes = (nome || '').trim().split(/\s+/);
+  if (!partes.length || !partes[0]) return '?';
+  return (partes[0][0] + (partes.length > 1 ? partes[partes.length - 1][0] : '')).toUpperCase();
+}
+
 function ataDetalheHTML(enc) {
   var h = '';
-  h += '<div style="font-size:.78rem;color:var(--tl);font-weight:700;letter-spacing:.04em;margin-bottom:.9rem">' + esc(fdbr2(enc.data)) + (enc.fase ? ' &middot; ' + esc(enc.fase) : '') + '</div>';
-  if (enc.resumo) h += '<div style="font-size:.87rem;color:var(--td);line-height:1.65;margin-bottom:1.1rem">' + esc(enc.resumo) + '</div>';
+  if (enc.resumo) h += '<div class="ata-resumo-card">' + esc(enc.resumo) + '</div>';
   if ((enc.participantes || []).length) {
-    h += '<div class="sec-lbl" style="margin-bottom:.45rem">Participantes</div>';
-    h += '<div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.1rem">' + enc.participantes.map(function(p){ return '<span class="eq-espec">' + esc(p) + '</span>'; }).join('') + '</div>';
+    h += '<div class="ata-section"><div class="ata-section-title">&#128101; Participantes</div>';
+    h += '<div class="ata-participantes">' + enc.participantes.map(function(p){
+      return '<div class="ata-participante"><div class="ata-participante-av">' + esc(ataIniciais(p)) + '</div><div class="ata-participante-nome">' + esc(p) + '</div></div>';
+    }).join('') + '</div></div>';
   }
   if ((enc.pauta || []).length) {
-    h += '<div class="sec-lbl" style="margin-bottom:.45rem">Pauta da reunião</div>';
-    h += '<ul style="margin:0 0 1.1rem 1.15rem;padding:0;font-size:.83rem;color:var(--tm);line-height:1.75">' + enc.pauta.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>';
+    h += '<div class="ata-section"><div class="ata-section-title">&#128203; Pauta da reunião</div>';
+    h += '<ul class="ata-pauta-list">' + enc.pauta.map(function(p, i){
+      return '<li class="ata-pauta-item"><div class="ata-pauta-num">' + (i + 1) + '</div><div>' + esc(p) + '</div></li>';
+    }).join('') + '</ul></div>';
   }
   if ((enc.destaques || []).length) {
-    h += '<div class="sec-lbl" style="margin-bottom:.45rem">Destaques</div>';
-    h += '<ul style="margin:0 0 1.1rem 1.15rem;padding:0;font-size:.83rem;color:var(--tm);line-height:1.75">' + enc.destaques.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>';
+    h += '<div class="ata-section"><div class="ata-section-title">&#10024; Destaques</div><div class="ata-destaque-card"><ul class="ata-destaque-list">' + enc.destaques.map(function(p){
+      return '<li class="ata-destaque-item"><span class="ata-destaque-ico">&#9733;</span><div>' + esc(p) + '</div></li>';
+    }).join('') + '</ul></div></div>';
   }
   if ((enc.proximosPassosReuniao || []).length) {
-    h += '<div class="sec-lbl" style="margin-bottom:.45rem;color:var(--warn)">&#9888; Encaminhamentos e pendências</div>';
-    h += '<ul style="margin:0 0 .2rem 1.15rem;padding:0;font-size:.83rem;color:var(--tm);line-height:1.75">' + enc.proximosPassosReuniao.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>';
+    h += '<div class="ata-section"><div class="ata-section-title" style="color:var(--warn)">&#9888; Encaminhamentos e pendências</div><div class="ata-pendencia-card"><ul class="ata-pendencia-list">' + enc.proximosPassosReuniao.map(function(p){
+      return '<li class="ata-pendencia-item"><span class="ata-pendencia-ico">&#8226;</span><div>' + esc(p) + '</div></li>';
+    }).join('') + '</ul></div></div>';
   }
   return h;
 }
@@ -5334,9 +5419,10 @@ function abrirAtaDetalhe(codigo, tituloDoc, urlPdf) {
   var enc = encontroPorDocCodigo(codigo);
   if (!enc) { abrirPreviewDoc(urlPdf, tituloDoc); return; } // sem encontro vinculado, cai no preview normal
   ge('ata-titulo').textContent = tituloDoc || enc.titulo || 'Ata de reunião';
+  ge('ata-modal-header-sub').textContent = fdbr2(enc.data) + (enc.fase ? ' · ' + enc.fase : '');
   ge('ata-corpo').innerHTML = ataDetalheHTML(enc);
   var linkPdf = ge('ata-abrir-pdf');
-  if (urlPdf) { linkPdf.href = urlPdf; linkPdf.style.display = ''; linkPdf.textContent = 'Ver PDF original ↗'; }
+  if (urlPdf) { linkPdf.href = urlPdf; linkPdf.style.display = ''; }
   else { linkPdf.removeAttribute('href'); linkPdf.style.display = 'none'; }
   ge('ata-overlay').className = 'app-modal-overlay on';
 }
@@ -6105,7 +6191,18 @@ function renderEntregas(filtro) {
 // Monta só o conteúdo da grade de documentos (usado tanto na renderização completa
 // quanto na atualização por busca, que não pode redesenhar a tela inteira senão
 // o campo de texto perde o foco a cada letra digitada).
+// Chave de ordenação por data do documento (não da ordem de upload). Usa
+// dataISO quando existe; se for um item antigo sem esse campo, tenta
+// converter o formato de exibição DD/MM/AAAA de volta para AAAA-MM-DD.
+function docSortKey(d) {
+  if (d.dataISO) return d.dataISO;
+  var m = (d.data || '').match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (m) return m[3] + '-' + m[2] + '-' + m[1];
+  return '';
+}
+
 function docGridHTML(lista, c) {
+  lista = lista.slice().sort(function(a, b) { return docSortKey(b).localeCompare(docSortKey(a)); });
   var h = '';
   if (!lista.length) h += '<p style="font-size:.83rem;color:var(--tl);grid-column:1/-1;padding:1rem 0">Nenhum documento encontrado. Tente outro termo ou categoria.</p>';
   for (var j = 0; j < lista.length; j++) {
