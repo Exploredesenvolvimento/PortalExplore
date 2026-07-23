@@ -876,7 +876,17 @@ a{text-decoration:none;color:inherit}
 .eq-card.open .eq-xbody{max-height:280px}
 .eq-card.open .xchev{transform:rotate(180deg)}
 .eq-xinner{padding:.22rem 1.1rem 1rem}
+.ce-peso-soma{display:flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:700;padding:.6rem .85rem;border-radius:var(--r);margin-bottom:.85rem}
+.ce-peso-soma.ok{background:var(--ok-bg);color:var(--ok)}
+.ce-peso-soma.warn{background:var(--warn-bg);color:var(--warn)}
 .eq-espec{font-size:.72rem;font-weight:700;color:var(--tm);padding:.15rem .5rem;background:var(--cream);border-radius:4px;display:inline-block;margin-bottom:.55rem}
+.eq-espec-wrap{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.55rem}
+.eq-espec-wrap .eq-espec{margin-bottom:0}
+.ce-multiselect{display:flex;flex-wrap:wrap;gap:.45rem}
+.ce-ms-chip{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .7rem;border:1.5px solid var(--cream-dk);border-radius:99px;font-size:.78rem;color:var(--tm);cursor:pointer;transition:background .15s ease,border-color .15s ease,color .15s ease;user-select:none;background:var(--white)}
+.ce-ms-chip input{margin:0;accent-color:var(--bx);cursor:pointer}
+.ce-ms-chip.checked{background:var(--bx);border-color:var(--bx);color:var(--white)}
+.ce-ms-chip:hover{border-color:var(--bx-lt)}
 .eq-bio{font-size:.79rem;color:var(--tm);line-height:1.6}
 
 /* radar canvas */
@@ -911,8 +921,17 @@ a{text-decoration:none;color:inherit}
 .m-ll{background:#EAF4EE}.m-lh{background:#FBF4E6}.m-hl{background:#FBF4E6}.m-hh{background:#FDECEA}
 .m-axis{font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--tl);display:flex;align-items:center;justify-content:center;text-align:center}
 .m-axis-y{writing-mode:vertical-lr;transform:rotate(180deg)}
-.r-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:var(--white)}
+.r-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:var(--white);border:none;cursor:pointer;position:relative;transition:transform .15s ease,box-shadow .15s ease;font-family:inherit}
+.r-dot:hover,.r-dot:focus-visible{transform:scale(1.14);box-shadow:0 2px 8px rgba(0,0,0,.22);outline:none}
 .rd-ll{background:var(--ok)}.rd-lh{background:var(--warn)}.rd-hl{background:var(--warn)}.rd-hh{background:var(--danger)}
+/* tooltip customizado nos pontos da matriz — substitui o title nativo do navegador */
+.r-dot[data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--td);color:var(--white);font-size:.72rem;font-weight:500;line-height:1.35;padding:.45rem .65rem;border-radius:6px;width:max-content;max-width:180px;white-space:normal;text-align:center;opacity:0;pointer-events:none;transition:opacity .15s ease,transform .15s ease;z-index:20;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.r-dot[data-tip]::before{content:'';position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--td);opacity:0;pointer-events:none;transition:opacity .15s ease}
+.r-dot[data-tip]:hover::after,.r-dot[data-tip]:focus-visible::after{opacity:1;transform:translateX(-50%) translateY(0)}
+.r-dot[data-tip]:hover::before,.r-dot[data-tip]:focus-visible::before{opacity:1}
+/* destaque temporário ao navegar da matriz até o item na lista */
+@keyframes riscoFlash{0%{box-shadow:0 0 0 0 rgba(97,43,74,.35);border-color:var(--bx)}100%{box-shadow:0 0 0 10px rgba(97,43,74,0);border-color:var(--cream-dk)}}
+.risco-item.rf-highlight{animation:riscoFlash 1.1s ease-out}
 .riscos-list{display:flex;flex-direction:column;gap:.55rem}
 .risco-item{background:var(--white);border-radius:var(--r);padding:.85rem 1rem;border:1px solid var(--cream-dk)}
 .ri-hh{background:linear-gradient(to right, rgba(155,35,53,.05), var(--white) 5%)}.ri-hl{background:linear-gradient(to right, rgba(176,125,42,.045), var(--white) 5%)}.ri-lh{background:linear-gradient(to right, rgba(176,125,42,.045), var(--white) 5%)}.ri-ll{background:linear-gradient(to right, rgba(59,122,87,.05), var(--white) 5%)}
@@ -1574,6 +1593,19 @@ a{text-decoration:none;color:inherit}
     </div>
   </div>
 
+  <div class="app-modal-overlay" id="ata-overlay" onclick="if(event.target===this) fecharAtaDetalhe()">
+    <div class="app-modal" style="max-width:640px;width:92vw;max-height:86vh;display:flex;flex-direction:column;padding:0;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;border-bottom:1px solid var(--line);flex-shrink:0">
+        <div id="ata-titulo" style="font-weight:700;font-size:.92rem;color:var(--td)"></div>
+        <div style="display:flex;gap:.7rem;align-items:center;flex-shrink:0">
+          <a id="ata-abrir-pdf" href="#" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--bx);font-weight:700;white-space:nowrap">Ver PDF original &#8599;</a>
+          <button onclick="fecharAtaDetalhe()" style="border:none;background:none;font-size:1.1rem;cursor:pointer;color:var(--tm)">&#10005;</button>
+        </div>
+      </div>
+      <div id="ata-corpo" style="padding:1.1rem;overflow-y:auto;flex:1"></div>
+    </div>
+  </div>
+
   <div class="app-modal-overlay" id="busca-overlay" onclick="if(event.target===this) fecharBusca()">
     <div class="app-modal" style="max-width:520px;text-align:left">
       <input type="text" id="busca-input" placeholder="Buscar em entregas, documentos, encontros, decisões..." style="width:100%;padding:.7rem .9rem;border:1.5px solid var(--line);border-radius:var(--r);font-size:.88rem;margin-bottom:.7rem" oninput="executarBusca(this.value)">
@@ -2171,6 +2203,17 @@ function esc(s) {
     .replace(/"/g,'&quot;');
 }
 
+// Formata CNPJ automaticamente enquanto a pessoa digita (só números), no padrão
+// 00.000.000/0000-00 — assim ninguém precisa digitar a pontuação na mão.
+function formatarCNPJ(v) {
+  var d = String(v || '').replace(/[^0-9]/g, '').slice(0, 14);
+  if (d.length > 12) return d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})$/, '$1.$2.$3/$4-$5');
+  if (d.length > 8) return d.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})$/, '$1.$2.$3/$4');
+  if (d.length > 5) return d.replace(/^(\d{2})(\d{3})(\d{0,3})$/, '$1.$2.$3');
+  if (d.length > 2) return d.replace(/^(\d{2})(\d{0,3})$/, '$1.$2');
+  return d;
+}
+
 function sv(h) {
   var vc = ge('vc');
   if (!vc) return;
@@ -2648,11 +2691,11 @@ var CE_CATEGORIAS = [
       { k:'nome', label:'Nome', tipo:'text', req:true },
       { k:'foto', label:'Foto', tipo:'file', destino:'foto' },
       { k:'papel', label:'Papel', tipo:'text' },
-      { k:'especialidade', label:'Especialidade', tipo:'text' },
+      { k:'especialidade', label:'Especialidade(s)', tipo:'multiselect', opcoes:['Gestão','Processos','Pessoas','Gestão de Pessoas','Estratégia','Desenvolvimento Organizacional','Cultura Organizacional','Liderança','Diagnóstico Comportamental','Advisory'] },
       { k:'bio', label:'Bio', tipo:'textarea' },
-      { k:'email', label:'E-mail', tipo:'text' },
-      { k:'telefone', label:'Telefone', tipo:'text' },
-      { k:'whatsapp', label:'WhatsApp (só números, com DDI, ex: 5521999990000)', tipo:'text' },
+      { k:'email', label:'E-mail', tipo:'text', validarEmail:true },
+      { k:'telefone', label:'Telefone', tipo:'text', soNumero:'telefone' },
+      { k:'whatsapp', label:'WhatsApp (só números, com DDI, ex: 5521999990000)', tipo:'text', soNumero:'digitos' },
       { k:'contatoPortal', label:'Aparece como contato no portal (com botão de WhatsApp)?', tipo:'select', opcoes:[['','Não'],['sim','Sim']] }
     ]
   },
@@ -2662,18 +2705,18 @@ var CE_CATEGORIAS = [
     campos: [
       { k:'nome', label:'Nome', tipo:'text', req:true },
       { k:'cargo', label:'Cargo', tipo:'text' },
-      { k:'email', label:'E-mail', tipo:'text' },
-      { k:'telefone', label:'Telefone', tipo:'text' },
+      { k:'email', label:'E-mail', tipo:'text', validarEmail:true },
+      { k:'telefone', label:'Telefone', tipo:'text', soNumero:'telefone' },
       { k:'responsavel', label:'É o responsável principal pelo projeto?', tipo:'select', opcoes:[['','Não'],['sim','Sim']] }
     ]
   },
   { id:'dadosEmpresa', label:'Dados da Empresa', tipo:'single',
     campos: [
-      { k:'cnpj', label:'CNPJ', tipo:'text', col:'cnpj' },
+      { k:'cnpj', label:'CNPJ', tipo:'text', col:'cnpj', soNumero:'cnpj' },
       { k:'setor', label:'Setor / atividade', tipo:'text', col:'setor' },
       { k:'endereco', label:'Endereço', tipo:'text', col:'endereco' },
-      { k:'telefoneEmpresa', label:'Telefone da empresa', tipo:'text', col:'telefone_empresa' },
-      { k:'emailEmpresa', label:'E-mail da empresa', tipo:'text', col:'email_empresa' },
+      { k:'telefoneEmpresa', label:'Telefone da empresa', tipo:'text', col:'telefone_empresa', soNumero:'telefone' },
+      { k:'emailEmpresa', label:'E-mail da empresa', tipo:'text', col:'email_empresa', validarEmail:true },
       { k:'horasProjeto', label:'Horas de consultoria contratadas', tipo:'number', col:'horas_projeto' },
       { k:'horasConsumidas', label:'Horas consumidas até agora', tipo:'number', col:'horas_consumidas' }
     ]
@@ -2682,9 +2725,9 @@ var CE_CATEGORIAS = [
     campos: [
       { k:'consultor', label:'Nome do consultor responsável', tipo:'text', col:'consultor' },
       { k:'consultorCargo', label:'Cargo do consultor responsável na EXPLORE', tipo:'text', col:'consultor_cargo' },
-      { k:'consultorEmail', label:'E-mail do consultor responsável', tipo:'text', col:'consultor_email' },
-      { k:'consultorTelefone', label:'Telefone do consultor responsável', tipo:'text', col:'consultor_telefone' },
-      { k:'consultorWa', label:'WhatsApp (só números, com DDI, ex: 5521999990000)', tipo:'text', col:'consultor_whatsapp' }
+      { k:'consultorEmail', label:'E-mail do consultor responsável', tipo:'text', col:'consultor_email', validarEmail:true },
+      { k:'consultorTelefone', label:'Telefone do consultor responsável', tipo:'text', col:'consultor_telefone', soNumero:'telefone' },
+      { k:'consultorWa', label:'WhatsApp (só números, com DDI, ex: 5521999990000)', tipo:'text', col:'consultor_whatsapp', soNumero:'digitos' }
     ]
   },
   { id:'acessoCliente', label:'Acesso do Cliente (login)', tipo:'acesso' },
@@ -3015,6 +3058,11 @@ function ceRenderLista() {
   ge('ce-title').textContent = cat.label;
   var arr = _c[cat.campo] || [];
   var h = '<button class="ce-back" onclick="ceClose()">&#8592; Fechar</button>';
+  if (cat.id === 'fases' && arr.length) {
+    var somaPesos = arr.reduce(function(s, f){ return s + (Number(f.peso) || 0); }, 0);
+    var pesoOk = Math.round(somaPesos * 100) / 100 === 100;
+    h += '<div class="ce-peso-soma' + (pesoOk ? ' ok' : ' warn') + '">' + (pesoOk ? '✓ ' : '⚠ ') + 'Soma dos pesos das fases: <strong>' + somaPesos + '%</strong>' + (pesoOk ? '' : ' — deveria ser 100% para o progresso do cronograma ficar correto') + '</div>';
+  }
   if (!arr.length) {
     h += '<div class="ce-empty">Nenhum item cadastrado ainda. Use o botão abaixo para adicionar o primeiro.</div>';
   } else if (cat.campo === 'proximosPassos') {
@@ -3099,8 +3147,39 @@ function ceRenderForm(item) {
         }
         h += '</div>';
       }
+    } else if (f.tipo === 'combo') {
+      var dlId = 'dl-' + f.k;
+      h += '<input class="ce-form-input" type="text" id="ce-f-' + f.k + '" list="' + dlId + '" value="' + esc(val) + '" placeholder="' + esc(f.placeholder || 'Selecione ou digite') + '" autocomplete="off">';
+      h += '<datalist id="' + dlId + '">';
+      for (var jc = 0; jc < (f.opcoes || []).length; jc++) { h += '<option value="' + esc(f.opcoes[jc]) + '">'; }
+      h += '</datalist>';
+    } else if (f.tipo === 'multiselect') {
+      var msSelecionados = (val || '').split(',').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+      h += '<div class="ce-multiselect" id="ce-f-' + f.k + '">';
+      for (var jm = 0; jm < (f.opcoes || []).length; jm++) {
+        var msOpt = f.opcoes[jm];
+        var msChecked = msSelecionados.indexOf(msOpt) !== -1;
+        h += '<label class="ce-ms-chip' + (msChecked ? ' checked' : '') + '"><input type="checkbox" value="' + esc(msOpt) + '"' + (msChecked ? ' checked' : '') + ' onchange="this.parentElement.classList.toggle(\'checked\', this.checked)"> ' + esc(msOpt) + '</label>';
+      }
+      h += '</div>';
+      var msExtras = msSelecionados.filter(function(s){ return f.opcoes.indexOf(s) === -1; }).join(', ');
+      h += '<input class="ce-form-input" type="text" id="ce-f-' + f.k + '-extra" placeholder="Outra(s) especialidade(s) — separe por vírgula" value="' + esc(msExtras) + '" style="margin-top:.5rem">';
     } else {
-      h += '<input class="ce-form-input" type="' + f.tipo + '" id="ce-f-' + f.k + '" value="' + esc(val) + '">';
+      var numAttrs = '';
+      if (f.tipo === 'number') {
+        // bloqueia letras e símbolos que o <input type=number> ainda deixa passar (e, +, -)
+        numAttrs = ' inputmode="decimal" oninput="this.value=this.value.replace(/[^0-9.]/g,\'\')"';
+      } else if (f.soNumero === 'digitos') {
+        // só dígitos — usado em WhatsApp, onde o formato exigido é DDI+DDD+número, sem símbolos
+        numAttrs = ' inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,\'\')"';
+      } else if (f.soNumero === 'telefone') {
+        // dígitos + símbolos comuns de formatação de telefone (espaço, parênteses, hífen, +)
+        numAttrs = ' inputmode="tel" oninput="this.value=this.value.replace(/[^0-9 ()\\-+]/g,\'\')"';
+      } else if (f.soNumero === 'cnpj') {
+        // formata automaticamente como 00.000.000/0000-00 enquanto digita
+        numAttrs = ' inputmode="numeric" oninput="this.value=formatarCNPJ(this.value)"';
+      }
+      h += '<input class="ce-form-input" type="' + f.tipo + '" id="ce-f-' + f.k + '" value="' + esc(val) + '"' + numAttrs + '>';
     }
     h += '</div>';
   }
@@ -3153,9 +3232,26 @@ function ceSaveItem() {
       item[f.k] = Array.prototype.map.call(marcados, function(c) { return c.value; });
       continue;
     }
+    if (f.tipo === 'multiselect') {
+      var msWrap = ge('ce-f-' + f.k);
+      var msMarcados = msWrap ? msWrap.querySelectorAll('input[type=checkbox]:checked') : [];
+      var msVals = Array.prototype.map.call(msMarcados, function(c) { return c.value; });
+      var msExtraEl = ge('ce-f-' + f.k + '-extra');
+      if (msExtraEl && msExtraEl.value.trim()) {
+        var msExtraVals = msExtraEl.value.split(',').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+        msVals = msVals.concat(msExtraVals);
+      }
+      if (f.req && !msVals.length) { showAlert('Preencha o campo "' + f.label + '"'); return; }
+      item[f.k] = msVals.join(', ');
+      continue;
+    }
     var el = ge('ce-f-' + f.k);
     var val = el.value;
     if (f.req && !val) { showAlert('Preencha o campo "' + f.label + '"'); return; }
+    if (f.validarEmail && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+      showAlert('O e-mail informado em "' + f.label + '" não parece válido. Confira o formato (ex: nome@empresa.com).');
+      return;
+    }
     if (f.tipo === 'list') {
       item[f.k] = val.split('\n').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
     } else if (f.tipo === 'taglist') {
@@ -3163,6 +3259,13 @@ function ceSaveItem() {
     } else {
       item[f.k] = f.tipo === 'number' ? Number(val) : val;
     }
+  }
+
+  // Contato no portal depende de WhatsApp preenchido — sem isso o botão de
+  // WhatsApp fica quebrado (vazio) na tela do cliente.
+  if (cat.id === 'equipe' && item.contatoPortal === 'sim' && !item.whatsapp) {
+    showAlert('Para aparecer como contato no portal, preencha também o campo "WhatsApp" — sem ele, o botão de WhatsApp aparece quebrado para o cliente.');
+    return;
   }
 
   if (kpiValorAntigo !== null && kpiValorAntigo !== item.atual) {
@@ -5191,6 +5294,57 @@ function doExport() {
 
 
 // ═══════════════════════════════════════════
+// RESUMO DA ATA EM MODAL (documento "Ata de Reunião" vinculado a um Encontro)
+// ═══════════════════════════════════════════
+// Acha o Encontro cujo campo "docs" referencia o código deste documento —
+// é essa ligação que permite ao cliente ver a ata desmembrada (pauta,
+// resumo, destaques, pendências) mesmo antes do PDF em si estar anexado.
+function encontroPorDocCodigo(codigo) {
+  var lst = _c.encontros || [];
+  for (var i = 0; i < lst.length; i++) {
+    if ((lst[i].docs || []).indexOf(codigo) !== -1) return lst[i];
+  }
+  return null;
+}
+
+function ataDetalheHTML(enc) {
+  var h = '';
+  h += '<div style="font-size:.78rem;color:var(--tl);font-weight:700;letter-spacing:.04em;margin-bottom:.9rem">' + esc(fdbr2(enc.data)) + (enc.fase ? ' &middot; ' + esc(enc.fase) : '') + '</div>';
+  if (enc.resumo) h += '<div style="font-size:.87rem;color:var(--td);line-height:1.65;margin-bottom:1.1rem">' + esc(enc.resumo) + '</div>';
+  if ((enc.participantes || []).length) {
+    h += '<div class="sec-lbl" style="margin-bottom:.45rem">Participantes</div>';
+    h += '<div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.1rem">' + enc.participantes.map(function(p){ return '<span class="eq-espec">' + esc(p) + '</span>'; }).join('') + '</div>';
+  }
+  if ((enc.pauta || []).length) {
+    h += '<div class="sec-lbl" style="margin-bottom:.45rem">Pauta da reunião</div>';
+    h += '<ul style="margin:0 0 1.1rem 1.15rem;padding:0;font-size:.83rem;color:var(--tm);line-height:1.75">' + enc.pauta.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>';
+  }
+  if ((enc.destaques || []).length) {
+    h += '<div class="sec-lbl" style="margin-bottom:.45rem">Destaques</div>';
+    h += '<ul style="margin:0 0 1.1rem 1.15rem;padding:0;font-size:.83rem;color:var(--tm);line-height:1.75">' + enc.destaques.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>';
+  }
+  if ((enc.proximosPassosReuniao || []).length) {
+    h += '<div class="sec-lbl" style="margin-bottom:.45rem;color:var(--warn)">&#9888; Encaminhamentos e pendências</div>';
+    h += '<ul style="margin:0 0 .2rem 1.15rem;padding:0;font-size:.83rem;color:var(--tm);line-height:1.75">' + enc.proximosPassosReuniao.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>';
+  }
+  return h;
+}
+
+function abrirAtaDetalhe(codigo, tituloDoc, urlPdf) {
+  var enc = encontroPorDocCodigo(codigo);
+  if (!enc) { abrirPreviewDoc(urlPdf, tituloDoc); return; } // sem encontro vinculado, cai no preview normal
+  ge('ata-titulo').textContent = tituloDoc || enc.titulo || 'Ata de reunião';
+  ge('ata-corpo').innerHTML = ataDetalheHTML(enc);
+  var linkPdf = ge('ata-abrir-pdf');
+  if (urlPdf) { linkPdf.href = urlPdf; linkPdf.style.display = ''; linkPdf.textContent = 'Ver PDF original ↗'; }
+  else { linkPdf.removeAttribute('href'); linkPdf.style.display = 'none'; }
+  ge('ata-overlay').className = 'app-modal-overlay on';
+}
+function fecharAtaDetalhe() {
+  ge('ata-overlay').className = 'app-modal-overlay';
+}
+
+// ═══════════════════════════════════════════
 // PREVIEW DE DOCUMENTO EM MODAL
 // ═══════════════════════════════════════════
 // Converte links comuns do Google Drive (/view, /edit, sem sufixo) para o
@@ -5958,8 +6112,14 @@ function docGridHTML(lista, c) {
     var d = lista[j];
     var docIdx = c.documentos.indexOf(d);
     var proprio = arquivoProprio(d.url);
+    var encVinculado = encontroPorDocCodigo(d.nome);
     h += '<div class="doc-card-wrap">';
-    if (proprio) {
+    if (encVinculado) {
+      // Ata de reunião com encontro vinculado: o clique abre o resumo desmembrado
+      // (pauta, destaques, pendências), com o PDF original como ação secundária
+      // — assim o cliente vê o conteúdo mesmo antes do arquivo ser anexado.
+      h += '<a class="doc-card" href="javascript:void(0)" onclick="abrirAtaDetalhe(\'' + esc(d.nome).replace(/'/g,"\\'") + '\',\'' + esc(d.titulo || d.nome).replace(/'/g,"\\'") + '\',\'' + esc(d.url || '').replace(/'/g,"\\'") + '\')">';
+    } else if (proprio) {
       h += '<a class="doc-card" href="' + esc(d.url) + '" target="_blank" rel="noopener" download="' + esc(d.titulo || d.nome) + '">';
     } else {
       h += '<a class="doc-card" href="javascript:void(0)" onclick="abrirPreviewDoc(\'' + esc(d.url).replace(/'/g,"\\'") + '\',\'' + esc(d.titulo || d.nome).replace(/'/g,"\\'") + '\')">';
@@ -5969,7 +6129,7 @@ function docGridHTML(lista, c) {
     h += badgeDocSt(d.status) + '</div></div>';
     h += '<div class="dc-nome">' + esc(d.titulo || d.nome) + '</div>';
     h += '<div class="dc-bot"><div><div class="dc-data">' + esc(d.data) + '</div><div class="dc-data" style="font-size:.67rem;opacity:.7">' + esc(d.tamanho) + '</div></div>';
-    h += '<div class="dc-link">' + (proprio ? 'Baixar &#8595;' : 'Visualizar &#128065;') + '</div></div></a>';
+    h += '<div class="dc-link">' + (encVinculado ? 'Ver resumo &#128196;' : proprio ? 'Baixar &#8595;' : 'Visualizar &#128065;') + '</div></div></a>';
     h += '<div class="ce-edit-abs">' + ceEditIconHTML('documentos', docIdx) + '</div></div>';
   }
   return h;
@@ -6112,13 +6272,20 @@ function renderProximos() {
 // ═══════════════════════════════════════════
 // Calcula o % de progresso de um KPI considerando a direção: para indicadores onde
 // "quanto menor, melhor" (ex: tempo gasto em tarefas operacionais), o cálculo se inverte.
+// Nunca retorna NaN: meta ou atual ausentes/zerados são tratados explicitamente em vez
+// de caírem numa divisão por zero (0/0 = NaN em JS).
 function kpiProgresso(k) {
   var dir = k.direcao || 'crescente';
+  var meta = Number(k.meta), atual = Number(k.atual);
+  if (!isFinite(meta)) meta = 0;
+  if (!isFinite(atual)) atual = 0;
   if (dir === 'decrescente') {
-    if (k.atual <= k.meta) return 100;
-    return Math.max(0, Math.round(k.meta / k.atual * 100));
+    if (atual <= meta) return 100;
+    if (meta <= 0) return 0; // meta zero e ainda não atingida: não dá pra expressar como proporção
+    return Math.max(0, Math.round(meta / atual * 100));
   }
-  return Math.min(100, Math.round(k.atual / k.meta * 100));
+  if (meta <= 0) return atual >= meta ? 100 : 0; // meta zero: já cumprida por definição (crescente)
+  return Math.min(100, Math.round(atual / meta * 100));
 }
 
 // Mesma lógica aplicada à interpretação da tendência: "subindo" só é bom se o indicador
@@ -6136,11 +6303,15 @@ function kpiTendenciaInfo(k) {
 function kpiFaltamTexto(k) {
   var dir = k.direcao || 'crescente';
   var unid = k.unidade || '';
+  var meta = Number(k.meta), atual = Number(k.atual);
+  if (!isFinite(meta)) meta = 0;
+  if (!isFinite(atual)) atual = 0;
   if (dir === 'decrescente') {
-    if (k.atual <= k.meta) return 'Meta atingida';
-    return (Math.round((k.atual - k.meta) * 100) / 100) + unid + ' acima da meta';
+    if (atual <= meta) return 'Meta atingida';
+    return (Math.round((atual - meta) * 100) / 100) + unid + ' acima da meta';
   }
-  return Math.max(0, k.meta - k.atual) + unid + ' até a meta';
+  if (atual >= meta) return 'Meta atingida';
+  return Math.max(0, meta - atual) + unid + ' até a meta';
 }
 
 // Pequeno gráfico de linha (sparkline) com a evolução do KPI ao longo do tempo,
@@ -6552,7 +6723,8 @@ function renderEquipe() {
     h += '<div><div class="eq-nome serif">' + esc(p.nome) + '</div><div class="eq-papel">' + esc(p.papel) + '</div></div></div>';
     h += chevSVG() + '</button><div class="ce-edit-abs">' + ceEditIconHTML('equipe', i) + '</div>';
     h += '<div class="eq-xbody"><div class="eq-xinner"><div style="height:1px;background:var(--cream-dk);margin:.4rem 0 .65rem"></div>';
-    h += '<span class="eq-espec">' + esc(p.especialidade) + '</span>';
+    var espArr = (p.especialidade || '').split(',').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+    if (espArr.length) { h += '<div class="eq-espec-wrap">' + espArr.map(function(e){ return '<span class="eq-espec">' + esc(e) + '</span>'; }).join('') + '</div>'; }
     h += '<div class="eq-bio" style="margin-top:.55rem">' + esc(p.bio) + '</div>';
     h += '</div></div></div>';
   }
@@ -6677,18 +6849,18 @@ function renderRiscos() {
   h += '</div>';
   h += '<div class="matrix">';
   h += '<div class="m-axis m-axis-y">Alta prob.</div>';
-  h += '<div class="m-cell m-hl">' + quad.hl.map(function(x){ return '<div class="r-dot rd-hl" title="'+esc(x.r.titulo)+'">'+x.idx+'</div>'; }).join('') + '<span style="font-size:.6rem;color:var(--warn)">Alta / Baixo</span></div>';
-  h += '<div class="m-cell m-hh">' + quad.hh.map(function(x){ return '<div class="r-dot rd-hh" title="'+esc(x.r.titulo)+'">'+x.idx+'</div>'; }).join('') + '<span style="font-size:.6rem;color:var(--danger)">Alta / Alto</span></div>';
+  h += '<div class="m-cell m-hl">' + quad.hl.map(function(x){ return '<button type="button" class="r-dot rd-hl" data-tip="'+esc(x.r.titulo)+'" onclick="irParaRisco('+x.idx+')" aria-label="Ver risco: '+esc(x.r.titulo)+'">'+x.idx+'</button>'; }).join('') + '<span style="font-size:.6rem;color:var(--warn)">Alta / Baixo</span></div>';
+  h += '<div class="m-cell m-hh">' + quad.hh.map(function(x){ return '<button type="button" class="r-dot rd-hh" data-tip="'+esc(x.r.titulo)+'" onclick="irParaRisco('+x.idx+')" aria-label="Ver risco: '+esc(x.r.titulo)+'">'+x.idx+'</button>'; }).join('') + '<span style="font-size:.6rem;color:var(--danger)">Alta / Alto</span></div>';
   h += '<div class="m-axis m-axis-y">Baixa prob.</div>';
-  h += '<div class="m-cell m-ll">' + quad.ll.map(function(x){ return '<div class="r-dot rd-ll" title="'+esc(x.r.titulo)+'">'+x.idx+'</div>'; }).join('') + '<span style="font-size:.6rem;color:var(--ok)">Baixa / Baixo</span></div>';
-  h += '<div class="m-cell m-lh">' + quad.lh.map(function(x){ return '<div class="r-dot rd-lh" title="'+esc(x.r.titulo)+'">'+x.idx+'</div>'; }).join('') + '<span style="font-size:.6rem;color:var(--warn)">Baixa / Alto</span></div>';
+  h += '<div class="m-cell m-ll">' + quad.ll.map(function(x){ return '<button type="button" class="r-dot rd-ll" data-tip="'+esc(x.r.titulo)+'" onclick="irParaRisco('+x.idx+')" aria-label="Ver risco: '+esc(x.r.titulo)+'">'+x.idx+'</button>'; }).join('') + '<span style="font-size:.6rem;color:var(--ok)">Baixa / Baixo</span></div>';
+  h += '<div class="m-cell m-lh">' + quad.lh.map(function(x){ return '<button type="button" class="r-dot rd-lh" data-tip="'+esc(x.r.titulo)+'" onclick="irParaRisco('+x.idx+')" aria-label="Ver risco: '+esc(x.r.titulo)+'">'+x.idx+'</button>'; }).join('') + '<span style="font-size:.6rem;color:var(--warn)">Baixa / Alto</span></div>';
   h += '<div></div><div class="m-axis">Baixo impacto</div><div class="m-axis">Alto impacto</div></div>';
   h += '<div class="sec-lbl-row"><div class="sec-lbl">Detalhamento dos riscos</div>' + addBtn + '</div><div class="riscos-list">';
   for (var j = 0; j < riscos.length; j++) {
     var r = riscos[j]; var q = getQ(r);
-    h += '<div class="risco-item ri-' + q + '">';
+    h += '<div class="risco-item ri-' + q + '" id="risco-item-' + (j+1) + '">';
     h += '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.65rem;margin-bottom:.28rem">';
-    h += '<div style="display:flex;align-items:center;gap:.55rem"><div class="r-dot rd-'+q+'" style="width:26px;height:26px;font-size:.68rem;flex-shrink:0">'+(j+1)+'</div><div class="r-titulo">'+esc(r.titulo)+'</div></div>';
+    h += '<div style="display:flex;align-items:center;gap:.55rem"><div class="r-dot rd-'+q+'" style="width:26px;height:26px;font-size:.68rem;flex-shrink:0;cursor:default">'+(j+1)+'</div><div class="r-titulo">'+esc(r.titulo)+'</div></div>';
     h += '<div style="display:flex;align-items:center;gap:.3rem;flex-shrink:0"><span class="badge b-'+(r.probabilidade==='alta'?'danger':'pend')+'">'+cap(r.probabilidade)+' prob.</span><span class="badge b-'+(r.impacto==='alto'?'danger':r.impacto==='medio'?'warn':'pend')+'">'+cap(r.impacto)+' impacto</span>' + ceEditIconHTML('riscos', j) + '</div></div>';
     h += '<div class="r-mit"><strong style="color:var(--tm)">Mitigação:</strong> '+esc(r.mitigacao)+'</div></div>';
   }
@@ -6699,6 +6871,17 @@ function renderRiscos() {
     var matrix = document.querySelector('.matrix');
     if (matrix && window.innerWidth > 640) matrix.style.display = 'grid';
   }, 50);
+}
+
+// leva do ponto numerado na matriz até o card correspondente em "Detalhamento dos riscos"
+function irParaRisco(idx) {
+  var el = document.getElementById('risco-item-' + idx);
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.classList.remove('rf-highlight');
+  void el.offsetWidth; // reinicia a animação se já tiver sido clicado antes
+  el.classList.add('rf-highlight');
+  setTimeout(function() { el.classList.remove('rf-highlight'); }, 1200);
 }
 
 // ═══════════════════════════════════════════
