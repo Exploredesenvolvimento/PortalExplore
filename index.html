@@ -6472,16 +6472,13 @@ function docCardHTML(d, c) {
 }
 
 function docGridHTML(lista, c) {
-  // Ordem alfabética por título (ou nome/código, se não houver título) — mais
-  // fácil de achar um documento específico do que por data.
-  lista = lista.slice().sort(function(a, b) { return (a.titulo || a.nome || '').localeCompare(b.titulo || b.nome || '', 'pt-BR', {sensitivity:'base'}); });
   var h = '';
   if (!lista.length) { h += '<p style="font-size:.83rem;color:var(--tl);grid-column:1/-1;padding:1rem 0">Nenhum documento encontrado. Tente outro termo ou categoria.</p>'; return h; }
 
   // Sem filtro de categoria ativo (visão "Todos"), agrupa por tipo de documento —
   // com um filtro específico já selecionado, ou na busca, mostra a lista corrida
   // (agrupar quando já está tudo filtrado pra um tipo só seria redundante).
-  if (_fD !== 'todos') return docCardsHTML(lista, c);
+  if (_fD !== 'todos') return docCardsHTML(docsOrdenados(lista), c);
 
   var porCat = {}, ordemCats = [];
   for (var i = 0; i < lista.length; i++) {
@@ -6493,9 +6490,18 @@ function docGridHTML(lista, c) {
   for (var oc = 0; oc < ordemCats.length; oc++) {
     var catg2 = ordemCats[oc];
     h += '<div class="doc-grupo-hdr">' + esc(cap(catg2)) + '<span class="doc-grupo-count">' + porCat[catg2].length + '</span></div>';
-    h += docCardsHTML(porCat[catg2], c);
+    h += docCardsHTML(docsOrdenados(porCat[catg2]), c);
   }
   return h;
+}
+
+// Ordena por data (mais antigo primeiro) dentro de um grupo de documentos.
+// Título sozinho não funciona bem aqui: documentos do mesmo tipo (ex: atas de
+// reunião) costumam ter títulos quase idênticos, diferindo só na data no final
+// — ordenar por título nesse caso vira, na prática, comparar os dígitos do dia
+// e ignora mês/ano, deixando a lista fora de ordem cronológica.
+function docsOrdenados(lista) {
+  return lista.slice().sort(function(a, b) { return docSortKey(a).localeCompare(docSortKey(b)); });
 }
 
 function docCardsHTML(lista, c) {
