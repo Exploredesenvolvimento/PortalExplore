@@ -566,8 +566,10 @@ a{text-decoration:none;color:inherit}
 .xtoggle:hover{background:#fdfcfa}
 .xchev{transition:transform .25s;flex-shrink:0;opacity:.5}
 .xcard.open .xchev{transform:rotate(180deg)}
+.ec.open .xchev{transform:rotate(180deg)}
 .xbody{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
 .xcard.open .xbody{max-height:900px}
+.ec.open .xbody{max-height:900px}
 .xinner{padding:.25rem 1.1rem 1rem}
 .xsep{height:1px;background:var(--cream-dk);margin:.6rem 0}
 .xblock{margin-bottom:.6rem}
@@ -713,6 +715,9 @@ a{text-decoration:none;color:inherit}
 .doc-search-input:focus{border-color:var(--bx)}
 .doc-search-input::placeholder{color:var(--tl)}
 .doc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem}
+.doc-grupo-hdr{grid-column:1/-1;display:flex;align-items:center;gap:.5rem;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tl);margin:1.1rem 0 .1rem;padding-top:.9rem;border-top:1px solid var(--cream-dk)}
+.doc-grupo-hdr:first-child{margin-top:0;padding-top:0;border-top:none}
+.doc-grupo-count{font-size:.62rem;font-weight:700;color:var(--tl);background:var(--cream);border-radius:99px;padding:.05rem .5rem}
 .doc-card-wrap{position:relative}
 .doc-card{background:var(--white);border-radius:var(--rl);padding:1rem;border:1.5px solid var(--cream-dk);display:flex;flex-direction:column;gap:.55rem;text-decoration:none;color:inherit;transition:all .2s}
 .doc-card:hover{border-color:var(--gold);box-shadow:0 2px 16px rgba(97,43,74,.10);transform:translateY(-2px)}
@@ -749,6 +754,9 @@ a{text-decoration:none;color:inherit}
 .passo-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.6rem;margin-bottom:.24rem}
 .passo-titulo{font-size:.88rem;font-weight:700;color:var(--td)}
 .passo-desc{font-size:.78rem;color:var(--tm);margin-bottom:.55rem;line-height:1.55}
+.passo-origem{display:inline-flex;align-items:center;gap:.3rem;font-size:.7rem;font-weight:600;color:var(--tl);background:var(--cream);border-radius:99px;padding:.22rem .6rem;margin-bottom:.55rem}
+.passo-origem.clicavel{cursor:pointer;color:var(--bx);background:var(--gold-lt)}
+.passo-origem.clicavel:hover{background:var(--gold)}
 .passo-bot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.32rem}
 .passo-resp{font-size:.7rem;color:var(--tl);display:flex;align-items:center;gap:.25rem}
 .passo-av{width:16px;height:16px;border-radius:50%;background:var(--cream-dk);display:flex;align-items:center;justify-content:center;font-size:.54rem;font-weight:700;color:var(--bx)}
@@ -976,6 +984,12 @@ a{text-decoration:none;color:inherit}
 .ri-hh{background:linear-gradient(to right, rgba(155,35,53,.05), var(--white) 5%)}.ri-hl{background:linear-gradient(to right, rgba(176,125,42,.045), var(--white) 5%)}.ri-lh{background:linear-gradient(to right, rgba(176,125,42,.045), var(--white) 5%)}.ri-ll{background:linear-gradient(to right, rgba(59,122,87,.05), var(--white) 5%)}
 .r-titulo{font-size:.84rem;font-weight:700;color:var(--td);margin-bottom:.22rem}
 .r-mit{font-size:.77rem;color:var(--tm);line-height:1.5}
+.risco-grupo-hdr{display:flex;align-items:center;gap:.45rem;margin:1.2rem 0 .2rem}
+.risco-grupo-hdr:first-child{margin-top:0}
+.risco-grupo-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.risco-grupo-nome{font-size:.78rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.risco-grupo-count{font-size:.68rem;font-weight:700;color:var(--tl);background:var(--cream);border-radius:99px;padding:.05rem .5rem}
+.risco-grupo-desc{font-size:.75rem;color:var(--tl);margin-bottom:.6rem}
 
 /* agenda */
 .agenda-list{display:flex;flex-direction:column;gap:.6rem}
@@ -1166,7 +1180,8 @@ a{text-decoration:none;color:inherit}
 .cgl-date{color:var(--tl);font-size:.68rem}
 .cron-cal-wrap{background:var(--white);border-radius:var(--rl);padding:1rem 1.1rem;border:1px solid var(--cream-dk);margin-top:.85rem}
 .cron-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem}
-.cron-cal-month-lbl{font-size:.9rem;font-weight:700;color:var(--td);text-transform:capitalize;font-family:Georgia,serif}
+.cron-cal-month-lbl{font-size:1.2rem;font-weight:700;color:var(--bx);text-transform:capitalize;font-family:Georgia,serif;letter-spacing:.01em}
+.cron-cal-resumo{font-size:.78rem;color:var(--tl);margin-bottom:.7rem}
 .cron-cal-nav{display:flex;align-items:center;gap:.3rem}
 .cron-cal-nav-btn{width:24px;height:24px;border-radius:50%;border:1px solid var(--cream-dk);background:var(--white);color:var(--tm);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;transition:background .15s;padding:0}
 .cron-cal-nav-btn:hover{background:var(--cream)}
@@ -1176,19 +1191,33 @@ a{text-decoration:none;color:inherit}
 .cron-cal-dow{font-size:.6rem;font-weight:700;color:var(--tl);text-align:center;padding:.2rem 0;text-transform:uppercase}
 .cron-cal-cell{position:relative;height:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:6px;font-size:.74rem;color:var(--tm)}
 .cron-cal-cell.empty{visibility:hidden}
+.cron-cal-cell.weekend{background:rgba(107,79,90,.05)}
 .cron-cal-cell.has-act{cursor:pointer;background:var(--cream);font-weight:700;color:var(--td)}
 .cron-cal-cell.has-act:hover{background:var(--cream-dk)}
 .cron-cal-cell.selected{background:var(--bx);color:var(--white)}
-.cron-cal-cell.is-today{box-shadow:inset 0 0 0 1.5px var(--gold)}
+.cron-cal-cell.is-today:not(.selected){background:var(--gold-lt);color:var(--bx-dk);font-weight:700;box-shadow:inset 0 0 0 1px var(--gold)}
 .ccd-num{line-height:1}
 .ccd-dots{display:flex;gap:2px;margin-top:3px}
 .ccd-dot{width:4.5px;height:4.5px;border-radius:50%;background:var(--bx)}
-.ccd-dot.ccd-online{background:var(--blue)}
+.ccd-dot.ccd-online{background:var(--bx-lt);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
 .ccd-dot.ccd-presencial{background:var(--bx)}
 .ccd-dot.ccd-realizado{background:var(--ok)}
 .ccd-dot.ccd-entrega{border-radius:1px;background:var(--gold)}
 .ccd-dot.ccd-cancelado{background:var(--tl);opacity:.5}
 .cron-cal-cell.selected .ccd-dot{background:var(--white)}
+.cron-cal-list-mobile{display:none;flex-direction:column;gap:.4rem}
+.cron-cal-list-empty{font-size:.8rem;color:var(--tl);padding:.5rem 0}
+.cron-cal-list-row{display:flex;align-items:center;gap:.7rem;padding:.55rem .65rem;border-radius:var(--r);background:var(--cream);cursor:pointer;transition:background .15s}
+.cron-cal-list-row:hover{background:var(--cream-dk)}
+.cron-cal-list-row.selected{background:var(--bx);color:var(--white)}
+.cron-cal-list-row.selected .ccl-dow{color:var(--white);opacity:.75}
+.cron-cal-list-row.is-today:not(.selected){background:var(--gold-lt);box-shadow:inset 0 0 0 1px var(--gold)}
+.ccl-date{display:flex;flex-direction:column;align-items:center;min-width:32px;flex-shrink:0}
+.ccl-daynum{font-family:Georgia,serif;font-weight:bold;font-size:1.05rem;line-height:1;color:inherit}
+.ccl-dow{font-size:.58rem;font-weight:700;text-transform:uppercase;color:var(--tl);margin-top:.1rem}
+.ccl-dots{display:flex;gap:3px;flex-wrap:wrap;max-width:34px}
+.ccl-count{margin-left:auto;font-size:.68rem;color:var(--tl);white-space:nowrap;flex-shrink:0}
+.cron-cal-list-row.selected .ccl-count{color:rgba(255,255,255,.8)}
 .cron-cal-legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.68rem;color:var(--tm);padding-top:.6rem;margin-top:.55rem;border-top:1px solid var(--cream-dk)}
 .cron-cal-legend span{display:flex;align-items:center;gap:.3rem}
 .cron-dia-detail-box{margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--cream-dk)}
@@ -1198,7 +1227,7 @@ a{text-decoration:none;color:inherit}
 .cron-act-btn{width:100%;display:flex;align-items:center;gap:.6rem;padding:.65rem .8rem;background:none;border:none;cursor:pointer;text-align:left}
 .cron-act-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .cron-act-dot.enc-presencial{background:var(--bx)}
-.cron-act-dot.enc-online{background:var(--blue)}
+.cron-act-dot.enc-online{background:var(--bx-lt)}
 .cron-act-dot.entrega{border-radius:2px;background:var(--gold)}
 .cron-act-main{flex:1;min-width:0}
 .cron-act-titulo{font-size:.81rem;font-weight:700;color:var(--td)}
@@ -1209,6 +1238,10 @@ a{text-decoration:none;color:inherit}
 .cron-dia-enc-resumo{font-size:.79rem;color:var(--tm);line-height:1.55;margin-bottom:.5rem}
 @media(max-width:768px){
   .cron-cal-cell{font-size:.7rem;height:34px}
+}
+@media(max-width:640px){
+  .cron-cal-grid,.cron-cal-dow{display:none}
+  .cron-cal-list-mobile{display:flex}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -1795,7 +1828,7 @@ function sbRowToFront(tabela, row) {
     return { _id: row.id, nome: row.codigo, titulo: row.titulo, categoria: row.categoria, status: row.status, data: row.data ? fd(row.data) : '', dataISO: row.data, tamanho: row.tamanho, url: row.url, criadoEm: row.criado_em };
   }
   if (tabela === 'proximos_passos') {
-    return { _id: row.id, titulo: row.titulo, descricao: row.descricao, prioridade: row.prioridade, dataLimite: row.data_limite, responsavel: row.responsavel, concluido: !!row.concluido, concluidoEm: row.concluido_em, criadoEm: row.criado_em };
+    return { _id: row.id, titulo: row.titulo, descricao: row.descricao, prioridade: row.prioridade, dataLimite: row.data_limite, responsavel: row.responsavel, concluido: !!row.concluido, concluidoEm: row.concluido_em, criadoEm: row.criado_em, origem: row.origem, origemData: row.origem_data };
   }
   if (tabela === 'riscos') {
     return { _id: row.id, titulo: row.titulo, probabilidade: row.probabilidade, impacto: row.impacto, mitigacao: row.mitigacao };
@@ -1839,7 +1872,7 @@ function sbItemToRow(tabela, item, projetoId) {
     return { projeto_id: projetoId, codigo: item.nome, titulo: item.titulo, categoria: item.categoria || null, status: item.status || null, data: item.dataISO || item.data || null, tamanho: item.tamanho || null, url: item.url || null };
   }
   if (tabela === 'proximos_passos') {
-    return { projeto_id: projetoId, titulo: item.titulo, descricao: item.descricao || null, prioridade: item.prioridade || null, data_limite: item.dataLimite || null, responsavel: item.responsavel || null, concluido: item.concluido === true || item.concluido === 'sim', concluido_em: item.concluidoEm || null };
+    return { projeto_id: projetoId, titulo: item.titulo, descricao: item.descricao || null, prioridade: item.prioridade || null, data_limite: item.dataLimite || null, responsavel: item.responsavel || null, concluido: item.concluido === true || item.concluido === 'sim', concluido_em: item.concluidoEm || null, origem: item.origem || null, origem_data: item.origemData || null };
   }
   if (tabela === 'riscos') {
     return { projeto_id: projetoId, titulo: item.titulo, probabilidade: item.probabilidade, impacto: item.impacto, mitigacao: item.mitigacao || null };
@@ -2325,6 +2358,8 @@ function transformarEmProximoPasso(encIdx, itemIdx, btnEl) {
   var novo = {
     titulo: texto,
     descricao: 'Combinado na reunião "' + (enc.titulo || '') + '" (' + fdbr(enc.data) + ').',
+    origem: 'Encontro: ' + (enc.titulo || 'Reunião') + ' · ' + fdbr(enc.data),
+    origemData: enc.data,
     prioridade: 'media',
     dataLimite: prazoSugerido.toISOString().slice(0, 10),
     responsavel: '', concluido: false
@@ -2687,6 +2722,7 @@ var CE_CATEGORIAS = [
     campos: [
       { k:'titulo', label:'Título da ação', tipo:'text', req:true },
       { k:'descricao', label:'Descrição', tipo:'textarea' },
+      { k:'origem', label:'Origem (de onde vem esse passo? ex: Risco de adesão, Decisão de 10/06, Reunião de Kickoff...)', tipo:'text' },
       { k:'prioridade', label:'Prioridade', tipo:'select', opcoes:[['baixa','Baixa'],['media','Média'],['alta','Alta']] },
       { k:'dataLimite', label:'Data limite', tipo:'date' },
       { k:'responsavel', label:'Responsável', tipo:'text' },
@@ -2774,7 +2810,34 @@ var CE_CATEGORIAS = [
     sub: function(i){ return (i.cargo||'') + (i.responsavel ? ' · Responsável pelo projeto' : ''); },
     campos: [
       { k:'nome', label:'Nome', tipo:'text', req:true },
-      { k:'cargo', label:'Cargo', tipo:'text' },
+      { k:'cargo', label:'Cargo', tipo:'select', opcoes:[
+        ['','Selecione o cargo...'],
+        ['CEO / Fundador(a)','CEO / Fundador(a)'],
+        ['Sócio(a)-Diretor(a)','Sócio(a)-Diretor(a)'],
+        ['Diretor(a) Executivo(a)','Diretor(a) Executivo(a)'],
+        ['Diretor(a) Financeiro(a)','Diretor(a) Financeiro(a)'],
+        ['Diretor(a) Comercial','Diretor(a) Comercial'],
+        ['Diretor(a) de Operações','Diretor(a) de Operações'],
+        ['Diretor(a) de RH / Gente & Gestão','Diretor(a) de RH / Gente & Gestão'],
+        ['Diretor(a) de Marketing','Diretor(a) de Marketing'],
+        ['Diretor(a) de TI','Diretor(a) de TI'],
+        ['Gerente Geral','Gerente Geral'],
+        ['Gerente Financeiro(a)','Gerente Financeiro(a)'],
+        ['Gerente Comercial','Gerente Comercial'],
+        ['Gerente de Operações','Gerente de Operações'],
+        ['Gerente de RH','Gerente de RH'],
+        ['Gerente de Marketing','Gerente de Marketing'],
+        ['Gerente de Projetos','Gerente de Projetos'],
+        ['Head de Pessoas','Head de Pessoas'],
+        ['Head Comercial','Head Comercial'],
+        ['Coordenador(a)','Coordenador(a)'],
+        ['Supervisor(a)','Supervisor(a)'],
+        ['Analista','Analista'],
+        ['Assistente Administrativo(a)','Assistente Administrativo(a)'],
+        ['Consultor(a) Interno(a)','Consultor(a) Interno(a)'],
+        ['Estagiário(a)','Estagiário(a)'],
+        ['Outro','Outro']
+      ] },
       { k:'email', label:'E-mail', tipo:'text', validarEmail:true },
       { k:'telefone', label:'Telefone', tipo:'text', soNumero:'telefone' },
       { k:'responsavel', label:'É o responsável principal pelo projeto?', tipo:'select', opcoes:[['','Não'],['sim','Sim']] }
@@ -3181,10 +3244,23 @@ function ceRenderForm(item) {
     if (f.readonly) {
       h += '<div class="ce-form-readonly">' + esc(val) + '</div>';
     } else if (f.tipo === 'select') {
+      // Alguns campos Sim/Não (responsavel, contatoPortal, concluido) vêm do banco
+      // como boolean de verdade (true/false), mas as opções da lista são strings
+      // ('sim'/''). Sem essa normalização, "true" nunca batia com 'sim' e o campo
+      // aparecia como "Não" mesmo quando o valor salvo era "Sim" — arriscando
+      // reverter o dado se o formulário fosse salvo sem o consultor notar.
+      var valSelect = typeof val === 'boolean' ? (val ? 'sim' : '') : val;
       h += '<select class="ce-form-select" id="ce-f-' + f.k + '">';
+      var valBate = false;
       for (var j = 0; j < f.opcoes.length; j++) {
-        h += '<option value="' + f.opcoes[j][0] + '"' + (val === f.opcoes[j][0] ? ' selected' : '') + '>' + f.opcoes[j][1] + '</option>';
+        if (valSelect === f.opcoes[j][0]) valBate = true;
+        h += '<option value="' + f.opcoes[j][0] + '"' + (valSelect === f.opcoes[j][0] ? ' selected' : '') + '>' + f.opcoes[j][1] + '</option>';
       }
+      // Valor já salvo que ainda assim não bate com nenhuma opção da lista atual
+      // (ex: texto livre cadastrado antes deste campo virar lista suspensa) — sem
+      // isso, o formulário mostrava a primeira opção da lista e, ao salvar sem
+      // querer, apagava o valor original em silêncio.
+      if (!valBate && valSelect) h += '<option value="' + esc(valSelect) + '" selected>' + esc(valSelect) + ' (valor atual)</option>';
       h += '</select>';
     } else if (f.tipo === 'textarea') {
       h += '<textarea class="ce-form-textarea" id="ce-f-' + f.k + '">' + esc(val) + '</textarea>';
@@ -3339,6 +3415,14 @@ function ceSaveItem() {
   if (cat.id === 'documentos') {
     item.dataISO = item.data || null;
     item.data = item.data ? fd(item.data) : '';
+  }
+
+  // Entregas guarda o prazo em dois formatos: dataISO (input date, usado para
+  // ordenar e gravar no banco) e data (DD/MM/AAAA, usado na exibição do card
+  // em "Aba Entregas"). Sem isso, uma entrega recém-criada ou editada ficava
+  // sem data visível na tela até a página ser recarregada.
+  if (cat.id === 'entregas') {
+    item.data = item.dataISO ? fd(item.dataISO) : '';
   }
 
   // Contato no portal depende de WhatsApp preenchido — sem isso o botão de
@@ -4385,7 +4469,8 @@ function cancelarSelecionadosSerie() {
 function aprovarEntrega(idx) {
   if (projetoBloqueado()) { avisoProjetoEncerrado(); return; }
   var e = _c.entregas[idx];
-  if (!e || !sb) return;
+  if (!e) return;
+  if (!sb) { showAlert('Não é possível aprovar sem conexão com o banco de dados. Tente novamente em instantes.', {danger:true}); return; }
   showConfirm('Confirma que esta entrega está aprovada? "' + e.nome + '"', function() {
     var agora = new Date().toISOString();
     sb.from('entregas').update({ aprovado_pelo_cliente: true, aprovado_em: agora, ajustes_solicitados: null }).eq('id', e._id).then(function(res) {
@@ -4417,7 +4502,9 @@ function fecharAjustesEntrega() {
 function salvarAjustesEntrega() {
   var e = _c.entregas[_ajustesEntregaIdx];
   var texto = (ge('ajustes-texto').value || '').trim();
-  if (!e || !texto || !sb) { showAlert('Descreva o que precisa ser ajustado.'); return; }
+  if (!e) return;
+  if (!texto) { showAlert('Descreva o que precisa ser ajustado.'); return; }
+  if (!sb) { showAlert('Não é possível enviar sem conexão com o banco de dados. Tente novamente em instantes.', {danger:true}); return; }
   var btn = ge('ajustes-btn-save');
   btn.disabled = true; btn.textContent = 'Enviando...';
   sb.from('entregas').update({ ajustes_solicitados: texto, aprovado_pelo_cliente: false, aprovado_em: null }).eq('id', e._id).then(function(res) {
@@ -5902,6 +5989,29 @@ function renderProgresso() {
     h += docsRelHTML(f.docs || []);
     h += '<div class="pc-bar-bg"><div class="pc-bar-fill"></div></div></div>';
 
+    // entregas — mesma lógica de correspondência por data já usada no Relatório
+    // de Status (PDF): a entrega "pertence" à fase quando o prazo dela cai
+    // dentro da janela de datas da fase. Entregas não têm campo "fase" próprio,
+    // então casar por nome não seria confiável (evita duplicar cadastro).
+    var entsFase = (c.entregas || []).filter(function(e) {
+      if (!f.dataInicio) return false;
+      var ini = f.dataInicio, fim = f.dataConclusao || '9999-12-31';
+      var d = e.dataISO || '';
+      return d >= ini && d <= fim;
+    });
+    if (entsFase.length) {
+      h += '<div class="enc-section">';
+      h += '<div class="enc-sec-lbl">Entregas<span class="enc-count">' + entsFase.length + '</span></div>';
+      for (var ei3 = 0; ei3 < entsFase.length; ei3++) {
+        var ent = entsFase[ei3];
+        h += '<div class="enc-compact-row" onclick="setView(\'entregas\')">';
+        h += '<span class="enc-date">' + esc(ent.data) + '</span><span class="enc-title">' + esc(ent.nome) + '</span>';
+        h += badgeSt(ent.status);
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+
     // encontros — só uma lista compacta (data, título, tipo, status), sem
     // pauta/resumo/destaques. O detalhe completo de cada reunião mora só no
     // Cronograma agora; aqui é só contexto de "quantos e quando" por fase.
@@ -6023,47 +6133,84 @@ function cronCalendarHTML(c) {
   var ym = _cronMes;
   var ano = Number(ym.slice(0, 4)), mes = Number(ym.slice(5, 7)) - 1;
   var DOW = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  var DOW_EXT = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
   var primeiroDow = new Date(ano, mes, 1).getDay();
   var diasNoMes = new Date(ano, mes + 1, 0).getDate();
   var porDia = {};
+  var mesEnc = 0, mesEnt = 0;
   for (var i = 0; i < todas.length; i++) {
     if (todas[i].iso.slice(0, 7) !== ym) continue;
+    if (todas[i].tipo === 'entrega') mesEnt++; else mesEnc++;
     var dNum = Number(todas[i].iso.slice(8, 10));
     if (!porDia[dNum]) porDia[dNum] = [];
     porDia[dNum].push(todas[i]);
   }
+  function dotClsDe(at) {
+    return at.tipo === 'entrega' ? 'ccd-entrega' : (at.raw.status === 'cancelado' ? 'ccd-cancelado' : at.raw.tipo === 'online' ? 'ccd-online' : 'ccd-presencial');
+  }
+
   var h = '<div class="cron-cal-wrap sec"><div class="cron-gantt-title">Calendário do projeto</div>';
+  h += '<div class="cron-cal-resumo">' + mesEnc + ' encontro' + (mesEnc === 1 ? '' : 's') + ' · ' + mesEnt + ' prazo' + (mesEnt === 1 ? '' : 's') + ' de entrega este mês</div>';
   h += '<div class="cron-cal-header"><div class="cron-cal-month-lbl">' + MESES_PT[mes] + ' ' + ano + '</div>';
   h += '<div class="cron-cal-nav"><button class="cron-cal-nav-btn" onclick="cronNavMes(-1)" aria-label="Mês anterior">&#8249;</button>';
   h += '<button class="cron-cal-nav-btn" onclick="cronNavMes(1)" aria-label="Próximo mês">&#8250;</button>';
   h += '<button class="cron-cal-today-btn" onclick="cronIrHoje()">Hoje</button></div></div>';
+
+  // Grade — visão padrão (desktop / telas maiores)
   h += '<div class="cron-cal-grid">';
   for (var dw = 0; dw < 7; dw++) h += '<div class="cron-cal-dow">' + DOW[dw] + '</div>';
   for (var bl = 0; bl < primeiroDow; bl++) h += '<div class="cron-cal-cell empty"></div>';
   for (var dia = 1; dia <= diasNoMes; dia++) {
     var iso = ym + '-' + pad(dia);
     var dAtvs = porDia[dia];
-    var cls = 'cron-cal-cell' + (dAtvs ? ' has-act' : '') + (iso === _cronDia ? ' selected' : '') + (iso === hojeISO ? ' is-today' : '');
+    var dowDia = new Date(ano, mes, dia).getDay();
+    var isWeekend = dowDia === 0 || dowDia === 6;
+    var cls = 'cron-cal-cell' + (isWeekend ? ' weekend' : '') + (dAtvs ? ' has-act' : '') + (iso === _cronDia ? ' selected' : '') + (iso === hojeISO ? ' is-today' : '');
     h += '<div class="' + cls + '"' + (dAtvs ? ' onclick="cronShowDia(\'' + iso + '\')"' : '') + '><span class="ccd-num">' + dia + '</span>';
     if (dAtvs) {
       h += '<span class="ccd-dots">';
       var mostrar = dAtvs.slice(0, 4);
       for (var de = 0; de < mostrar.length; de++) {
-        var at = mostrar[de];
-        var dotCls = at.tipo === 'entrega' ? 'ccd-entrega' : (at.raw.status === 'cancelado' ? 'ccd-cancelado' : at.raw.tipo === 'online' ? 'ccd-online' : 'ccd-presencial');
-        h += '<span class="ccd-dot ' + dotCls + '"></span>';
+        h += '<span class="ccd-dot ' + dotClsDe(mostrar[de]) + '"></span>';
       }
       h += '</span>';
     }
     h += '</div>';
   }
-  h += '</div><div class="cron-cal-legend">';
+  h += '</div>';
+
+  // Lista — visão alternativa pra mobile, onde células de 38px com pontinhos
+  // de 4.5px ficam difíceis de tocar e de ler. Mostra só os dias com
+  // compromisso, um por linha, com data, dia da semana e contagem.
+  var diasComAtv = Object.keys(porDia).map(Number).sort(function(a, b) { return a - b; });
+  h += '<div class="cron-cal-list-mobile">';
+  if (!diasComAtv.length) {
+    h += '<div class="cron-cal-list-empty">Nenhum compromisso neste mês.</div>';
+  }
+  for (var lm = 0; lm < diasComAtv.length; lm++) {
+    var diaL = diasComAtv[lm];
+    var isoL = ym + '-' + pad(diaL);
+    var atvsL = porDia[diaL];
+    var dowL = new Date(ano, mes, diaL).getDay();
+    var clsL = 'cron-cal-list-row' + (isoL === _cronDia ? ' selected' : '') + (isoL === hojeISO ? ' is-today' : '');
+    h += '<div class="' + clsL + '" onclick="cronShowDia(\'' + isoL + '\')">';
+    h += '<div class="ccl-date"><span class="ccl-daynum">' + diaL + '</span><span class="ccl-dow">' + DOW_EXT[dowL] + '</span></div>';
+    h += '<div class="ccl-dots">';
+    for (var de2 = 0; de2 < atvsL.length; de2++) { h += '<span class="ccd-dot ' + dotClsDe(atvsL[de2]) + '"></span>'; }
+    h += '</div>';
+    h += '<div class="ccl-count">' + atvsL.length + ' compromisso' + (atvsL.length === 1 ? '' : 's') + '</div>';
+    h += '</div>';
+  }
+  h += '</div>';
+
+  h += '<div class="cron-cal-legend">';
   h += '<span><span class="ccd-dot ccd-presencial"></span> Encontro presencial</span>';
   h += '<span><span class="ccd-dot ccd-online"></span> Encontro online</span>';
   h += '<span><span class="ccd-dot ccd-entrega"></span> Prazo de entrega</span></div>';
   h += '<div id="cron-dia-detail">' + cronDiaDetailHTML(c) + '</div></div>';
   return h;
 }
+
 
 function cronNavMes(delta) {
   var ym = _cronMes || (new Date()).toISOString().slice(0, 7);
@@ -6083,6 +6230,17 @@ function cronIrHoje() {
 function cronShowDia(iso) {
   _cronDia = (iso === _cronDia) ? null : iso;
   renderCronograma();
+}
+
+// Usado pela tag de "Origem" de um Próximo Passo quando ele veio de um encontro —
+// leva direto pro dia certo no Cronograma, já com o mês correto selecionado
+// (sem isso, cronShowDia sozinho mostraria o detalhe mas o grid podia ficar
+// aberto num mês diferente do da reunião de origem).
+function irParaOrigemEncontro(iso) {
+  if (!iso) return;
+  _cronMes = iso.slice(0, 7);
+  _cronDia = iso;
+  setView('cronograma');
 }
 
 function cronDiaDetailHTML(c) {
@@ -6233,7 +6391,7 @@ function renderEntregas(filtro) {
     var av = ini2(e.responsavel);
     var ecid = 'ec-' + j;
     var hasDocs = e.docs && e.docs.length > 0;
-    h += '<div class="ec ' + cls + '" id="' + ecid + '">';
+    h += '<div class="ec ' + cls + '" id="' + ecid + '" data-group="entregas">';
     h += '<div class="ec-main"' + (hasDocs ? ' style="cursor:pointer" onclick="toggleX(\'' + ecid + '\',\'entregas\')"' : '') + '>';
     h += '<div><div class="ec-nome">' + esc(e.nome) + '</div><div class="ec-desc">' + esc(e.descricao) + '</div>';
     h += '<div class="ec-meta">' + badgeSt(e.status) + '<div class="ec-resp"><div class="ec-av">' + av + '</div>' + esc(e.responsavel) + '</div></div></div>';
@@ -6282,40 +6440,67 @@ function docSortKey(d) {
   return '';
 }
 
-function docGridHTML(lista, c) {
-  lista = lista.slice().sort(function(a, b) { return docSortKey(b).localeCompare(docSortKey(a)); });
-  var h = '';
-  if (!lista.length) h += '<p style="font-size:.83rem;color:var(--tl);grid-column:1/-1;padding:1rem 0">Nenhum documento encontrado. Tente outro termo ou categoria.</p>';
-  for (var j = 0; j < lista.length; j++) {
-    var d = lista[j];
-    var docIdx = c.documentos.indexOf(d);
-    var proprio = arquivoProprio(d.url);
-    var encVinculado = encontroPorDocCodigo(d.nome);
-    var semArquivo = !d.url && !encVinculado;
-    h += '<div class="doc-card-wrap">';
-    if (encVinculado) {
-      // Ata de reunião com encontro vinculado: o clique abre o resumo desmembrado
-      // (pauta, destaques, pendências), com o PDF original como ação secundária
-      // — assim o cliente vê o conteúdo mesmo antes do arquivo ser anexado.
-      h += '<a class="doc-card" href="javascript:void(0)" onclick="abrirAtaDetalhe(\'' + esc(d.nome).replace(/'/g,"\\'") + '\',\'' + esc(d.titulo || d.nome).replace(/'/g,"\\'") + '\',\'' + esc(d.url || '').replace(/'/g,"\\'") + '\')">';
-    } else if (proprio) {
-      h += '<a class="doc-card" href="' + esc(d.url) + '" target="_blank" rel="noopener" download="' + esc(d.titulo || d.nome) + '">';
-    } else if (semArquivo) {
-      // Documento cadastrado sem arquivo anexado ainda (o campo "Arquivo" não é
-      // obrigatório no formulário) — sem isso, o clique chamava urlParaPreview(null)
-      // e quebrava silenciosamente, sem abrir nada e sem avisar o motivo.
-      h += '<div class="doc-card doc-card-semarquivo">';
-    } else {
-      h += '<a class="doc-card" href="javascript:void(0)" onclick="abrirPreviewDoc(\'' + esc(d.url).replace(/'/g,"\\'") + '\',\'' + esc(d.titulo || d.nome).replace(/'/g,"\\'") + '\')">';
-    }
-    h += '<div class="dc-top">' + docIco(d.categoria);
-    h += '<div class="dc-tags"><span class="badge b-tag">' + cap(d.categoria) + '</span>';
-    h += badgeDocSt(d.status) + '</div></div>';
-    h += '<div class="dc-nome">' + esc(d.titulo || d.nome) + '</div>';
-    h += '<div class="dc-bot"><div><div class="dc-data">' + esc(d.data) + '</div><div class="dc-data" style="font-size:.67rem;opacity:.7">' + esc(d.tamanho) + '</div></div>';
-    h += '<div class="dc-link">' + (encVinculado ? 'Ver resumo &#128196;' : proprio ? 'Baixar &#8595;' : semArquivo ? 'Sem arquivo ainda' : 'Visualizar &#128065;') + '</div></div>' + (semArquivo ? '</div>' : '</a>');
-    h += '<div class="ce-edit-abs">' + ceEditIconHTML('documentos', docIdx) + '</div></div>';
+function docCardHTML(d, c) {
+  var docIdx = c.documentos.indexOf(d);
+  var proprio = arquivoProprio(d.url);
+  var encVinculado = encontroPorDocCodigo(d.nome);
+  var semArquivo = !d.url && !encVinculado;
+  var h = '<div class="doc-card-wrap">';
+  if (encVinculado) {
+    // Ata de reunião com encontro vinculado: o clique abre o resumo desmembrado
+    // (pauta, destaques, pendências), com o PDF original como ação secundária
+    // — assim o cliente vê o conteúdo mesmo antes do arquivo ser anexado.
+    h += '<a class="doc-card" href="javascript:void(0)" onclick="abrirAtaDetalhe(\'' + esc(d.nome).replace(/'/g,"\\'") + '\',\'' + esc(d.titulo || d.nome).replace(/'/g,"\\'") + '\',\'' + esc(d.url || '').replace(/'/g,"\\'") + '\')">';
+  } else if (proprio) {
+    h += '<a class="doc-card" href="' + esc(d.url) + '" target="_blank" rel="noopener" download="' + esc(d.titulo || d.nome) + '">';
+  } else if (semArquivo) {
+    // Documento cadastrado sem arquivo anexado ainda (o campo "Arquivo" não é
+    // obrigatório no formulário) — sem isso, o clique chamava urlParaPreview(null)
+    // e quebrava silenciosamente, sem abrir nada e sem avisar o motivo.
+    h += '<div class="doc-card doc-card-semarquivo">';
+  } else {
+    h += '<a class="doc-card" href="javascript:void(0)" onclick="abrirPreviewDoc(\'' + esc(d.url).replace(/'/g,"\\'") + '\',\'' + esc(d.titulo || d.nome).replace(/'/g,"\\'") + '\')">';
   }
+  h += '<div class="dc-top">' + docIco(d.categoria);
+  h += '<div class="dc-tags"><span class="badge b-tag">' + cap(d.categoria) + '</span>';
+  h += badgeDocSt(d.status) + '</div></div>';
+  h += '<div class="dc-nome">' + esc(d.titulo || d.nome) + '</div>';
+  h += '<div class="dc-bot"><div><div class="dc-data">' + esc(d.data) + '</div><div class="dc-data" style="font-size:.67rem;opacity:.7">' + esc(d.tamanho) + '</div></div>';
+  h += '<div class="dc-link">' + (encVinculado ? 'Ver resumo &#128196;' : proprio ? 'Baixar &#8595;' : semArquivo ? 'Sem arquivo ainda' : 'Visualizar &#128065;') + '</div></div>' + (semArquivo ? '</div>' : '</a>');
+  h += '<div class="ce-edit-abs">' + ceEditIconHTML('documentos', docIdx) + '</div></div>';
+  return h;
+}
+
+function docGridHTML(lista, c) {
+  // Ordem alfabética por título (ou nome/código, se não houver título) — mais
+  // fácil de achar um documento específico do que por data.
+  lista = lista.slice().sort(function(a, b) { return (a.titulo || a.nome || '').localeCompare(b.titulo || b.nome || '', 'pt-BR', {sensitivity:'base'}); });
+  var h = '';
+  if (!lista.length) { h += '<p style="font-size:.83rem;color:var(--tl);grid-column:1/-1;padding:1rem 0">Nenhum documento encontrado. Tente outro termo ou categoria.</p>'; return h; }
+
+  // Sem filtro de categoria ativo (visão "Todos"), agrupa por tipo de documento —
+  // com um filtro específico já selecionado, ou na busca, mostra a lista corrida
+  // (agrupar quando já está tudo filtrado pra um tipo só seria redundante).
+  if (_fD !== 'todos') return docCardsHTML(lista, c);
+
+  var porCat = {}, ordemCats = [];
+  for (var i = 0; i < lista.length; i++) {
+    var catg = lista[i].categoria || 'outros';
+    if (!porCat[catg]) { porCat[catg] = []; ordemCats.push(catg); }
+    porCat[catg].push(lista[i]);
+  }
+  ordemCats.sort(function(a, b) { return cap(a).localeCompare(cap(b), 'pt-BR', {sensitivity:'base'}); });
+  for (var oc = 0; oc < ordemCats.length; oc++) {
+    var catg2 = ordemCats[oc];
+    h += '<div class="doc-grupo-hdr">' + esc(cap(catg2)) + '<span class="doc-grupo-count">' + porCat[catg2].length + '</span></div>';
+    h += docCardsHTML(porCat[catg2], c);
+  }
+  return h;
+}
+
+function docCardsHTML(lista, c) {
+  var h = '';
+  for (var j = 0; j < lista.length; j++) { h += docCardHTML(lista[j], c); }
   return h;
 }
 
@@ -6397,6 +6582,11 @@ function passoCardHTML(p, pIdx) {
   h += '<div class="passo-titulo' + (p.concluido ? ' done' : '') + '">' + esc(p.titulo) + '</div></div>';
   h += '<div style="display:flex;align-items:center;gap:.3rem;flex-shrink:0"><span class="badge b-' + prio + '">' + cap(prio) + '</span>' + ceEditIconHTML('proximosPassos', pIdx) + '</div></div>';
   h += '<div class="passo-desc">' + esc(p.descricao) + '</div>';
+  if (p.origem) {
+    h += p.origemData
+      ? '<div class="passo-origem clicavel" onclick="event.stopPropagation();irParaOrigemEncontro(\'' + p.origemData + '\')">&#128197; ' + esc(p.origem) + ' &#8594;</div>'
+      : '<div class="passo-origem">&#128204; ' + esc(p.origem) + '</div>';
+  }
   h += '<div class="passo-bot"><div class="passo-resp"><div class="passo-av">' + av + '</div>' + esc(p.responsavel) + '</div>';
   if (!p.concluido) {
     h += '<div class="passo-data ' + dcls + '"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + dlbl + '</div>';
@@ -6559,7 +6749,7 @@ function kpiCardHTML(k, idx) {
   var pct = kpiProgresso(k);
   var tInfo = kpiTendenciaInfo(k);
   var kid = 'kpi-' + idx;
-  var h = '<div class="kpi-card" id="' + kid + '">';
+  var h = '<div class="kpi-card" id="' + kid + '" data-group="kpis">';
   h += '<button class="kpi-toggle" onclick="toggleX(\'' + kid + '\',\'kpis\')">';
   h += '<div class="kpi-left"><div class="kpi-nome">' + esc(k.nome) + '</div>';
   h += '<div class="kpi-vals"><span class="kpi-atual">' + k.atual + '</span><span class="kpi-unid">' + esc(k.unidade || '') + '</span></div>';
@@ -6735,7 +6925,7 @@ function valorListaHTML(lista) {
 
     h += '<div class="tl-item">';
     h += '<div class="tl-dot '+(dotCls[item.tipo]||'tl-d-enc')+'"></div>';
-    h += '<div class="tl-card" id="'+tlid+'">';
+    h += '<div class="tl-card" id="'+tlid+'" data-group="tl">';
     h += '<button class="tl-toggle" onclick="toggleX(\''+tlid+'\',\'tl\')">';
     h += '<div class="tl-tl"><div><div class="tl-title">'+esc(item.titulo)+'</div><div class="tl-sub">'+esc(item.sub)+'</div></div></div>';
     h += '<div class="tl-tr"><span class="badge '+(badgeCls[item.tipo]||'b-pend')+'">'+esc(item.badge)+'</span>';
@@ -6816,13 +7006,13 @@ function npsHistoricoHTML() {
   for (var hi = 0; hi < hist.length; hi++) {
     var n = hist[hi];
     var nhid = 'nps-h-' + hi;
-    h += '<div class="nps-hcard" id="' + nhid + '">';
+    h += '<div class="nps-hcard" id="' + nhid + '" data-group="nps">';
     h += '<button class="nps-htoggle" onclick="toggleX(\'' + nhid + '\',\'nps\')">';
     h += '<div style="display:flex;align-items:center;gap:.65rem"><div>';
     h += '<div class="nps-hstars">';
     for (var si = 1; si <= 5; si++) h += '<span class="nps-hstar' + (si <= n.nota ? ' on' : '') + '">&#9733;</span>';
     h += '</div><div class="nps-hfase">' + esc(n.fase) + '</div></div>';
-    h += '<div class="nps-hpreview">' + esc(n.comentario.substring(0,50)) + (n.comentario.length > 50 ? '…' : '') + '</div></div>';
+    h += '<div class="nps-hpreview">' + esc((n.comentario||'').substring(0,50)) + ((n.comentario||'').length > 50 ? '…' : '') + '</div></div>';
     h += chevSVG() + '</button>';
     h += '<div class="nps-hbody"><div class="nps-hinner" style="font-size:.81rem;color:var(--tm);line-height:1.6">' + esc(n.comentario) + '</div></div></div>';
   }
@@ -6928,6 +7118,19 @@ function renderDadosEmpresa(tab) {
     h += dfFieldHTML('Telefone', c.consultorTelefone);
     h += dfFieldHTML('WhatsApp (só números, com DDI)', c.consultorWa);
     h += '</div>';
+
+    // O bloco acima é o consultor principal (ponto de contato), com campos fixos
+    // no cadastro do projeto — por isso só permite editar, nunca "adicionar mais
+    // um". Para incluir outros consultores no projeto, reaproveita a mesma lista
+    // (múltipla, com foto/bio/especialidade) já usada na aba "Equipe EXPLORE".
+    var equipeOutros = c.equipe || [];
+    h += '<div style="height:1px;background:var(--cream-dk);margin:1.3rem 0"></div>';
+    h += '<div class="sec-lbl-row" style="border-bottom:none;padding-bottom:.6rem"><div class="sec-lbl">Outros consultores do projeto</div>' + ceAddBtnHTML('equipe', 'Adicionar consultor') + '</div>';
+    if (!equipeOutros.length) {
+      h += '<p style="font-size:.83rem;color:var(--tl);padding:.2rem 0 .5rem">Nenhum outro consultor adicionado ainda.</p>';
+    } else {
+      h += '<div class="equipe-grid">' + equipeCardsHTML(equipeOutros) + '</div>';
+    }
   } else if (_dfTab === 'acesso' && _isMaster) {
     h += '<div style="text-align:right;margin-bottom:.7rem"><button class="ce-inline-add" onclick="ceQuickAcesso()">' + pencilSVG() + ' Gerenciar acesso</button></div>';
     h += '<div class="df-grid">';
@@ -6935,7 +7138,7 @@ function renderDadosEmpresa(tab) {
     h += '</div>';
     h += '<p style="font-size:.76rem;color:var(--tl);margin-top:.7rem">Alterar e-mail ou redefinir a senha do cliente fica em "Gerenciar acesso".</p>';
   } else {
-    var colabs = c.colaboradores || [];
+    var colabs = (c.colaboradores || []).slice().sort(function(a, b) { return (a.nome || '').localeCompare(b.nome || '', 'pt-BR', {sensitivity:'base'}); });
     h += '<div style="text-align:right;margin-bottom:.7rem">' + ceAddBtnHTML('colaboradores', 'Adicionar colaborador') + '</div>';
     if (!colabs.length) {
       h += emptyStateHTML('equipe', 'Nenhum colaborador cadastrado', 'Adicione quem, do lado da empresa, participa deste projeto.');
@@ -6943,14 +7146,15 @@ function renderDadosEmpresa(tab) {
       h += '<div class="equipe-grid">';
       for (var i = 0; i < colabs.length; i++) {
         var p = colabs[i];
+        var origIdx = c.colaboradores.indexOf(p);
         var cid = 'colab-' + i;
         var av = ini2(p.nome);
         var isResp = p.responsavel === true || p.responsavel === 'sim';
-        h += '<div class="eq-card" id="' + cid + '">';
+        h += '<div class="eq-card" id="' + cid + '" data-group="colab">';
         h += '<button class="eq-toggle" onclick="toggleX(\'' + cid + '\',\'colab\')">';
         h += '<div style="display:flex;align-items:center;gap:.75rem"><div class="eq-av"><span>' + av + '</span></div>';
         h += '<div><div class="eq-nome serif">' + esc(p.nome) + '</div><div class="eq-papel">' + esc(p.cargo || '') + (isResp ? ' · Responsável pelo projeto' : '') + '</div></div></div>';
-        h += chevSVG() + '</button><div class="ce-edit-abs">' + ceEditIconHTML('colaboradores', i) + '</div>';
+        h += chevSVG() + '</button><div class="ce-edit-abs">' + ceEditIconHTML('colaboradores', origIdx) + '</div>';
         h += '<div class="eq-xbody"><div class="eq-xinner"><div style="height:1px;background:var(--cream-dk);margin:.4rem 0 .65rem"></div>';
         h += p.email ? '<div style="font-size:.81rem;color:var(--tm);margin-bottom:.3rem">E-mail: ' + esc(p.email) + '</div>' : '';
         h += p.telefone ? '<div style="font-size:.81rem;color:var(--tm)">Telefone: ' + esc(p.telefone) + '</div>' : '';
@@ -6968,6 +7172,26 @@ function renderDadosEmpresa(tab) {
 // ═══════════════════════════════════════════
 // VIEW: EQUIPE
 // ═══════════════════════════════════════════
+function equipeCardsHTML(equipe) {
+  var h = '';
+  for (var i = 0; i < equipe.length; i++) {
+    var p = equipe[i];
+    var eid = 'eq-' + i;
+    var av = ini2(p.nome);
+    h += '<div class="eq-card" id="' + eid + '" data-group="equipe">';
+    h += '<button class="eq-toggle" onclick="toggleX(\'' + eid + '\',\'equipe\')">';
+    h += '<div style="display:flex;align-items:center;gap:.75rem"><div class="eq-av">' + (p.foto ? '<img src="'+esc(p.foto)+'" alt="'+esc(p.nome)+'">' : '<span>'+av+'</span>') + '</div>';
+    h += '<div><div class="eq-nome serif">' + esc(p.nome) + '</div><div class="eq-papel">' + esc(p.papel) + '</div></div></div>';
+    h += chevSVG() + '</button><div class="ce-edit-abs">' + ceEditIconHTML('equipe', i) + '</div>';
+    h += '<div class="eq-xbody"><div class="eq-xinner"><div style="height:1px;background:var(--cream-dk);margin:.4rem 0 .65rem"></div>';
+    var espArr = (p.especialidade || '').split(',').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+    if (espArr.length) { h += '<div class="eq-espec-wrap">' + espArr.map(function(e){ return '<span class="eq-espec">' + esc(e) + '</span>'; }).join('') + '</div>'; }
+    h += '<div class="eq-bio" style="margin-top:.55rem">' + esc(p.bio) + '</div>';
+    h += '</div></div></div>';
+  }
+  return h;
+}
+
 function renderEquipe() {
   var equipe = _c.equipe || [];
   var addBtn = ceAddBtnHTML('equipe', 'Adicionar membro');
@@ -6987,21 +7211,7 @@ function renderEquipe() {
     ]
   });
   h += '<div class="sec-lbl-row"><div class="sec-lbl">Equipe responsável</div>' + addBtn + '</div><div class="equipe-grid">';
-  for (var i = 0; i < equipe.length; i++) {
-    var p = equipe[i];
-    var eid = 'eq-' + i;
-    var av = ini2(p.nome);
-    h += '<div class="eq-card" id="' + eid + '">';
-    h += '<button class="eq-toggle" onclick="toggleX(\'' + eid + '\',\'equipe\')">';
-    h += '<div style="display:flex;align-items:center;gap:.75rem"><div class="eq-av">' + (p.foto ? '<img src="'+esc(p.foto)+'" alt="'+esc(p.nome)+'">' : '<span>'+av+'</span>') + '</div>';
-    h += '<div><div class="eq-nome serif">' + esc(p.nome) + '</div><div class="eq-papel">' + esc(p.papel) + '</div></div></div>';
-    h += chevSVG() + '</button><div class="ce-edit-abs">' + ceEditIconHTML('equipe', i) + '</div>';
-    h += '<div class="eq-xbody"><div class="eq-xinner"><div style="height:1px;background:var(--cream-dk);margin:.4rem 0 .65rem"></div>';
-    var espArr = (p.especialidade || '').split(',').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
-    if (espArr.length) { h += '<div class="eq-espec-wrap">' + espArr.map(function(e){ return '<span class="eq-espec">' + esc(e) + '</span>'; }).join('') + '</div>'; }
-    h += '<div class="eq-bio" style="margin-top:.55rem">' + esc(p.bio) + '</div>';
-    h += '</div></div></div>';
-  }
+  h += equipeCardsHTML(equipe);
   h += '</div>' + footer();
   sv(h);
 }
@@ -7130,7 +7340,7 @@ function renderRiscos() {
   }
   function getQ(r) { return r.probabilidade==='alta'&&r.impacto==='alto'?'hh':r.probabilidade==='alta'?'hl':r.impacto==='alto'?'lh':'ll'; }
   var quad = {hh:[],hl:[],lh:[],ll:[]};
-  for (var i = 0; i < riscos.length; i++) { quad[getQ(riscos[i])].push({r:riscos[i],idx:i+1}); }
+  for (var i = 0; i < riscos.length; i++) { quad[getQ(riscos[i])].push({r:riscos[i],idx:i}); }
   var criticoTop = riscoMaisCritico(riscos);
   var pctSobControle = Math.round((riscos.length - quad.hh.length) / riscos.length * 100);
 
@@ -7141,46 +7351,36 @@ function renderRiscos() {
   if (criticoTop) heroMeta.push({ k: 'Maior atenção', v: criticoTop.titulo });
   var h = secHeroHTML({ eyebrow: 'Gestão de riscos', title: 'Riscos do Projeto', pct: pctSobControle, ringLbl: 'Sob controle', meta: heroMeta });
 
-  h += '<div class="dh-stats sec">';
-  h += '<div class="dh-stat"><div class="dh-stat-ico" style="background:var(--danger-bg);color:var(--danger)">' + dhIco('alert') + '</div><div><div class="dh-stat-num" style="color:var(--danger)">' + quad.hh.length + '</div><div class="dh-stat-lbl">Riscos críticos</div><div class="dh-stat-sub">alta prob. + alto impacto</div></div></div>';
-  h += '<div class="dh-stat"><div class="dh-stat-ico" style="background:var(--warn-bg);color:var(--warn)">' + dhIco('clock') + '</div><div><div class="dh-stat-num" style="color:var(--warn)">' + (quad.hl.length+quad.lh.length) + '</div><div class="dh-stat-lbl">Riscos moderados</div><div class="dh-stat-sub">atenção necessária</div></div></div>';
-  h += '<div class="dh-stat"><div class="dh-stat-ico" style="background:var(--ok-bg);color:var(--ok)">' + dhIco('check') + '</div><div><div class="dh-stat-num" style="color:var(--ok)">' + quad.ll.length + '</div><div class="dh-stat-lbl">Riscos baixos</div><div class="dh-stat-sub">monitoramento</div></div></div>';
-  h += '</div>';
-  h += '<div class="matrix">';
-  h += '<div class="m-axis m-axis-y">Alta prob.</div>';
-  h += '<div class="m-cell m-hl">' + quad.hl.map(function(x){ return '<button type="button" class="r-dot rd-hl" data-tip="'+esc(x.r.titulo)+'" onclick="irParaRisco('+x.idx+')" aria-label="Ver risco: '+esc(x.r.titulo)+'">'+x.idx+'</button>'; }).join('') + '<span style="font-size:.6rem;color:var(--warn)">Alta / Baixo</span></div>';
-  h += '<div class="m-cell m-hh">' + quad.hh.map(function(x){ return '<button type="button" class="r-dot rd-hh" data-tip="'+esc(x.r.titulo)+'" onclick="irParaRisco('+x.idx+')" aria-label="Ver risco: '+esc(x.r.titulo)+'">'+x.idx+'</button>'; }).join('') + '<span style="font-size:.6rem;color:var(--danger)">Alta / Alto</span></div>';
-  h += '<div class="m-axis m-axis-y">Baixa prob.</div>';
-  h += '<div class="m-cell m-ll">' + quad.ll.map(function(x){ return '<button type="button" class="r-dot rd-ll" data-tip="'+esc(x.r.titulo)+'" onclick="irParaRisco('+x.idx+')" aria-label="Ver risco: '+esc(x.r.titulo)+'">'+x.idx+'</button>'; }).join('') + '<span style="font-size:.6rem;color:var(--ok)">Baixa / Baixo</span></div>';
-  h += '<div class="m-cell m-lh">' + quad.lh.map(function(x){ return '<button type="button" class="r-dot rd-lh" data-tip="'+esc(x.r.titulo)+'" onclick="irParaRisco('+x.idx+')" aria-label="Ver risco: '+esc(x.r.titulo)+'">'+x.idx+'</button>'; }).join('') + '<span style="font-size:.6rem;color:var(--warn)">Baixa / Alto</span></div>';
-  h += '<div></div><div class="m-axis">Baixo impacto</div><div class="m-axis">Alto impacto</div></div>';
-  h += '<div class="sec-lbl-row"><div class="sec-lbl">Detalhamento dos riscos</div>' + addBtn + '</div><div class="riscos-list">';
-  for (var j = 0; j < riscos.length; j++) {
-    var r = riscos[j]; var q = getQ(r);
-    h += '<div class="risco-item ri-' + q + '" id="risco-item-' + (j+1) + '">';
-    h += '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.65rem;margin-bottom:.28rem">';
-    h += '<div style="display:flex;align-items:center;gap:.55rem"><div class="r-dot rd-'+q+'" style="width:26px;height:26px;font-size:.68rem;flex-shrink:0;cursor:default">'+(j+1)+'</div><div class="r-titulo">'+esc(r.titulo)+'</div></div>';
-    h += '<div style="display:flex;align-items:center;gap:.3rem;flex-shrink:0"><span class="badge b-'+(r.probabilidade==='alta'?'danger':'pend')+'">'+cap(r.probabilidade)+' prob.</span><span class="badge b-'+(r.impacto==='alto'?'danger':r.impacto==='medio'?'warn':'pend')+'">'+cap(r.impacto)+' impacto</span>' + ceEditIconHTML('riscos', j) + '</div></div>';
-    h += '<div class="r-mit"><strong style="color:var(--tm)">Mitigação:</strong> '+esc(r.mitigacao)+'</div></div>';
+  h += '<div class="sec-lbl-row"><div class="sec-lbl">Riscos do projeto</div>' + addBtn + '</div>';
+
+  // Lista única, agrupada por criticidade (críticos → moderados → baixos) em vez
+  // de matriz + cards de contagem + lista solta repetindo a mesma informação três
+  // vezes. A ordem já comunica prioridade — não precisa comparar cores em 3 lugares.
+  var grupos = [
+    { itens: quad.hh, label: 'Críticos', desc: 'Alta probabilidade e alto impacto — requer ação imediata.', cor: 'var(--danger)' },
+    { itens: quad.hl.concat(quad.lh), label: 'Moderados', desc: 'Alta probabilidade ou alto impacto — acompanhar de perto.', cor: 'var(--warn)' },
+    { itens: quad.ll, label: 'Baixo risco', desc: 'Baixa probabilidade e impacto controlado — monitorar.', cor: 'var(--ok)' }
+  ];
+
+  h += '<div class="riscos-list">';
+  for (var g = 0; g < grupos.length; g++) {
+    var grupo = grupos[g];
+    if (!grupo.itens.length) continue;
+    h += '<div class="risco-grupo-hdr"><span class="risco-grupo-dot" style="background:' + grupo.cor + '"></span>';
+    h += '<span class="risco-grupo-nome" style="color:' + grupo.cor + '">' + grupo.label + '</span>';
+    h += '<span class="risco-grupo-count">' + grupo.itens.length + '</span></div>';
+    h += '<div class="risco-grupo-desc">' + grupo.desc + '</div>';
+    for (var gi = 0; gi < grupo.itens.length; gi++) {
+      var r = grupo.itens[gi].r, j = grupo.itens[gi].idx, q = getQ(r);
+      h += '<div class="risco-item ri-' + q + '">';
+      h += '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.65rem;margin-bottom:.28rem">';
+      h += '<div class="r-titulo">' + esc(r.titulo) + '</div>';
+      h += '<div style="display:flex;align-items:center;gap:.3rem;flex-shrink:0"><span class="badge b-'+(r.probabilidade==='alta'?'danger':'pend')+'">'+cap(r.probabilidade)+' prob.</span><span class="badge b-'+(r.impacto==='alto'?'danger':r.impacto==='medio'?'warn':'pend')+'">'+cap(r.impacto)+' impacto</span>' + ceEditIconHTML('riscos', j) + '</div></div>';
+      h += '<div class="r-mit"><strong style="color:var(--tm)">Mitigação:</strong> '+esc(r.mitigacao)+'</div></div>';
+    }
   }
   h += '</div>' + footer();
   sv(h);
-  // show matrix on desktop
-  setTimeout(function() {
-    var matrix = document.querySelector('.matrix');
-    if (matrix && window.innerWidth > 640) matrix.style.display = 'grid';
-  }, 50);
-}
-
-// leva do ponto numerado na matriz até o card correspondente em "Detalhamento dos riscos"
-function irParaRisco(idx) {
-  var el = document.getElementById('risco-item-' + idx);
-  if (!el) return;
-  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  el.classList.remove('rf-highlight');
-  void el.offsetWidth; // reinicia a animação se já tiver sido clicado antes
-  el.classList.add('rf-highlight');
-  setTimeout(function() { el.classList.remove('rf-highlight'); }, 1200);
 }
 
 // ═══════════════════════════════════════════
@@ -7210,7 +7410,7 @@ function agendaTodosItens(c) {
   var ents = c.entregas || [];
   for (var k = 0; k < ents.length; k++) {
     if (!ents[k].dataISO) continue;
-    lista.push(Object.assign({ _idx: k }, ents[k], { _cat: 'entregas', data: ents[k].dataISO }));
+    lista.push(Object.assign({ _idx: k }, ents[k], { _cat: 'entregas' }));
   }
   return lista;
 }
@@ -7225,7 +7425,7 @@ function renderItemEntrega(e) {
   var av = ini2(e.responsavel);
   var hasDocs = e.docs && e.docs.length > 0;
   var ecid = 'crenc-entregas-' + e._idx;
-  var h = '<div class="ec ' + cls + '" id="' + ecid + '">';
+  var h = '<div class="ec ' + cls + '" id="' + ecid + '" data-group="entregas">';
   h += '<div class="ec-main"' + (hasDocs ? ' style="cursor:pointer" onclick="toggleX(\'' + ecid + '\',\'entregas\')"' : '') + '>';
   h += '<div><div class="ec-nome">' + esc(e.nome) + '</div><div class="ec-desc">' + esc(e.descricao) + '</div>';
   h += '<div class="ec-meta">' + badgeSt(e.status) + '<div class="ec-resp"><div class="ec-av">' + av + '</div>' + esc(e.responsavel) + '</div></div></div>';
@@ -7250,7 +7450,7 @@ function filtrarAgenda(valor) {
   if (wrap) wrap.innerHTML = agendaSectionHTML();
 }
 function agendaSectionHTML() {
-  var agenda = agendaTodosItens(_c).sort(function(a,b){ return new Date(a.data)-new Date(b.data); });
+  var agenda = agendaTodosItens(_c).sort(function(a,b){ return new Date(a.dataISO || a.data)-new Date(b.dataISO || b.data); });
   if (_agendaBusca) {
     agenda = agenda.filter(function(a) {
       var pautaTxt = (a.pauta || []).join(' ').toLowerCase();
@@ -7258,8 +7458,8 @@ function agendaSectionHTML() {
     });
   }
   var hoje = new Date(); hoje.setHours(0,0,0,0);
-  var futuros = agenda.filter(function(a){ return new Date(a.data) >= hoje; });
-  var passados = agenda.filter(function(a){ return new Date(a.data) < hoje; });
+  var futuros = agenda.filter(function(a){ return new Date(a.dataISO || a.data) >= hoje; });
+  var passados = agenda.filter(function(a){ return new Date(a.dataISO || a.data) < hoje; });
   function renderItem(a) {
     if (a._cat === 'entregas') return renderItemEntrega(a);
     var df = Math.ceil((new Date(a.data) - hoje) / 86400000);
