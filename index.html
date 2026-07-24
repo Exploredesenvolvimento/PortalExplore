@@ -716,6 +716,8 @@ a{text-decoration:none;color:inherit}
 .doc-card-wrap{position:relative}
 .doc-card{background:var(--white);border-radius:var(--rl);padding:1rem;border:1.5px solid var(--cream-dk);display:flex;flex-direction:column;gap:.55rem;text-decoration:none;color:inherit;transition:all .2s}
 .doc-card:hover{border-color:var(--gold);box-shadow:0 2px 16px rgba(97,43,74,.10);transform:translateY(-2px)}
+.doc-card-semarquivo{opacity:.7;cursor:default}
+.doc-card-semarquivo:hover{border-color:var(--cream-dk);box-shadow:none;transform:none}
 .dc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.55rem}
 .dc-icon{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .dc-i-diag{background:#F0EAF5}.dc-i-plan{background:#EAF4EE}.dc-i-rel{background:#FBF4E6}.dc-i-mat{background:#EFF6FF}
@@ -2203,6 +2205,7 @@ function ordenarEncontros(encontros) {
 }
 function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 function ini2(nome) {
+  if (!nome) return '—';
   var parts = nome.split(' ');
   return ((parts[0]||'').charAt(0) + (parts[1]||'').charAt(0)).toUpperCase();
 }
@@ -5442,6 +5445,7 @@ function fecharAtaDetalhe() {
 // do arquivo tiver bloqueado embed, a pessoa sempre tem o botão "Abrir em
 // nova guia" como saída garantida.
 function urlParaPreview(url) {
+  if (!url) return '';
   var m = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
   if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
   var m2 = url.match(/[?&]id=([^&]+)/);
@@ -5449,6 +5453,7 @@ function urlParaPreview(url) {
   return url;
 }
 function abrirPreviewDoc(url, titulo) {
+  if (!url) { showAlert('Este documento ainda não tem um arquivo anexado.'); return; }
   ge('docprev-titulo').textContent = titulo || 'Documento';
   ge('docprev-abrir').href = url;
   ge('docprev-iframe').src = urlParaPreview(url);
@@ -6286,6 +6291,7 @@ function docGridHTML(lista, c) {
     var docIdx = c.documentos.indexOf(d);
     var proprio = arquivoProprio(d.url);
     var encVinculado = encontroPorDocCodigo(d.nome);
+    var semArquivo = !d.url && !encVinculado;
     h += '<div class="doc-card-wrap">';
     if (encVinculado) {
       // Ata de reunião com encontro vinculado: o clique abre o resumo desmembrado
@@ -6294,6 +6300,11 @@ function docGridHTML(lista, c) {
       h += '<a class="doc-card" href="javascript:void(0)" onclick="abrirAtaDetalhe(\'' + esc(d.nome).replace(/'/g,"\\'") + '\',\'' + esc(d.titulo || d.nome).replace(/'/g,"\\'") + '\',\'' + esc(d.url || '').replace(/'/g,"\\'") + '\')">';
     } else if (proprio) {
       h += '<a class="doc-card" href="' + esc(d.url) + '" target="_blank" rel="noopener" download="' + esc(d.titulo || d.nome) + '">';
+    } else if (semArquivo) {
+      // Documento cadastrado sem arquivo anexado ainda (o campo "Arquivo" não é
+      // obrigatório no formulário) — sem isso, o clique chamava urlParaPreview(null)
+      // e quebrava silenciosamente, sem abrir nada e sem avisar o motivo.
+      h += '<div class="doc-card doc-card-semarquivo">';
     } else {
       h += '<a class="doc-card" href="javascript:void(0)" onclick="abrirPreviewDoc(\'' + esc(d.url).replace(/'/g,"\\'") + '\',\'' + esc(d.titulo || d.nome).replace(/'/g,"\\'") + '\')">';
     }
@@ -6302,7 +6313,7 @@ function docGridHTML(lista, c) {
     h += badgeDocSt(d.status) + '</div></div>';
     h += '<div class="dc-nome">' + esc(d.titulo || d.nome) + '</div>';
     h += '<div class="dc-bot"><div><div class="dc-data">' + esc(d.data) + '</div><div class="dc-data" style="font-size:.67rem;opacity:.7">' + esc(d.tamanho) + '</div></div>';
-    h += '<div class="dc-link">' + (encVinculado ? 'Ver resumo &#128196;' : proprio ? 'Baixar &#8595;' : 'Visualizar &#128065;') + '</div></div></a>';
+    h += '<div class="dc-link">' + (encVinculado ? 'Ver resumo &#128196;' : proprio ? 'Baixar &#8595;' : semArquivo ? 'Sem arquivo ainda' : 'Visualizar &#128065;') + '</div></div>' + (semArquivo ? '</div>' : '</a>');
     h += '<div class="ce-edit-abs">' + ceEditIconHTML('documentos', docIdx) + '</div></div>';
   }
   return h;
@@ -6353,8 +6364,10 @@ function renderDocumentos(filtro) {
   h += '<button class="cf-btn' + (_fD === 'todos' ? ' on' : '') + '" onclick="renderDocumentos(\'todos\')">Todos</button>';
   if (emRev.length) h += '<button class="cf-btn' + (_fD === 'revisao' ? ' on' : '') + '" style="' + (_fD !== 'revisao' ? 'border-color:var(--warn);color:var(--warn)' : '') + '" onclick="renderDocumentos(\'revisao\')">&#9888; Revisão (' + emRev.length + ')</button>';
   for (var ci = 0; ci < cats.length; ci++) {
+    var catRaw = cats[ci];
+    var catJs = esc(catRaw).replace(/'/g,"\\'");
     var cnt = all.filter(function(d) { return d.categoria === cats[ci]; }).length;
-    h += '<button class="cf-btn' + (_fD === cats[ci] ? ' on' : '') + '" onclick="renderDocumentos(\'' + cats[ci] + '\')">' + cap(cats[ci]) + ' (' + cnt + ')</button>';
+    h += '<button class="cf-btn' + (_fD === catRaw ? ' on' : '') + '" onclick="renderDocumentos(\'' + catJs + '\')">' + esc(cap(catRaw)) + ' (' + cnt + ')</button>';
   }
   h += '</div><div style="text-align:right;margin:.7rem 0">' + ceAddBtnHTML('documentos', 'Adicionar documento') + '</div>';
   h += '<div class="doc-grid" id="doc-grid-wrap">' + docGridHTML(lista, c) + '</div>';
@@ -6373,14 +6386,16 @@ function passoCheckHTML(idx, done) {
 }
 
 function passoCardHTML(p, pIdx) {
-  var dias2 = drest(p.dataLimite);
-  var dcls = dias2 < 0 || dias2 <= 3 ? 'pd-urg' : dias2 <= 7 ? 'pd-warn' : 'pd-norm';
-  var dlbl = dias2 < 0 ? '&#9888; ' + Math.abs(dias2) + 'd em atraso' : dias2 === 0 ? '&#9888; Vence hoje' : dias2 <= 3 ? '&#8987; ' + dias2 + 'd restantes' : fdbr2(p.dataLimite);
+  var temPrazo = !!p.dataLimite;
+  var dias2 = temPrazo ? drest(p.dataLimite) : null;
+  var dcls = !temPrazo ? 'pd-norm' : (dias2 < 0 || dias2 <= 3 ? 'pd-urg' : dias2 <= 7 ? 'pd-warn' : 'pd-norm');
+  var dlbl = !temPrazo ? 'Sem prazo definido' : dias2 < 0 ? '&#9888; ' + Math.abs(dias2) + 'd em atraso' : dias2 === 0 ? '&#9888; Vence hoje' : dias2 <= 3 ? '&#8987; ' + dias2 + 'd restantes' : fdbr2(p.dataLimite);
   var av = ini2(p.responsavel);
-  var h = '<div class="passo pa-' + p.prioridade.charAt(0) + (p.concluido ? ' done' : '') + '">';
+  var prio = p.prioridade || 'media';
+  var h = '<div class="passo pa-' + prio.charAt(0) + (p.concluido ? ' done' : '') + '">';
   h += '<div class="passo-top"><div style="display:flex;align-items:flex-start;gap:.6rem;min-width:0">' + passoCheckHTML(pIdx, !!p.concluido);
   h += '<div class="passo-titulo' + (p.concluido ? ' done' : '') + '">' + esc(p.titulo) + '</div></div>';
-  h += '<div style="display:flex;align-items:center;gap:.3rem;flex-shrink:0"><span class="badge b-' + p.prioridade + '">' + cap(p.prioridade) + '</span>' + ceEditIconHTML('proximosPassos', pIdx) + '</div></div>';
+  h += '<div style="display:flex;align-items:center;gap:.3rem;flex-shrink:0"><span class="badge b-' + prio + '">' + cap(prio) + '</span>' + ceEditIconHTML('proximosPassos', pIdx) + '</div></div>';
   h += '<div class="passo-desc">' + esc(p.descricao) + '</div>';
   h += '<div class="passo-bot"><div class="passo-resp"><div class="passo-av">' + av + '</div>' + esc(p.responsavel) + '</div>';
   if (!p.concluido) {
@@ -6405,7 +6420,13 @@ function proximosBodyHTML() {
   });
   var pendentes = todos.filter(function(p){ return !p.concluido; }).slice().sort(function(a, b) {
     var o = {alta:0,media:1,baixa:2};
-    return o[a.prioridade] !== o[b.prioridade] ? o[a.prioridade] - o[b.prioridade] : new Date(a.dataLimite) - new Date(b.dataLimite);
+    var oa = o[a.prioridade] != null ? o[a.prioridade] : 1;
+    var ob = o[b.prioridade] != null ? o[b.prioridade] : 1;
+    if (oa !== ob) return oa - ob;
+    if (a.dataLimite && b.dataLimite) return new Date(a.dataLimite) - new Date(b.dataLimite);
+    if (a.dataLimite) return -1;
+    if (b.dataLimite) return 1;
+    return 0;
   });
   var concluidos = todos.filter(function(p){ return p.concluido; });
   var na = 0, nm = 0, nb = 0;
@@ -6643,7 +6664,7 @@ function valorHistoricoItens() {
   }
   for (var k = 0; k < c.documentos.length; k++) {
     var d = c.documentos[k];
-    var dp = d.data.split('/'); var diso = dp[2]+'-'+dp[1]+'-'+dp[0];
+    var diso = docSortKey(d);
     items.push({data:diso,tipo:'doc',titulo:d.titulo||d.nome,badge:'Documento',sub:cap(d.categoria)+' · '+d.tamanho,detail:{descricao:'',responsavel:'',url:d.url,tamanho:d.tamanho,docs:[d.nome]}});
   }
   var decs = c.decisoes || [];
@@ -6657,7 +6678,16 @@ function valorHistoricoItens() {
       items.push({data:t.concluidoEm||t.dataLimite,tipo:'tarefa',titulo:t.titulo,badge:'Tarefa',sub:'Tarefa concluída · '+(t.responsavel||''),detail:{descricao:t.descricao,responsavel:t.responsavel,docs:[]}});
     }
   }
-  items.sort(function(a,b){ return new Date(b.data)-new Date(a.data); });
+  items.sort(function(a,b){
+    var da = a.data ? new Date(a.data) : null;
+    var db = b.data ? new Date(b.data) : null;
+    var va = da && !isNaN(da) ? da.getTime() : null;
+    var vb = db && !isNaN(db) ? db.getTime() : null;
+    if (va !== null && vb !== null) return vb - va;
+    if (va !== null) return -1;
+    if (vb !== null) return 1;
+    return 0;
+  });
   return items;
 }
 
