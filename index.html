@@ -441,6 +441,8 @@ a{text-decoration:none;color:inherit}
 /* dashboard — cartões de relance com ícone, no lugar da lista de texto */
 .dh-glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.85rem;margin-bottom:1.6rem}
 .dh-glance-card{background:var(--white);border:1px solid var(--cream-dk);border-radius:var(--rl);padding:1.05rem 1.1rem;display:flex;gap:.75rem;align-items:flex-start}
+.dh-glance-card-clicavel{cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.dh-glance-card-clicavel:hover{border-color:var(--warn);box-shadow:var(--sh-md)}
 .dh-glance-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--gc-bg,var(--cream));color:var(--gc-fg,var(--bx))}
 .dh-glance-body{min-width:0;flex:1}
 .dh-glance-lbl{font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tl);margin-bottom:.28rem}
@@ -1204,6 +1206,7 @@ a{text-decoration:none;color:inherit}
 .ccd-dot.ccd-realizado{background:var(--ok)}
 .ccd-dot.ccd-entrega{border-radius:1px;background:var(--gold)}
 .ccd-dot.ccd-cancelado{background:var(--tl);opacity:.5}
+.ccd-dot.ccd-pendente{background:var(--warn)}
 .cron-cal-cell.selected .ccd-dot{background:var(--white)}
 .cron-cal-list-mobile{display:none;flex-direction:column;gap:.4rem}
 .cron-cal-list-empty{font-size:.8rem;color:var(--tl);padding:.5rem 0}
@@ -1223,8 +1226,9 @@ a{text-decoration:none;color:inherit}
 .cron-dia-detail-box{margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--cream-dk)}
 .cron-dia-detail-head{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:700;color:var(--td);margin-bottom:.6rem}
 .cron-dia-close{background:none;border:none;font-size:1.2rem;color:var(--tl);cursor:pointer;line-height:1;padding:0 .2rem}
-.cron-act-item{background:var(--cream);border-radius:var(--r);margin-bottom:.5rem;overflow:hidden}
-.cron-act-btn{width:100%;display:flex;align-items:center;gap:.6rem;padding:.65rem .8rem;background:none;border:none;cursor:pointer;text-align:left}
+.cron-act-item{background:var(--cream);border-radius:var(--r);margin-bottom:.5rem;position:relative;overflow:visible;z-index:0}
+.cron-act-item.menu-aberto{z-index:30}
+.cron-act-btn{width:100%;display:flex;align-items:center;gap:.6rem;padding:.65rem 2.6rem .65rem .8rem;background:none;border:none;cursor:pointer;text-align:left}
 .cron-act-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .cron-act-dot.enc-presencial{background:var(--bx)}
 .cron-act-dot.enc-online{background:var(--bx-lt)}
@@ -4203,12 +4207,12 @@ function toggleEncMenu(id, ev) {
   var todos = document.querySelectorAll('.enc-menu-list.on');
   for (var i = 0; i < todos.length; i++) {
     todos[i].classList.remove('on');
-    var cardAntigo = todos[i].closest('.enc-card');
+    var cardAntigo = todos[i].closest('.enc-card, .cron-act-item');
     if (cardAntigo) cardAntigo.classList.remove('menu-aberto');
   }
   if (!estavaAberto) {
     alvo.classList.add('on');
-    var card = alvo.closest('.enc-card');
+    var card = alvo.closest('.enc-card, .cron-act-item');
     if (card) card.classList.add('menu-aberto');
   }
 }
@@ -4216,7 +4220,7 @@ function fecharTodosEncMenus() {
   var todos = document.querySelectorAll('.enc-menu-list.on');
   for (var i = 0; i < todos.length; i++) {
     todos[i].classList.remove('on');
-    var card = todos[i].closest('.enc-card');
+    var card = todos[i].closest('.enc-card, .cron-act-item');
     if (card) card.classList.remove('menu-aberto');
   }
 }
@@ -5894,6 +5898,19 @@ function dhGlanceHTML(c, mom, faseAtiva, faseAtivaIdx) {
       subHTML:'<div class="dh-rm-wrap">' + riskMatrixHTML(riscoTop.probabilidade, riscoTop.impacto, riscoCor) + '<span class="dh-rm-lbl">probabilidade ' + esc(riscoTop.probabilidade) + '<br>impacto ' + esc(riscoTop.impacto) + '</span></div>'});
   }
 
+  // Encontros com data já passada mas que ninguém voltou pra marcar como
+  // realizado (nem registrar resumo/destaques) — sem isso, esses casos só
+  // apareciam se alguém abrisse o Cronograma e reparasse no badge "Aguardando
+  // registro" item a item. Aqui, o dashboard já entrega a contagem de cara.
+  var hojeSemHora = new Date(); hojeSemHora.setHours(0,0,0,0);
+  var aguardandoCount = (c.encontros || []).filter(function(e) { return e.status === 'agendado' && e.data && new Date(e.data) < hojeSemHora; }).length;
+  if (aguardandoCount > 0) {
+    cards.push({icon:'clock', bg:'var(--warn-bg)', fg:'var(--warn)', lbl:'Encontros aguardando registro',
+      val: aguardandoCount + ' ' + (aguardandoCount > 1 ? 'encontros' : 'encontro'),
+      sub:'já passaram da data e seguem como "Agendado" — marque como realizado ou remarque',
+      onClick:"setView('cronograma')"});
+  }
+
   var altaCount = (c.proximosPassos || []).filter(function(p) { return p.prioridade === 'alta' && !p.concluido; }).length;
   if (altaCount > 0) {
     cards.push({icon:'flag', bg:'var(--warn-bg)', fg:'var(--warn)', lbl:'Prioridades', val: altaCount + ' ' + (altaCount > 1 ? 'itens' : 'item') + ' de alta prioridade', sub:'pendente' + (altaCount > 1 ? 's' : '') + ' em Próximos Passos'});
@@ -5905,7 +5922,7 @@ function dhGlanceHTML(c, mom, faseAtiva, faseAtivaIdx) {
     h += '<div class="dh-glance">';
     for (var i = 0; i < cards.length; i++) {
       var cd = cards[i];
-      h += '<div class="dh-glance-card"><div class="dh-glance-icon" style="--gc-bg:' + cd.bg + ';--gc-fg:' + cd.fg + '">' + dhIco(cd.icon) + '</div>';
+      h += '<div class="dh-glance-card' + (cd.onClick ? ' dh-glance-card-clicavel' : '') + '"' + (cd.onClick ? ' onclick="' + cd.onClick + '"' : '') + '><div class="dh-glance-icon" style="--gc-bg:' + cd.bg + ';--gc-fg:' + cd.fg + '">' + dhIco(cd.icon) + '</div>';
       h += '<div class="dh-glance-body"><div class="dh-glance-lbl">' + cd.lbl + '</div><div class="dh-glance-val" title="' + cd.val + '">' + cd.val + '</div>' + (cd.subHTML || '<div class="dh-glance-sub" title="' + cd.sub + '">' + cd.sub + '</div>') + '</div></div>';
     }
     h += '</div>';
@@ -6146,7 +6163,13 @@ function cronCalendarHTML(c) {
     porDia[dNum].push(todas[i]);
   }
   function dotClsDe(at) {
-    return at.tipo === 'entrega' ? 'ccd-entrega' : (at.raw.status === 'cancelado' ? 'ccd-cancelado' : at.raw.tipo === 'online' ? 'ccd-online' : 'ccd-presencial');
+    if (at.tipo === 'entrega') return 'ccd-entrega';
+    if (at.raw.status === 'cancelado') return 'ccd-cancelado';
+    // Data já passou mas o encontro segue "Agendado" — ninguém voltou aqui pra
+    // marcar como realizado nem registrar o que rolou. Sinaliza no próprio
+    // grid, sem precisar abrir o dia pra descobrir.
+    if (at.raw.status === 'agendado' && at.iso < hojeISO) return 'ccd-pendente';
+    return at.raw.tipo === 'online' ? 'ccd-online' : 'ccd-presencial';
   }
 
   var h = '<div class="cron-cal-wrap sec"><div class="cron-gantt-title">Calendário do projeto</div>';
@@ -6206,7 +6229,9 @@ function cronCalendarHTML(c) {
   h += '<div class="cron-cal-legend">';
   h += '<span><span class="ccd-dot ccd-presencial"></span> Encontro presencial</span>';
   h += '<span><span class="ccd-dot ccd-online"></span> Encontro online</span>';
-  h += '<span><span class="ccd-dot ccd-entrega"></span> Prazo de entrega</span></div>';
+  h += '<span><span class="ccd-dot ccd-entrega"></span> Prazo de entrega</span>';
+  h += '<span><span class="ccd-dot ccd-pendente"></span> Aguardando registro</span>';
+  h += '<span><span class="ccd-dot ccd-cancelado"></span> Cancelado</span></div>';
   h += '<div id="cron-dia-detail">' + cronDiaDetailHTML(c) + '</div></div>';
   return h;
 }
@@ -6272,10 +6297,21 @@ function cronAtividadeItemHTML(item) {
     var stTxt = ent.status === 'concluido' ? 'Concluída' : ent.status === 'em_andamento' ? 'Em andamento' : 'Pendente';
     sub = 'Entrega · ' + stTxt + (ent.responsavel ? ' · ' + ent.responsavel : '');
   }
+  // Menu completo (editar / marcar realizado / remarcar / repetir / cancelar /
+  // excluir) — mesmo usado na lista de Compromissos, pra não deixar o card do
+  // calendário com menos ação disponível que o resto do Cronograma. Só se
+  // aplica a registros reais da tabela encontros (indexOf >= 0); itens vindos
+  // de c.agenda (hoje sempre vazio, mas defensivo) ficam só com o toggle.
+  var menuIcon = '';
+  if (item.tipo === 'encontro') {
+    var encIdxCal = _c.encontros.indexOf(item.raw);
+    if (encIdxCal !== -1) menuIcon = encMenuHTML(encIdxCal, item.raw, 'encmenu-cal-');
+  }
   var h = '<div class="cron-act-item" id="' + aid + '" data-group="cronact">';
   h += '<button class="cron-act-btn" onclick="toggleX(\'' + aid + '\',\'cronact\')"><span class="cron-act-dot ' + dotCls + '"></span>';
   h += '<div class="cron-act-main"><div class="cron-act-titulo">' + esc(titulo) + '</div><div class="cron-act-sub">' + esc(sub) + '</div></div>';
   h += chevSVG() + '</button>';
+  if (menuIcon) h += '<div class="ce-edit-abs">' + menuIcon + '</div>';
   h += '<div class="cron-act-body">' + cronAtividadeDetHTML(item) + '</div>';
   h += '</div>';
   return h;
@@ -7446,6 +7482,62 @@ function renderItemEntrega(e) {
   return h;
 }
 
+// Monta o menu "⋮ Mais opções" de um encontro — reaproveitado tanto na lista de
+// Compromissos quanto no card do dia dentro do Calendário, pra manter as duas
+// telas com exatamente as mesmas ações (nada de uma tela ficar mais completa
+// que a outra). idPrefix evita ids DOM duplicados quando as duas telas
+// renderizam o mesmo encontro ao mesmo tempo (calendário + compromissos).
+function encMenuHTML(idx, a, idPrefix) {
+  if (!_isMaster) return '';
+  var menuId = (idPrefix || 'encmenu-') + idx;
+  var itensMenu = '';
+  itensMenu += '<button class="enc-menu-item" onclick="fecharTodosEncMenus();ceQuickEdit(\'encontros\',' + idx + ')">Editar tudo</button>';
+  if (a.status === 'agendado') {
+    itensMenu += '<button class="enc-menu-item" onclick="fecharTodosEncMenus();marcarEncontroRealizado(' + idx + ')">Marcar como realizado</button>';
+  }
+  if (a.status !== 'realizado') {
+    itensMenu += '<button class="enc-menu-item" onclick="fecharTodosEncMenus();abrirReagendarEncontro(' + idx + ')">Remarcar</button>';
+  }
+  itensMenu += a.serieId
+    ? '<button class="enc-menu-item" onclick="fecharTodosEncMenus();abrirGerenciarSerie(\'' + a.serieId + '\')">Gerenciar série</button>'
+    : '<button class="enc-menu-item" onclick="fecharTodosEncMenus();abrirRepetirEncontro(' + idx + ')">Repetir semanalmente</button>';
+  if (a.status !== 'realizado' && a.status !== 'cancelado') {
+    itensMenu += '<button class="enc-menu-item danger" onclick="fecharTodosEncMenus();abrirCancelarEncontro(' + idx + ')">Cancelar encontro</button>';
+  }
+  itensMenu += '<button class="enc-menu-item danger" onclick="fecharTodosEncMenus();excluirEncontro(' + idx + ')">Excluir encontro</button>';
+  return '<div class="enc-menu"><button class="enc-menu-btn" title="Mais opções" onclick="toggleEncMenu(\'' + menuId + '\',event)">&#8942;</button>' +
+    '<div class="enc-menu-list" id="' + menuId + '">' + itensMenu + '</div></div>';
+}
+
+// Exclusão definitiva de um encontro (diferente de "Cancelar", que preserva o
+// histórico). Pensada para registros criados por engano — duplicados, data
+// errada — que não fazem sentido manter nem como cancelado.
+function excluirEncontro(idx) {
+  var item = _c && _c.encontros && _c.encontros[idx];
+  if (!item) return;
+  if (projetoBloqueado()) { avisoProjetoEncerrado(); return; }
+  showConfirm('Excluir "' + item.titulo + '" (' + fd(item.data) + ')? Essa ação não pode ser desfeita — diferente de "Cancelar", não fica nenhum registro.', function() {
+    excluirEncontroConfirmado(idx);
+  }, {confirmLabel:'Excluir'});
+}
+function excluirEncontroConfirmado(idx) {
+  var item = _c && _c.encontros && _c.encontros[idx];
+  if (!item) return;
+  var titulo = item.titulo;
+  _c.encontros.splice(idx, 1);
+  registrarLog('Encontros', 'excluído', titulo);
+  if (_currentView === 'cronograma') renderCronograma();
+  else if (_currentView === 'progresso') renderProgresso();
+  atualizarBadgesNav();
+  if (!sb || !item._id) { ceToast(); return; }
+  sbExcluirItem('encontros', item._id).then(function() {
+    ceToast();
+  }).catch(function(e) {
+    console.error('Erro ao excluir encontro:', e);
+    showAlert('O encontro sumiu da tela, mas não foi possível excluir no banco de dados. Recarregue a página para conferir.', {danger:true});
+  });
+}
+
 // Seção "Compromissos" (próximos + realizados), embutida dentro do Cronograma —
 // antes era uma aba própria (Agenda), unificada aqui para não repetir a mesma
 // informação que o calendário já mostra em outro formato.
@@ -7480,26 +7572,7 @@ function agendaSectionHTML() {
       // campo Status do formulário estivesse marcado como Agendado).
       dfLbl = a.status === 'agendado' ? '<span class="badge b-warn">Aguardando registro</span>' : '<span class="badge b-ok">Realizado</span>';
     }
-    var menuBtn = '';
-    if (a._cat === 'encontros' && _isMaster) {
-      var menuId = 'encmenu-' + a._idx;
-      var itensMenu = '';
-      itensMenu += '<button class="enc-menu-item" onclick="fecharTodosEncMenus();ceQuickEdit(\'encontros\',' + a._idx + ')">Editar tudo</button>';
-      if (a.status === 'agendado') {
-        itensMenu += '<button class="enc-menu-item" onclick="fecharTodosEncMenus();marcarEncontroRealizado(' + a._idx + ')">Marcar como realizado</button>';
-      }
-      if (a.status !== 'realizado') {
-        itensMenu += '<button class="enc-menu-item" onclick="fecharTodosEncMenus();abrirReagendarEncontro(' + a._idx + ')">Remarcar</button>';
-      }
-      itensMenu += a.serieId
-        ? '<button class="enc-menu-item" onclick="fecharTodosEncMenus();abrirGerenciarSerie(\'' + a.serieId + '\')">Gerenciar série</button>'
-        : '<button class="enc-menu-item" onclick="fecharTodosEncMenus();abrirRepetirEncontro(' + a._idx + ')">Repetir semanalmente</button>';
-      if (a.status !== 'realizado' && a.status !== 'cancelado') {
-        itensMenu += '<button class="enc-menu-item danger" onclick="fecharTodosEncMenus();abrirCancelarEncontro(' + a._idx + ')">Cancelar encontro</button>';
-      }
-      menuBtn = '<div class="enc-menu"><button class="enc-menu-btn" title="Mais opções" onclick="toggleEncMenu(\'' + menuId + '\',event)">&#8942;</button>' +
-        '<div class="enc-menu-list" id="' + menuId + '">' + itensMenu + '</div></div>';
-    }
+    var menuBtn = (a._cat === 'encontros') ? encMenuHTML(a._idx, a, 'encmenu-') : '';
     // Acordeão completo — mesmo template que já existia (e já funcionava bem) em
     // Progresso. Antes, esse nível de detalhe (resumo, destaques, combinados) só
     // existia lá, escondido por fase. Cronograma era o lugar óbvio pra procurar
